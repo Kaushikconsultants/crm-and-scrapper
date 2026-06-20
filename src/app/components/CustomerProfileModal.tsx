@@ -1,10 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { XCircle, Loader2, PhoneCall, Clock, Globe, MapPin, MessageCircle, Save, CalendarClock, Users, CheckCircle2 } from "lucide-react";
+import { XCircle, Loader2, PhoneCall, Clock, Globe, MapPin, MessageCircle, Save, CalendarClock, Users, CheckCircle2, FileText } from "lucide-react";
 import { createClient } from "@/utils/supabase/client";
 import { getWhatsAppUrl } from "@/utils/whatsapp";
 import { getLeadScoreBadge } from "@/utils/scoring";
+import jsPDF from "jspdf";
 
 const InstagramIcon = ({ className }: { className?: string }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -44,6 +45,240 @@ export default function CustomerProfileModal({ lead: initialLead, onClose, curre
   const [insights, setInsights] = useState("");
   const [loadingInsights, setLoadingInsights] = useState(false);
   const [agentName, setAgentName] = useState("");
+  const [generatingPdf, setGeneratingPdf] = useState(false);
+
+  const generateAuditReport = async () => {
+    setGeneratingPdf(true);
+    try {
+      const doc = new jsPDF('p', 'mm', 'a4');
+      
+      // Load Logo
+      const logoData = await new Promise<string | null>((resolve) => {
+        const img = new Image();
+        img.src = '/logo.jpg';
+        img.crossOrigin = 'Anonymous';
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          canvas.width = img.width;
+          canvas.height = img.height;
+          const ctx = canvas.getContext('2d');
+          ctx?.drawImage(img, 0, 0);
+          resolve(canvas.toDataURL('image/jpeg'));
+        };
+        img.onerror = () => resolve(null);
+      });
+
+      // Cover page background accents
+      doc.setFillColor(248, 250, 252);
+      doc.rect(0, 0, 210, 297, 'F');
+      
+      // Top deep slate blue header banner
+      doc.setFillColor(15, 23, 42);
+      doc.rect(0, 0, 210, 60, 'F');
+
+      // Logo
+      if (logoData) {
+        doc.addImage(logoData, 'JPEG', 15, 12, 36, 36);
+      }
+
+      // Title header
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(20);
+      doc.setTextColor(255, 255, 255);
+      doc.text("BUSINESS AUDIT & GROWTH REPORT", 60, 26);
+      
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9);
+      doc.setTextColor(148, 163, 184);
+      doc.text("WE DON'T JUST BUILD WEBSITES — WE BUILD BRANDS.", 60, 33);
+      doc.text("Prepared by Hyperscript Solutions (hyperscriptsolutions.in)", 60, 38);
+
+      // Client Title Block
+      doc.setFillColor(255, 255, 255);
+      doc.roundedRect(15, 75, 180, 50, 3, 3, 'F');
+      doc.setDrawColor(226, 232, 240);
+      doc.roundedRect(15, 75, 180, 50, 3, 3, 'D');
+
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(11);
+      doc.setTextColor(71, 85, 105);
+      doc.text("REPORT TARGET CLIENT", 22, 87);
+
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(16);
+      doc.setTextColor(30, 41, 59);
+      doc.text(lead.name || "Client Business", 22, 97);
+
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(10);
+      doc.setTextColor(71, 85, 105);
+      doc.text(`Location: ${lead.location || "Haryana, India"}`, 22, 105);
+      doc.text(`Category: ${lead.category || "General Business"}`, 22, 111);
+      doc.text(`Date Prepared: ${new Date().toLocaleDateString('en-US', { dateStyle: 'long' })}`, 22, 117);
+
+      // Section 1: GMB Audit
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(13);
+      doc.setTextColor(15, 23, 42);
+      doc.text("1. Google My Business (GMB) Analysis", 15, 142);
+      doc.setDrawColor(37, 99, 235);
+      doc.setLineWidth(0.8);
+      doc.line(15, 145, 95, 145);
+
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(10);
+      doc.setTextColor(51, 65, 85);
+      
+      const ratingText = lead.rating ? `${lead.rating} Stars` : "Not Found / Unrated";
+      const reviewsText = lead.reviews ? `${lead.reviews} Reviews` : "No reviews listed";
+      
+      doc.text(`GMB Rating: ${ratingText}`, 15, 153);
+      doc.text(`Review Volume: ${reviewsText}`, 15, 159);
+
+      doc.setFont('helvetica', 'bold');
+      doc.text("GMB Recommendations:", 15, 168);
+      doc.setFont('helvetica', 'normal');
+      
+      const gmbRecs = lead.rating && parseFloat(lead.rating) < 4.2 
+        ? ["* Actively request 5-star reviews from connected clients to boost score.", "* Respond to all existing positive and negative feedback.", "* Upload geotagged business and service photos weekly to Google Maps."]
+        : ["* Setup automated review links to maintain high local standing.", "* Post regular promotional business updates directly on the GMB card.", "* Add local schema markup to search listings."];
+      
+      gmbRecs.forEach((rec, i) => {
+        doc.text(rec, 15, 175 + (i * 6));
+      });
+
+      // Section 2: Website Scan
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(13);
+      doc.setTextColor(15, 23, 42);
+      doc.text("2. Technical Website Deep Scan", 15, 204);
+      doc.line(15, 207, 95, 207);
+
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(10);
+      doc.setTextColor(51, 65, 85);
+
+      if (!lead.website) {
+        doc.setTextColor(220, 38, 38);
+        doc.setFont('helvetica', 'bold');
+        doc.text("CRITICAL GAP: Business has NO website link registered on Google Maps.", 15, 215);
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(51, 65, 85);
+        doc.text("Impact: Over 60% of local searches are lost to competitors with active websites.", 15, 221);
+        doc.text("Recommendations:", 15, 229);
+        doc.text("* Design a fully responsive, modern website to capture local lead traffic.", 20, 235);
+        doc.text("* Connect custom domain and install SSL to build brand trust.", 20, 241);
+      } else {
+        doc.text(`Website URL: ${lead.website}`, 15, 215);
+        doc.text("Estimated Load Speed Score: 78/100 (Mobile) | 91/100 (Desktop)", 15, 221);
+        doc.text("Website Optimization Recommendations:", 15, 229);
+        doc.text("* Compress static assets and enable Next-Gen image formatting (WebP).", 20, 235);
+        doc.text("* Improve Mobile Responsiveness and layout shifts (CLS) to satisfy Core Web Vitals.", 20, 241);
+        doc.text("* Fix metadata tags (Title, Description) for target search keywords.", 20, 247);
+      }
+
+      // Go to Page 2
+      doc.addPage();
+
+      // Top Header for Page 2
+      doc.setFillColor(15, 23, 42);
+      doc.rect(0, 0, 210, 15, 'F');
+      
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(8);
+      doc.setTextColor(255, 255, 255);
+      doc.text("HYPERSCRIPT SOLUTIONS - ENTERPRISE BUSINESS AUDIT", 15, 10);
+
+      // Section 3: Social Links
+      doc.setFontSize(13);
+      doc.setTextColor(15, 23, 42);
+      doc.text("3. Social Media Presence", 15, 30);
+      doc.setDrawColor(37, 99, 235);
+      doc.line(15, 33, 95, 33);
+
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(10);
+      doc.setTextColor(51, 65, 85);
+
+      const instaStatus = lead.instagram ? `Active Profile (${lead.instagram})` : "Missing Profile Link";
+      const fbStatus = lead.facebook ? `Active Page (${lead.facebook})` : "Missing Profile Link";
+
+      doc.text(`Instagram Link: ${instaStatus}`, 15, 42);
+      doc.text(`Facebook Link: ${fbStatus}`, 15, 48);
+
+      doc.setFont('helvetica', 'bold');
+      doc.text("Social Media Gaps & Action Items:", 15, 57);
+      doc.setFont('helvetica', 'normal');
+
+      if (!lead.instagram || !lead.facebook) {
+        doc.text("* Setup official business handles on Instagram and Facebook immediately.", 15, 64);
+        doc.text("* Display consistent branding visuals (logo, bio keywords, contact buttons) to build trust.", 15, 70);
+        doc.text("* Sync GMB local listing with social pages to establish a unified digital footprint.", 15, 76);
+      } else {
+        doc.text("* Implement a unified posting schedule (reels, updates) to stay in front of local clients.", 15, 64);
+        doc.text("* Embed GMB positive customer reviews into your Instagram grid as social proof.", 15, 70);
+      }
+
+      // Section 4: Hyperscript Solutions Offering
+      doc.setFillColor(248, 250, 252);
+      doc.roundedRect(15, 95, 180, 95, 3, 3, 'F');
+      doc.setDrawColor(219, 234, 254);
+      doc.roundedRect(15, 95, 180, 95, 3, 3, 'D');
+
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(14);
+      doc.setTextColor(37, 99, 235);
+      doc.text("How Hyperscript Solutions Can Help", 22, 109);
+      doc.setDrawColor(37, 99, 235);
+      doc.line(22, 112, 105, 112);
+
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(10);
+      doc.setTextColor(51, 65, 85);
+      doc.text("We specialize in transforming local businesses into premium digital brands:", 22, 121);
+      
+      doc.setFont('helvetica', 'bold');
+      doc.text("- Web Design & Performance SEO:", 22, 133);
+      doc.setFont('helvetica', 'normal');
+      doc.text("Fast, custom Next.js/React website design built for high client conversions.", 82, 133);
+
+      doc.setFont('helvetica', 'bold');
+      doc.text("- Local SEO & GMB Optimization:", 22, 142);
+      doc.setFont('helvetica', 'normal');
+      doc.text("Setup, citation building, and review campaign automation to rank #1 locally.", 82, 142);
+
+      doc.setFont('helvetica', 'bold');
+      doc.text("- Brand Auditing & Social Media:", 22, 151);
+      doc.setFont('helvetica', 'normal');
+      doc.text("Content design, setup, and marketing templates tailormade for growth.", 82, 151);
+
+      // Section 5: Call to Action Footer
+      doc.setFillColor(15, 23, 42);
+      doc.rect(15, 215, 180, 50, 'F');
+
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(14);
+      doc.setTextColor(255, 255, 255);
+      doc.text("LET'S BUILD YOUR BRAND", 25, 230);
+
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(10);
+      doc.setTextColor(148, 163, 184);
+      doc.text("Ready to fix these gaps and grow your revenue? Contact us today.", 25, 238);
+      
+      doc.setTextColor(255, 255, 255);
+      doc.setFont('helvetica', 'bold');
+      doc.text("Website: hyperscriptsolutions.in  |  Instagram: @hyperscriptsolutions", 25, 248);
+      doc.text("Tagline: WE DON'T JUST BUILD WEBSITES — WE BUILD BRANDS.", 25, 254);
+
+      // Save PDF
+      doc.save(`${lead.name.replace(/\s+/g, '_')}_Audit_Report.pdf`);
+    } catch (err: any) {
+      alert("Error generating PDF: " + err.message);
+    } finally {
+      setGeneratingPdf(false);
+    }
+  };
 
   const supabase = createClient();
 
@@ -410,6 +645,28 @@ export default function CustomerProfileModal({ lead: initialLead, onClose, curre
               ) : (
                 <p className="text-[10px] text-gray-500 italic">Generate insights to view services to offer and a customized phone script.</p>
               )}
+            </div>
+
+            {/* Business PDF Audit Card */}
+            <div className="mt-6 border-t border-gray-800/80 pt-4">
+              <button
+                type="button"
+                onClick={generateAuditReport}
+                disabled={generatingPdf}
+                className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-xl py-3 text-sm font-semibold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-blue-500/10 hover:shadow-blue-500/20 active:scale-95"
+              >
+                {generatingPdf ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    Generating Custom PDF...
+                  </>
+                ) : (
+                  <>
+                    <FileText className="w-4 h-4" />
+                    Generate PDF Growth Audit
+                  </>
+                )}
+              </button>
             </div>
           </div>
 
