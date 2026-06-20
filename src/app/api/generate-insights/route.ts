@@ -8,19 +8,24 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Missing lead data" }, { status: 400 });
     }
 
-    // 1. Get Groq Key
+    // 1. Get Groq Key & Model
     let groqApiKey = process.env.GROQ_API_KEY || "";
+    let groqModel = "llama-3.3-70b-versatile";
     try {
       const { data } = await supabase
         .from("settings")
-        .select("value")
-        .eq("key", "groq_api_key")
-        .single();
-      if (data?.value) {
-        groqApiKey = data.value;
+        .select("*");
+      
+      if (data) {
+        const config: Record<string, string> = {};
+        data.forEach(row => {
+          config[row.key] = row.value;
+        });
+        if (config.groq_api_key) groqApiKey = config.groq_api_key;
+        if (config.groq_model) groqModel = config.groq_model;
       }
     } catch (e) {
-      // Graceful fallback to default key
+      // Graceful fallback to defaults
     }
 
     // 2. Prepare analysis points
@@ -60,7 +65,7 @@ Instructions:
         "Authorization": `Bearer ${groqApiKey}`
       },
       body: JSON.stringify({
-        model: "llama3-8b-8192",
+        model: groqModel,
         messages: [
           { role: "system", content: "You are a helpful and concise sales coaching assistant." },
           { role: "user", content: prompt }

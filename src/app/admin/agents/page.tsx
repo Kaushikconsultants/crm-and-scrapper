@@ -30,6 +30,7 @@ export default function AgentsPage() {
 
   // Groq Settings Form
   const [groqApiKey, setGroqApiKey] = useState("");
+  const [groqModel, setGroqModel] = useState("llama-3.3-70b-versatile");
   const [savingSettings, setSavingSettings] = useState(false);
   const [settingsMessage, setSettingsMessage] = useState<{type: 'success' | 'error', text: string} | null>(null);
 
@@ -44,9 +45,8 @@ export default function AgentsPage() {
     try {
       const res = await fetch("/api/settings");
       const data = await res.json();
-      if (data.groq_api_key) {
-        setGroqApiKey(data.groq_api_key);
-      }
+      if (data.groq_api_key) setGroqApiKey(data.groq_api_key);
+      if (data.groq_model) setGroqModel(data.groq_model);
     } catch (err) {}
   };
 
@@ -58,7 +58,7 @@ export default function AgentsPage() {
       const res = await fetch("/api/settings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ groq_api_key: groqApiKey }),
+        body: JSON.stringify({ groq_api_key: groqApiKey, groq_model: groqModel }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to update settings");
@@ -258,11 +258,28 @@ export default function AgentsPage() {
                 This API key is stored in the Supabase settings table and used to generate pitch offers and call scripts for agents.
               </p>
             </div>
+
+            <div>
+              <label className="block text-gray-400 text-sm mb-2 font-medium">Groq Model</label>
+              <select 
+                value={groqModel} 
+                onChange={e => setGroqModel(e.target.value)} 
+                required 
+                className="w-full bg-[#1a1a1a] border border-gray-800 rounded-xl p-3 focus:border-blue-500 outline-none text-white text-sm"
+              >
+                <option value="llama-3.3-70b-specdec">llama-3.3-70b-specdec (High performance reasoning)</option>
+                <option value="llama-3.3-70b-versatile">llama-3.3-70b-versatile (Recommended default)</option>
+                <option value="llama-3.1-70b-versatile">llama-3.1-70b-versatile (General purpose large)</option>
+                <option value="llama-3.1-8b-instant">llama-3.1-8b-instant (Fast / lightweight)</option>
+                <option value="gemma2-9b-it">gemma2-9b-it (Google Gemma 2)</option>
+                <option value="mixtral-8x7b-32768">mixtral-8x7b-32768 (MoE architecture)</option>
+              </select>
+            </div>
             
             <button 
               type="submit" 
               disabled={savingSettings} 
-              className="w-full bg-blue-600 text-white hover:bg-blue-500 disabled:opacity-50 rounded-xl py-3.5 font-semibold mt-4 transition-all flex justify-center text-sm"
+              className="w-full bg-blue-600 text-white hover:bg-blue-500 disabled:opacity-50 rounded-xl py-3.5 font-semibold mt-4 transition-all flex justify-center text-sm cursor-pointer"
             >
               {savingSettings ? <Loader2 className="w-5 h-5 animate-spin" /> : "Save Settings"}
             </button>
