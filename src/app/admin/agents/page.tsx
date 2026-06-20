@@ -38,6 +38,7 @@ export default function AgentsPage() {
   const [activeTab, setActiveTab] = useState<"team" | "analytics" | "settings">("team");
   const [allLeads, setAllLeads] = useState<any[]>([]);
   const [allCalls, setAllCalls] = useState<any[]>([]);
+  const [scraperRuns, setScraperRuns] = useState<any[]>([]);
 
   // Knowledge Base State
   const [kbItems, setKbItems] = useState<any[]>([]);
@@ -112,6 +113,10 @@ export default function AgentsPage() {
         .from('call_logs')
         .select('agent_id, created_at, status_marked');
       if (callsData) setAllCalls(callsData);
+
+      // Fetch Scraper Runs
+      const { data: runsData } = await supabase.from('scraper_runs').select('*').order('created_at', { ascending: false }).limit(6);
+      if (runsData) setScraperRuns(runsData);
 
       const today = new Date();
       today.setHours(0,0,0,0);
@@ -731,10 +736,10 @@ export default function AgentsPage() {
                 </div>
               </div>
 
-              {/* Second Row: Categories & Top Closing Leaders */}
+              {/* Second Row: Categories, Scrapes & Top Closing Leaders */}
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                 {/* Category statistics */}
-                <div className="lg:col-span-5 bg-[#111] border border-gray-800 rounded-3xl p-6 flex flex-col justify-between">
+                <div className="lg:col-span-4 bg-[#111] border border-gray-800 rounded-3xl p-6 flex flex-col justify-between">
                   <div>
                     <h3 className="text-lg font-bold text-white flex items-center gap-2">
                       <MapPin className="w-5 h-5 text-amber-400" /> Top Lead Categories
@@ -764,8 +769,47 @@ export default function AgentsPage() {
                   </div>
                 </div>
 
+                {/* Scraper Run History */}
+                <div className="lg:col-span-4 bg-[#111] border border-gray-800 rounded-3xl p-6 flex flex-col justify-between">
+                  <div>
+                    <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                      <BarChart2 className="w-5 h-5 text-blue-400" /> Scraper History
+                    </h3>
+                    <p className="text-gray-400 text-xs mt-1">Audit log of recent lead generation scrapes.</p>
+                  </div>
+
+                  <div className="space-y-3 mt-6 flex-1 overflow-y-auto max-h-56 pr-1 custom-scrollbar">
+                    {scraperRuns.length === 0 ? (
+                      <p className="text-gray-500 text-sm text-center py-8">No runs logged yet</p>
+                    ) : (
+                      scraperRuns.map((run, idx) => (
+                        <div key={run.id || idx} className="bg-[#1a1a1a] border border-gray-800/80 rounded-xl p-3 flex justify-between items-center hover:border-blue-500/20 transition-all">
+                          <div>
+                            <span className="text-xs font-bold text-gray-200 block truncate max-w-[150px]" title={run.category}>{run.category}</span>
+                            <span className="text-[10px] text-gray-500 flex items-center gap-0.5 mt-0.5">
+                              <MapPin className="w-2.5 h-2.5 text-gray-600" /> {run.location}
+                            </span>
+                          </div>
+                          <div className="text-right">
+                            <span className={`inline-block px-1.5 py-0.5 rounded text-[9px] font-bold border uppercase ${
+                              run.status === 'Completed' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' :
+                              run.status === 'Running' ? 'bg-blue-500/10 text-blue-400 border-blue-500/20' :
+                              'bg-rose-500/10 text-rose-400 border-rose-500/20'
+                            }`}>
+                              {run.leads_found || 0} Leads
+                            </span>
+                            <span className="text-[9px] text-gray-600 block mt-1">
+                              {new Date(run.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                            </span>
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </div>
+
                 {/* Deal-Closer Leaderboard */}
-                <div className="lg:col-span-7 bg-[#111] border border-gray-800 rounded-3xl p-6">
+                <div className="lg:col-span-4 bg-[#111] border border-gray-800 rounded-3xl p-6">
                   <h3 className="text-lg font-bold text-white flex items-center gap-2 mb-2">
                     <Trophy className="w-5 h-5 text-yellow-500" /> Agent Leaderboard
                   </h3>
@@ -775,16 +819,15 @@ export default function AgentsPage() {
                     <table className="w-full text-left text-xs border-collapse">
                       <thead>
                         <tr className="border-b border-gray-800 text-gray-500 pb-3">
-                          <th className="pb-3 font-semibold">Rank & Agent</th>
-                          <th className="pb-3 font-semibold text-center">Assigned Leads</th>
-                          <th className="pb-3 font-semibold text-center">Calls Logged</th>
-                          <th className="pb-3 font-semibold text-right text-yellow-500">Deals Closed (Won)</th>
+                          <th className="pb-3 font-semibold">Agent</th>
+                          <th className="pb-3 font-semibold text-center">Calls</th>
+                          <th className="pb-3 font-semibold text-right text-yellow-500">Won</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-gray-800/50">
                         {leaderboard.map((agent, index) => (
                           <tr key={agent.id} className="hover:bg-white/5 transition-colors">
-                            <td className="py-3.5 flex items-center gap-3">
+                            <td className="py-3 flex items-center gap-3">
                               <span className={`w-5 h-5 rounded-full flex items-center justify-center font-bold text-[10px] ${
                                 index === 0 ? 'bg-yellow-500 text-black' : 
                                 index === 1 ? 'bg-gray-300 text-black' : 
@@ -793,13 +836,11 @@ export default function AgentsPage() {
                                 {index + 1}
                               </span>
                               <div>
-                                <span className="font-bold text-gray-200 block">{agent.name}</span>
-                                <span className="text-[10px] text-gray-500">{agent.email}</span>
+                                <span className="font-bold text-gray-200 block max-w-[80px] truncate">{agent.name}</span>
                               </div>
                             </td>
-                            <td className="py-3.5 text-center font-mono text-gray-400">{agent.totalAssigned}</td>
-                            <td className="py-3.5 text-center font-mono text-gray-400">{agent.callsLogged}</td>
-                            <td className="py-3.5 text-right font-mono font-bold text-emerald-400 text-sm">{agent.closedCount}</td>
+                            <td className="py-3 text-center font-mono text-gray-400">{agent.callsLogged}</td>
+                            <td className="py-3 text-right font-mono font-bold text-emerald-400 text-sm">{agent.closedCount}</td>
                           </tr>
                         ))}
                       </tbody>
