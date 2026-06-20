@@ -5,18 +5,15 @@ CREATE TABLE IF NOT EXISTS public.settings (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- Seed default Groq API Key (leave empty by default, admin can configure in UI settings)
--- INSERT INTO public.settings (key, value) VALUES ('groq_api_key', 'YOUR_GROQ_API_KEY_HERE') ON CONFLICT (key) DO NOTHING;
-
-
--- Enable RLS on settings (optional, but good practice)
+-- Enable RLS on settings
 ALTER TABLE public.settings ENABLE ROW LEVEL SECURITY;
 
--- Allow public read access to settings
+-- Drop and recreate settings policies
+DROP POLICY IF EXISTS "Allow public read access to settings" ON public.settings;
 CREATE POLICY "Allow public read access to settings" ON public.settings
     FOR SELECT USING (true);
 
--- Allow admins (all service-role operations bypass RLS anyway) to write/update settings
+DROP POLICY IF EXISTS "Allow service role write access to settings" ON public.settings;
 CREATE POLICY "Allow service role write access to settings" ON public.settings
     FOR ALL USING (true);
 
@@ -27,7 +24,7 @@ CREATE TABLE IF NOT EXISTS public.scraper_runs (
     category TEXT NOT NULL,
     location TEXT NOT NULL,
     max_leads INTEGER NOT NULL,
-    status TEXT NOT NULL DEFAULT 'Running', -- 'Running', 'Completed', 'Failed'
+    status TEXT NOT NULL DEFAULT 'Running',
     leads_found INTEGER DEFAULT 0,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
@@ -35,11 +32,12 @@ CREATE TABLE IF NOT EXISTS public.scraper_runs (
 -- Enable RLS on scraper_runs
 ALTER TABLE public.scraper_runs ENABLE ROW LEVEL SECURITY;
 
--- Allow public read access to scraper_runs
+-- Drop and recreate scraper_runs policies
+DROP POLICY IF EXISTS "Allow public read access to scraper_runs" ON public.scraper_runs;
 CREATE POLICY "Allow public read access to scraper_runs" ON public.scraper_runs
     FOR SELECT USING (true);
 
--- Allow all operations to service role / authenticated users
+DROP POLICY IF EXISTS "Allow all access to scraper_runs for service role" ON public.scraper_runs;
 CREATE POLICY "Allow all access to scraper_runs for service role" ON public.scraper_runs
     FOR ALL USING (true);
 
@@ -58,10 +56,11 @@ CREATE TABLE IF NOT EXISTS public.knowledge_base (
 -- Enable RLS on knowledge_base
 ALTER TABLE public.knowledge_base ENABLE ROW LEVEL SECURITY;
 
--- Allow public read access to knowledge_base
+-- Drop and recreate knowledge_base policies
+DROP POLICY IF EXISTS "Allow public read access to knowledge_base" ON public.knowledge_base;
 CREATE POLICY "Allow public read access to knowledge_base" ON public.knowledge_base
     FOR SELECT USING (true);
 
--- Allow all operations to service role
+DROP POLICY IF EXISTS "Allow all access to knowledge_base for service role" ON public.knowledge_base;
 CREATE POLICY "Allow all access to knowledge_base for service role" ON public.knowledge_base
     FOR ALL USING (true);
