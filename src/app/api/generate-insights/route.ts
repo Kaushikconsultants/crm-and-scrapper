@@ -3,7 +3,7 @@ import { supabase } from "@/lib/supabase";
 
 export async function POST(req: Request) {
   try {
-    const { lead } = await req.json();
+    const { lead, language = "English", agentName = "our agent", previousCalls = [] } = await req.json();
     if (!lead) {
       return NextResponse.json({ error: "Missing lead data" }, { status: 400 });
     }
@@ -35,12 +35,20 @@ export async function POST(req: Request) {
     const instagramStatus = lead.instagram ? `Instagram page: ${lead.instagram}` : "No Instagram profile associated.";
     const facebookStatus = lead.facebook ? `Facebook page: ${lead.facebook}` : "No Facebook page associated.";
 
-    // 3. Build prompt (Strict instructions: Cold calling focus, NO WhatsApp templates, show what to offer)
+    const formattedCalls = previousCalls.length > 0 
+      ? previousCalls.map((log: any) => `- Outcome: ${log.status_marked || 'Call'}, Notes: ${log.notes || 'No notes'}`).join('\n')
+      : "No previous calls logged yet.";
+
+    // 3. Build prompt (Branding: Hyperscript Solutions, Website: hyperscriptsolutions.in, Insta: @hyperscriptsolutions)
     const prompt = `
 You are an expert sales strategist training a cold-call agent.
-Analyze the following details for the business lead and generate actionable advice:
+Generate a tailored sales pitch on behalf of our agency:
+- Company Name: Hyperscript Solutions
+- Agency Website: https://hyperscriptsolutions.in
+- Agency Instagram: @hyperscriptsolutions
+- Pitching Agent Name: ${agentName}
 
-Business Name: ${lead.name}
+Client Business Name: ${lead.name}
 Category: ${lead.category || "General"}
 Location: ${lead.location || "Haryana"}
 ${websiteStatus}
@@ -49,10 +57,14 @@ ${gmbReviews}
 ${instagramStatus}
 ${facebookStatus}
 
+Previous Interactions with this Client:
+${formattedCalls}
+
 Instructions:
-1. Identify WHAT the agent can offer to this customer (e.g., website redesign, SSL certificate installation, local SEO optimization, GMB review generation, social media setup).
-2. Write a highly tailored Phone Call opening script. Keep it friendly, short, and focused on starting a conversation (DO NOT write email or WhatsApp messages).
-3. Do not include any meta-commentary. Return your response in clean markdown with two main sections:
+1. Identify WHAT services Hyperscript Solutions can offer to this client based on their website gaps (e.g. lack of website/redesign, SEO fixes, social media setup, or GMB review growth).
+2. Formulate a personalized, conversational Phone Call script for ${agentName} to introduce Hyperscript Solutions, reference any previous call history if available, and pitch the suggested services.
+3. OUTPUT LANGUAGE REQUIREMENT: Your entire response (pitch points and phone script) MUST be written in ${language}. If the language is "Hinglish", use Hindi vocabulary written in the English script/alphabet (e.g., "Hello! Main Hyperscript Solutions se ${agentName} bol raha hoon...").
+4. Do not include any intro/outro commentary. Return your response in clean markdown with two sections:
    - **What to Offer (Pitch Points)**
    - **Tailored Phone Script**
 `;

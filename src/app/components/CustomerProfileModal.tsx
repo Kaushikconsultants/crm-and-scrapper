@@ -43,17 +43,34 @@ export default function CustomerProfileModal({ lead: initialLead, onClose, curre
   // AI Insights State
   const [insights, setInsights] = useState("");
   const [loadingInsights, setLoadingInsights] = useState(false);
+  const [agentName, setAgentName] = useState("");
 
   const supabase = createClient();
+
+  useEffect(() => {
+    if (currentUserId) {
+      supabase.from('agent_profiles').select('name').eq('id', currentUserId).single().then(({ data }) => {
+        if (data?.name) {
+          setAgentName(data.name);
+        }
+      });
+    }
+  }, [currentUserId]);
 
   const fetchInsights = async () => {
     setLoadingInsights(true);
     setInsights("");
+    const language = localStorage.getItem("ai_outreach_language") || "English";
     try {
       const res = await fetch("/api/generate-insights", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ lead }),
+        body: JSON.stringify({ 
+          lead,
+          language,
+          agentName: agentName || "our agent",
+          previousCalls: logs || []
+        }),
       });
       const data = await res.json();
       if (data.insights) {
@@ -69,6 +86,7 @@ export default function CustomerProfileModal({ lead: initialLead, onClose, curre
 
   useEffect(() => {
     fetchHistory();
+    setInsights(""); // Reset insights when lead changes
   }, [lead.id]);
 
   const fetchHistory = async () => {

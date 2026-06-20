@@ -25,6 +25,8 @@ export default function AgentDashboard() {
   const [selectedHistoryLead, setSelectedHistoryLead] = useState<any>(null);
   const [isAddLeadOpen, setIsAddLeadOpen] = useState(false);
   const [statusFilter, setStatusFilter] = useState("all");
+  const [agentName, setAgentName] = useState("");
+  const [aiLanguage, setAiLanguage] = useState("English");
 
   // Power Dialer state
   const [isDialerActive, setIsDialerActive] = useState(false);
@@ -46,6 +48,9 @@ export default function AgentDashboard() {
   useEffect(() => {
     fetchData();
 
+    const storedLang = localStorage.getItem("ai_outreach_language");
+    if (storedLang) setAiLanguage(storedLang);
+
     const handleLeadUpdated = (e: Event) => {
       const updatedLead = (e as CustomEvent).detail;
       setLeads(prev => prev.map(l => l.id === updatedLead.id ? { ...l, ...updatedLead } : l));
@@ -55,19 +60,13 @@ export default function AgentDashboard() {
     return () => window.removeEventListener("leadUpdated", handleLeadUpdated);
   }, []);
 
-  useEffect(() => {
-    if (isDialerActive && filteredLeads[dialerIndex]) {
-      fetchDialerInsights(filteredLeads[dialerIndex]);
-    }
-  }, [isDialerActive, dialerIndex]);
-
   const fetchData = async () => {
     setLoading(true);
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
     setCurrentUser(user);
 
-    // 1.5 Fetch current agent profile for availability status
+    // 1.5 Fetch current agent profile for availability status & name
     const { data: profile } = await supabase
       .from('agent_profiles')
       .select('*')
@@ -75,6 +74,7 @@ export default function AgentDashboard() {
       .single();
     if (profile) {
       setIsAvailable(profile.is_available !== false);
+      setAgentName(profile.name || "");
     }
 
     // 2. Fetch all leads explicitly assigned to this user
@@ -167,10 +167,23 @@ export default function AgentDashboard() {
     setLoadingInsights(true);
     setDialerInsights("");
     try {
+      // 1. Fetch Call Logs from Supabase for this lead
+      const { data: logsData } = await supabase
+        .from('call_logs')
+        .select('status_marked, notes')
+        .eq('lead_id', lead.id)
+        .order('created_at', { ascending: false });
+
+      // 2. Call AI Insights API
       const res = await fetch("/api/generate-insights", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ lead }),
+        body: JSON.stringify({ 
+          lead,
+          language: aiLanguage,
+          agentName: agentName || "our representative",
+          previousCalls: logsData || []
+        }),
       });
       const data = await res.json();
       if (data.insights) {
@@ -218,6 +231,7 @@ export default function AgentDashboard() {
     setDialerNotes("");
     setDialerFollowUpDate("");
     setDialerFollowUpTime("");
+    setDialerInsights("");
     setLoggingCall(false);
 
     // Advance to next lead or complete session
@@ -331,6 +345,19 @@ export default function AgentDashboard() {
                 <option value="Not Interested">Not Interested</option>
                 <option value="Closed">Closed (Won)</option>
               </select>
+              <select
+                value={aiLanguage}
+                onChange={(e) => {
+                  setAiLanguage(e.target.value);
+                  localStorage.setItem("ai_outreach_language", e.target.value);
+                }}
+                className="bg-[#111] border border-gray-800 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-emerald-500 cursor-pointer"
+                title="AI Language"
+              >
+                <option value="English">AI Language: English</option>
+                <option value="Hindi">AI Language: Hindi</option>
+                <option value="Hinglish">AI Language: Hinglish</option>
+              </select>
               <button
                  onClick={() => {
                    if (filteredLeads.length === 0) {
@@ -379,7 +406,15 @@ export default function AgentDashboard() {
                         <p className="text-xs text-gray-400 mt-1 flex items-center gap-1.5 flex-wrap">
                           <span className="bg-purple-500/10 text-purple-400 px-2 py-0.5 rounded text-[10px] font-semibold">{currentLead.category || "General"}</span>
                           <span className="text-gray-700">•</span>
-                          <span className="flex items-center gap-0.5 text-emerald-400"><MapPin className="w-3 h-3" /> {currentLead.location || "Haryana"}</span>
+                          <a 
+                            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((currentLead.location || "") + " " + currentLead.name)}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="flex items-center gap-0.5 text-emerald-400 hover:text-emerald-300 hover:underline decoration-emerald-500/30 underline-offset-2 cursor-pointer"
+                            title="Search Location on Google Maps"
+                          >
+                            <MapPin className="w-3 h-3" /> {currentLead.location || "Haryana"}
+                          </a>
                         </p>
                       </div>
 
@@ -424,15 +459,28 @@ export default function AgentDashboard() {
                       </div>
 
                       <div className="bg-[#111] border border-gray-800 rounded-xl p-4 space-y-2">
-                        <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-widest">Google maps data</h4>
+                        <div className="flex justify-between items-center">
+                          <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-widest">Google maps data</h4>
+                          {currentLead.gmbUrl && (
+                            <a href={currentLead.gmbUrl} target="_blank" rel="noreferrer" className="text-[10px] text-emerald-400 hover:underline">View GMB</a>
+                          )}
+                        </div>
                         <div className="space-y-1.5">
                           <div className="text-xs text-gray-300 flex justify-between">
                             <span>Rating:</span>
-                            <span className="text-amber-400 font-bold">{currentLead.rating || "N/A"} ⭐</span>
+                            {currentLead.gmbUrl ? (
+                              <a href={currentLead.gmbUrl} target="_blank" rel="noreferrer" className="text-amber-400 font-bold hover:underline">{currentLead.rating || "N/A"} ⭐</a>
+                            ) : (
+                              <span className="text-amber-400 font-bold">{currentLead.rating || "N/A"} ⭐</span>
+                            )}
                           </div>
                           <div className="text-xs text-gray-300 flex justify-between">
                             <span>Reviews:</span>
-                            <span className="text-gray-400">{currentLead.reviews || "N/A"} reviews</span>
+                            {currentLead.gmbUrl ? (
+                              <a href={currentLead.gmbUrl} target="_blank" rel="noreferrer" className="text-gray-400 hover:underline">{currentLead.reviews || "N/A"} reviews</a>
+                            ) : (
+                              <span className="text-gray-400">{currentLead.reviews || "N/A"} reviews</span>
+                            )}
                           </div>
                         </div>
                       </div>
