@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { MapPin, Globe, Loader2, Download, Database, FileText, Filter, Users, MessageCircle, Shuffle, History } from "lucide-react";
+import { MapPin, Globe, Loader2, Download, Database, FileText, Filter, Users, MessageCircle, Shuffle, History, Search } from "lucide-react";
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { createClient } from "@/utils/supabase/client";
@@ -38,6 +38,7 @@ export default function DatabasePage() {
   const [dbFilterAssigned, setDbFilterAssigned] = useState("all");
   const [dateFilter, setDateFilter] = useState("all");
   const [sortBy, setSortBy] = useState("newest");
+  const [searchTerm, setSearchTerm] = useState("");
 
   // Selection for Assignment
   const [selectedLeads, setSelectedLeads] = useState<Set<string>>(new Set());
@@ -162,6 +163,14 @@ export default function DatabasePage() {
      if (dbFilterAssigned === "unassigned" && lead.assigned_to) return false;
      if (dbFilterAssigned !== "all" && dbFilterAssigned !== "unassigned" && lead.assigned_to !== dbFilterAssigned) return false;
      
+     // Search term filter
+     if (searchTerm) {
+       const term = searchTerm.toLowerCase();
+       const nameMatch = (lead.name || "").toLowerCase().includes(term);
+       const phoneMatch = (lead.phone || "").toLowerCase().includes(term);
+       if (!nameMatch && !phoneMatch) return false;
+     }
+
      // Date Filter
      if (dateFilter !== "all" && lead.created_at) {
        const leadDate = new Date(lead.created_at);
@@ -268,11 +277,11 @@ export default function DatabasePage() {
   };
 
   return (
-    <div className="p-8 max-w-[1600px] mx-auto h-full flex flex-col">
-      <div className="mb-6 flex justify-between items-end">
+    <div className="p-4 max-w-[1600px] mx-auto h-full flex flex-col space-y-4">
+      <div className="flex justify-between items-end flex-wrap gap-4">
         <div>
-          <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">Master Database</h1>
-          <p className="text-gray-400 mt-1">Assign leads to agents and view your complete historical data.</p>
+          <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">Master Database</h1>
+          <p className="text-gray-400 text-xs mt-0.5">Assign leads to agents and view your complete historical data.</p>
         </div>
 
         {selectedLeads.size > 0 && (
@@ -307,64 +316,74 @@ export default function DatabasePage() {
       </div>
 
       <div className="bg-[#111] border border-gray-800 rounded-2xl flex flex-col flex-1 overflow-hidden min-h-[600px]">
-        <div className="p-4 border-b border-gray-800 flex justify-between items-center bg-[#1a1a1a] flex-wrap gap-4">
-          <div className="flex items-center gap-3 bg-[#0a0a0a] p-1.5 rounded-xl border border-gray-800 flex-wrap">
-             <div className="flex items-center px-3 border-r border-gray-800">
-                <Filter className="w-4 h-4 text-gray-400 mr-2" />
-                <span className="text-sm text-gray-400 font-medium">Filters</span>
+        <div className="p-2.5 border-b border-gray-800 flex justify-between items-center bg-[#1a1a1a] flex-wrap gap-3">
+          <div className="flex items-center gap-2 bg-[#0a0a0a] p-1 rounded-xl border border-gray-800 flex-wrap">
+             <div className="flex items-center px-2 border-r border-gray-800">
+                <Filter className="w-3.5 h-3.5 text-gray-400 mr-1.5" />
+                <span className="text-xs text-gray-400 font-medium">Filters</span>
              </div>
-             <select value={dbFilterLoc} onChange={(e) => setDbFilterLoc(e.target.value)} className="bg-transparent text-sm text-gray-300 focus:outline-none w-32 px-2 cursor-pointer">
+             <select value={dbFilterLoc} onChange={(e) => setDbFilterLoc(e.target.value)} className="bg-transparent text-xs text-gray-300 focus:outline-none w-28 px-1 cursor-pointer">
                 <option value="" className="bg-[#111] text-gray-300">All Locations</option>
                 {uniqueLocations.map(loc => <option key={loc} value={loc} className="bg-[#111]">{loc}</option>)}
              </select>
-             <div className="w-px h-5 bg-gray-800"></div>
-             <select value={dbFilterCat} onChange={(e) => setDbFilterCat(e.target.value)} className="bg-transparent text-sm text-gray-300 focus:outline-none w-32 px-2 cursor-pointer">
+             <div className="w-px h-4 bg-gray-800"></div>
+             <select value={dbFilterCat} onChange={(e) => setDbFilterCat(e.target.value)} className="bg-transparent text-xs text-gray-300 focus:outline-none w-28 px-1 cursor-pointer">
                 <option value="" className="bg-[#111] text-gray-300">All Categories</option>
                 {uniqueCategories.map(cat => <option key={cat} value={cat} className="bg-[#111]">{cat}</option>)}
              </select>
-             <div className="w-px h-5 bg-gray-800"></div>
-             <select value={dbFilterAssigned} onChange={(e) => setDbFilterAssigned(e.target.value)} className="bg-transparent text-sm text-blue-400 font-medium focus:outline-none w-36 px-2 cursor-pointer">
+             <div className="w-px h-4 bg-gray-800"></div>
+             <select value={dbFilterAssigned} onChange={(e) => setDbFilterAssigned(e.target.value)} className="bg-transparent text-xs text-blue-400 font-medium focus:outline-none w-32 px-1 cursor-pointer">
                 <option value="all" className="bg-[#111] text-gray-300">All Agents</option>
                 <option value="unassigned" className="bg-[#111] text-gray-300">Unassigned Only</option>
                 {agents.map(a => <option key={a.id} value={a.id} className="bg-[#111] text-gray-300">{a.name}</option>)}
              </select>
-             <div className="w-px h-5 bg-gray-800"></div>
-             <select value={dateFilter} onChange={(e) => setDateFilter(e.target.value)} className="bg-transparent text-sm text-gray-300 focus:outline-none w-32 px-2 cursor-pointer">
+             <div className="w-px h-4 bg-gray-800"></div>
+             <select value={dateFilter} onChange={(e) => setDateFilter(e.target.value)} className="bg-transparent text-xs text-gray-300 focus:outline-none w-28 px-1 cursor-pointer">
                 <option value="all" className="bg-[#111] text-gray-300">All Dates</option>
                 <option value="today" className="bg-[#111] text-gray-300">Today</option>
                 <option value="yesterday" className="bg-[#111] text-gray-300">Yesterday</option>
                 <option value="week" className="bg-[#111] text-gray-300">Last 7 Days</option>
                 <option value="month" className="bg-[#111] text-gray-300">Last 30 Days</option>
              </select>
-             <div className="w-px h-5 bg-gray-800"></div>
-             <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className="bg-transparent text-sm text-amber-400 font-semibold focus:outline-none w-36 px-2 cursor-pointer font-medium">
+             <div className="w-px h-4 bg-gray-800"></div>
+             <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className="bg-transparent text-xs text-amber-400 font-semibold focus:outline-none w-32 px-1 cursor-pointer font-medium">
                 <option value="newest" className="bg-[#111] text-gray-300">Newest Scraped</option>
                 <option value="oldest" className="bg-[#111] text-gray-300">Oldest Scraped</option>
                 <option value="name" className="bg-[#111] text-gray-300">Name (A-Z)</option>
                 <option value="rating" className="bg-[#111] text-gray-300">Rating (High-Low)</option>
              </select>
-             <div className="w-px h-5 bg-gray-800"></div>
-             <label className="flex items-center gap-2 cursor-pointer px-2 text-sm text-gray-300">
-                <input type="checkbox" checked={dbFilterWeb} onChange={(e) => setDbFilterWeb(e.target.checked)} className="rounded border-gray-700 bg-gray-900" /> Web
+             <div className="w-px h-4 bg-gray-800"></div>
+             <label className="flex items-center gap-1.5 cursor-pointer px-1 text-xs text-gray-300">
+                <input type="checkbox" checked={dbFilterWeb} onChange={(e) => setDbFilterWeb(e.target.checked)} className="rounded border-gray-700 bg-gray-900 w-3 h-3" /> Web
              </label>
-             <label className="flex items-center gap-2 cursor-pointer pr-4 text-sm text-gray-300">
-                <input type="checkbox" checked={dbFilterPhone} onChange={(e) => setDbFilterPhone(e.target.checked)} className="rounded border-gray-700 bg-gray-900" /> Phone
+             <label className="flex items-center gap-1.5 cursor-pointer pr-2 text-xs text-gray-300">
+                <input type="checkbox" checked={dbFilterPhone} onChange={(e) => setDbFilterPhone(e.target.checked)} className="rounded border-gray-700 bg-gray-900 w-3 h-3" /> Phone
              </label>
           </div>
 
-          <div className="flex gap-3">
-             <span className="bg-gray-800 text-gray-300 px-3 py-1.5 rounded-lg text-sm font-medium mr-2 flex items-center">
+          <div className="flex gap-2 items-center flex-wrap">
+             <div className="relative shrink-0">
+               <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-500" />
+               <input 
+                 type="text"
+                 placeholder="Search name/phone..."
+                 value={searchTerm}
+                 onChange={(e) => setSearchTerm(e.target.value)}
+                 className="bg-[#0a0a0a] border border-gray-800 rounded-lg pl-8 pr-3 py-1.5 text-xs text-white focus:outline-none focus:border-blue-500 w-44"
+               />
+             </div>
+             <span className="bg-gray-800 text-gray-300 px-2 py-1.5 rounded-lg text-xs font-medium flex items-center shrink-0">
                {sortedFilteredPastLeads.length} Leads
              </span>
              <button
                 onClick={() => setIsAddLeadOpen(true)}
-                className="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors flex items-center gap-2"
+                className="bg-blue-600 hover:bg-blue-500 text-white px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1.5 shrink-0"
              >
-                <Plus className="w-4 h-4" /> Add Lead
+                <Plus className="w-3.5 h-3.5" /> Add Lead
              </button>
-             <button onClick={() => handleDownloadCSV(sortedFilteredPastLeads, "Exported_Leads")} className="bg-[#1a1a1a] border border-gray-700 hover:bg-gray-800 text-white px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2 transition-colors"><Download className="w-4 h-4"/> CSV</button>
-             <button onClick={() => handleDownloadPDF(sortedFilteredPastLeads, "Master Database")} disabled={sortedFilteredPastLeads.length === 0} className="flex items-center gap-2 px-3 py-1.5 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-500 disabled:opacity-50">
-               <FileText className="w-4 h-4" /> PDF
+             <button onClick={() => handleDownloadCSV(sortedFilteredPastLeads, "Exported_Leads")} className="bg-[#1a1a1a] border border-gray-700 hover:bg-gray-800 text-white px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors shrink-0"><Download className="w-3.5 h-3.5"/> CSV</button>
+             <button onClick={() => handleDownloadPDF(sortedFilteredPastLeads, "Master Database")} disabled={sortedFilteredPastLeads.length === 0} className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 text-white rounded-lg text-xs font-medium hover:bg-blue-500 disabled:opacity-50 shrink-0">
+               <FileText className="w-3.5 h-3.5" /> PDF
              </button>
           </div>
         </div>
@@ -375,94 +394,103 @@ export default function DatabasePage() {
           ) : sortedFilteredPastLeads.length === 0 ? (
             <div className="flex justify-center items-center h-full text-gray-500">No leads found matching your filters.</div>
           ) : (
-            <table className="w-full text-left text-sm border-collapse min-w-[1000px]">
+            <table className="w-full text-left text-xs border-collapse min-w-[800px] table-fixed">
               <thead className="bg-[#111] text-gray-400 sticky top-0 z-10 shadow-sm border-b border-gray-800">
                 <tr>
-                  <th className="px-4 py-4 w-12 text-center">
+                  <th className="px-3 py-3 w-10 text-center">
                     <input 
                       type="checkbox" 
                       checked={selectedLeads.size > 0 && selectedLeads.size === sortedFilteredPastLeads.length}
                       ref={input => { if (input) input.indeterminate = selectedLeads.size > 0 && selectedLeads.size < sortedFilteredPastLeads.length; }}
                       onChange={() => toggleAll(sortedFilteredPastLeads)}
-                      className="rounded border-gray-700 bg-gray-900 cursor-pointer w-4 h-4"
+                      className="rounded border-gray-700 bg-gray-900 cursor-pointer w-3.5 h-3.5"
                     />
                   </th>
-                  <th className="px-6 py-4 font-semibold w-1/4">Business Name</th>
-                  <th className="px-6 py-4 font-semibold">Location</th>
-                  <th className="px-6 py-4 font-semibold">Assignment / Status</th>
-                  <th className="px-6 py-4 font-semibold">Phone Number</th>
-                  <th className="px-6 py-4 font-semibold">Socials</th>
+                  <th className="px-4 py-2.5 font-semibold text-xs text-gray-400 w-2/5">Business Name & Details</th>
+                  <th className="px-4 py-2.5 font-semibold text-xs text-gray-400 text-center">Assignment / Status</th>
+                  <th className="px-4 py-2.5 font-semibold text-xs text-gray-400 text-center">Phone Number</th>
+                  <th className="px-4 py-2.5 font-semibold text-xs text-gray-400 text-center">Socials</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-800/50">
-                {sortedFilteredPastLeads.map((lead: any) => (
-                  <tr key={lead.id} className={`hover:bg-[#1a1a1a] transition-colors group ${selectedLeads.has(lead.id) ? 'bg-blue-900/10' : ''}`}>
-                    <td className="px-4 py-4 text-center">
-                       <input 
-                         type="checkbox" 
-                         checked={selectedLeads.has(lead.id)}
-                         onChange={() => toggleSelection(lead.id)}
-                         className="rounded border-gray-700 bg-gray-900 cursor-pointer w-4 h-4"
-                       />
-                    </td>
-                    <td className="px-6 py-4">
-                       {lead.gmbUrl ? (
-                         <a href={lead.gmbUrl} target="_blank" rel="noreferrer" className="text-gray-100 font-semibold text-base mb-1 hover:text-blue-400 whitespace-normal break-words underline decoration-blue-500/30 underline-offset-4 block">{lead.name}</a>
-                       ) : <div className="text-gray-100 font-semibold text-base mb-1 whitespace-normal break-words">{lead.name}</div>}
-                    </td>
-                    <td className="px-6 py-4 font-medium text-gray-200">
-                       <div className="flex flex-col gap-1.5 items-start">
-                         <button 
-                           onClick={() => setSelectedHistoryLead(lead)} 
-                           className="text-left hover:text-blue-400 transition-colors font-semibold group flex items-center gap-1.5 text-xs bg-gray-800/50 hover:bg-gray-800 px-2 py-1 rounded-md border border-gray-700/50"
-                         >
-                           <History className="w-3 h-3 text-gray-400 group-hover:text-blue-400 transition-colors" />
-                           View History
-                         </button>
-                         <div className="flex gap-2 flex-wrap items-center mt-1">
-                           {(() => {
-                              const badge = getLeadScoreBadge(lead);
-                              return <span className={`px-2 py-1 rounded-md text-[10px] font-bold border ${badge.classes}`}>{badge.label}</span>
-                           })()}
-                           {lead.source_platform && <span className="bg-gray-800 text-gray-300 border border-gray-700 px-2 py-1 rounded-md text-[10px] font-bold">{lead.source_platform}</span>}
-                           {lead.category && <span className="bg-purple-500/10 text-purple-400 border border-purple-500/20 px-2 py-1 rounded-md text-[10px] font-bold">{lead.category}</span>}
+                {sortedFilteredPastLeads.map((lead: any) => {
+                  const badge = getLeadScoreBadge(lead);
+                  return (
+                    <tr key={lead.id} className={`hover:bg-[#1a1a1a] transition-colors group ${selectedLeads.has(lead.id) ? 'bg-blue-900/10' : ''}`}>
+                      <td className="px-3 py-2.5 text-center align-middle">
+                         <input 
+                           type="checkbox" 
+                           checked={selectedLeads.has(lead.id)}
+                           onChange={() => toggleSelection(lead.id)}
+                           className="rounded border-gray-700 bg-gray-900 cursor-pointer w-3.5 h-3.5"
+                         />
+                      </td>
+                      <td className="px-4 py-2.5 align-middle">
+                         <div className="flex flex-col gap-0.5">
+                           <div className="flex items-center gap-1.5 flex-wrap">
+                             <button 
+                               onClick={() => setSelectedHistoryLead(lead)} 
+                               className="text-left font-bold text-gray-100 hover:text-blue-400 transition-colors text-sm whitespace-normal break-words cursor-pointer"
+                             >
+                               {lead.name}
+                             </button>
+                             {lead.gmbUrl && (
+                               <a href={lead.gmbUrl} target="_blank" rel="noreferrer" className="text-gray-500 hover:text-amber-500 transition-colors shrink-0" title="Google Maps">
+                                 <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                               </a>
+                             )}
+                           </div>
+                           <div className="flex items-center gap-1.5 text-[10px] text-gray-500 flex-wrap font-medium">
+                             <span className={`font-extrabold tracking-wide ${badge.classes.split('border')[0]}`}>{badge.label}</span>
+                             <span>•</span>
+                             <span className="text-purple-400/90">{lead.category || "General"}</span>
+                             <span>•</span>
+                             <span className="flex items-center gap-0.5 text-emerald-400/90"><MapPin className="w-2.5 h-2.5" /> {lead.location || "Haryana"}</span>
+                             {lead.source_platform && (
+                               <>
+                                 <span>•</span>
+                                 <span className="text-gray-400">{lead.source_platform}</span>
+                               </>
+                             )}
+                           </div>
                          </div>
-                         {lead.location && <span className="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-1 rounded-md text-xs font-medium flex items-center gap-1 mt-0.5"><MapPin className="w-3 h-3" /> {lead.location}</span>}
-                       </div>
-                    </td>
-                    <td className="px-6 py-4">
-                       <div className="flex flex-col gap-2 items-start">
-                          {lead.assigned_to ? (
-                             <span className="bg-blue-500/10 text-blue-400 border border-blue-500/20 px-2 py-1 rounded-md text-xs font-semibold flex items-center gap-1.5">
-                               <Users className="w-3 h-3" /> {lead.agent_profiles?.name || 'Unknown Agent'}
-                             </span>
-                          ) : (
-                             <span className="bg-gray-800 text-gray-400 px-2 py-1 rounded-md text-xs font-medium border border-gray-700">Unassigned</span>
-                          )}
-                          <span className={`px-2 py-1 rounded-md text-xs font-medium border ${lead.status === 'New' ? 'bg-green-500/10 text-green-400 border-green-500/20' : 'bg-orange-500/10 text-orange-400 border-orange-500/20'}`}>
-                            {lead.status || 'New'}
-                          </span>
-                       </div>
-                    </td>
-                    <td className="px-6 py-4">
-                       <div className="flex items-center gap-3">
-                         <div className="font-mono text-blue-400 bg-blue-500/10 inline-block px-3 py-1.5 rounded-lg border border-blue-500/20 font-medium tracking-wide">
-                            {lead.phone ? `'${lead.phone}` : "No Phone"}
+                      </td>
+                      <td className="px-4 py-2.5 align-middle text-center">
+                         <div className="flex flex-wrap gap-1.5 justify-center items-center">
+                            {lead.assigned_to ? (
+                               <span className="bg-blue-500/10 text-blue-400 border border-blue-500/20 px-2 py-0.5 rounded text-[11px] font-semibold flex items-center gap-1">
+                                 <Users className="w-2.5 h-2.5" /> {lead.agent_profiles?.name || 'Agent'}
+                               </span>
+                            ) : (
+                               <span className="bg-gray-800/40 text-gray-400 px-2 py-0.5 rounded text-[11px] font-medium border border-gray-700/50">Unassigned</span>
+                            )}
+                            <span className={`px-2 py-0.5 rounded text-[11px] font-medium border ${lead.status === 'New' ? 'bg-green-500/10 text-green-400 border-green-500/20' : 'bg-orange-500/10 text-orange-400 border-orange-500/20'}`}>
+                              {lead.status || 'New'}
+                            </span>
                          </div>
-                         {lead.phone && (
-                            <a href={getWhatsAppUrl(lead.phone, lead.name)} target="_blank" rel="noreferrer" className="text-emerald-400 hover:text-emerald-300 bg-emerald-500/10 p-2 rounded-lg hover:bg-emerald-500/20 transition-colors" title="Message on WhatsApp">
-                               <MessageCircle className="w-4 h-4" />
-                            </a>
-                         )}
-                       </div>
-                    </td>
-                    <td className="px-6 py-4 flex gap-2 items-center flex-wrap">
-                        {lead.website && <a href={lead.website} target="_blank" rel="noreferrer" className="text-gray-300 hover:text-white bg-white/5 hover:bg-white/10 p-2 rounded-lg"><Globe className="w-4 h-4 text-blue-400" /></a>}
-                        {lead.instagram && <a href={lead.instagram} target="_blank" rel="noreferrer" className="text-pink-400 hover:text-pink-300 bg-pink-500/10 p-2 rounded-lg hover:bg-pink-500/20"><InstagramIcon className="w-4 h-4" /></a>}
-                        {lead.facebook && <a href={lead.facebook} target="_blank" rel="noreferrer" className="text-blue-500 hover:text-blue-400 bg-blue-500/10 p-2 rounded-lg hover:bg-blue-500/20"><FacebookIcon className="w-4 h-4" /></a>}
-                    </td>
-                  </tr>
-                ))}
+                      </td>
+                      <td className="px-4 py-2.5 align-middle text-center">
+                         <div className="flex items-center justify-center gap-2">
+                           <div className="font-mono text-blue-400 bg-blue-500/10 inline-block px-2.5 py-1 rounded border border-blue-500/20 text-xs font-semibold tracking-wide">
+                              {lead.phone ? `'${lead.phone}` : "No Phone"}
+                           </div>
+                           {lead.phone && (
+                              <a href={getWhatsAppUrl(lead.phone, lead.name)} target="_blank" rel="noreferrer" className="text-emerald-400 hover:text-emerald-300 bg-emerald-500/10 p-1.5 rounded hover:bg-emerald-500/20 transition-colors shrink-0" title="Message on WhatsApp">
+                                 <MessageCircle className="w-3.5 h-3.5" />
+                              </a>
+                           )}
+                         </div>
+                      </td>
+                      <td className="px-4 py-2.5 align-middle text-center">
+                        <div className="flex gap-1.5 items-center justify-center flex-wrap">
+                           {lead.website && <a href={lead.website} target="_blank" rel="noreferrer" className="text-gray-400 hover:text-white bg-white/5 hover:bg-white/10 p-1.5 rounded" title="Website"><Globe className="w-3.5 h-3.5 text-blue-400" /></a>}
+                           {lead.instagram && <a href={lead.instagram} target="_blank" rel="noreferrer" className="text-pink-400 hover:text-pink-300 bg-pink-500/10 p-1.5 rounded hover:bg-pink-500/20" title="Instagram"><InstagramIcon className="w-3.5 h-3.5" /></a>}
+                           {lead.facebook && <a href={lead.facebook} target="_blank" rel="noreferrer" className="text-blue-500 hover:text-blue-400 bg-blue-500/10 p-1.5 rounded hover:bg-blue-500/20" title="Facebook"><FacebookIcon className="w-3.5 h-3.5" /></a>}
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           )}
@@ -471,7 +499,13 @@ export default function DatabasePage() {
       
       {/* Customer Profile Modal */}
       {selectedHistoryLead && (
-         <CustomerProfileModal lead={selectedHistoryLead} onClose={() => { setSelectedHistoryLead(null); fetchData(); }} />
+         <CustomerProfileModal 
+            lead={selectedHistoryLead} 
+            onClose={() => setSelectedHistoryLead(null)} 
+            onLeadUpdate={(updatedLead) => {
+              setPastLeads(prev => prev.map(l => l.id === updatedLead.id ? { ...l, ...updatedLead } : l));
+            }}
+         />
       )}
 
       {/* Add Lead Modal */}

@@ -28,11 +28,47 @@ export default function AgentsPage() {
   const [updating, setUpdating] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
+  // Groq Settings Form
+  const [groqApiKey, setGroqApiKey] = useState("");
+  const [savingSettings, setSavingSettings] = useState(false);
+  const [settingsMessage, setSettingsMessage] = useState<{type: 'success' | 'error', text: string} | null>(null);
+
   const supabase = createClient();
 
   useEffect(() => {
     fetchData();
+    fetchSettings();
   }, []);
+
+  const fetchSettings = async () => {
+    try {
+      const res = await fetch("/api/settings");
+      const data = await res.json();
+      if (data.groq_api_key) {
+        setGroqApiKey(data.groq_api_key);
+      }
+    } catch (err) {}
+  };
+
+  const handleSaveSettings = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSavingSettings(true);
+    setSettingsMessage(null);
+    try {
+      const res = await fetch("/api/settings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ groq_api_key: groqApiKey }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to update settings");
+      setSettingsMessage({ type: 'success', text: "Settings saved successfully!" });
+    } catch (err: any) {
+      setSettingsMessage({ type: 'error', text: err.message });
+    } finally {
+      setSavingSettings(false);
+    }
+  };
 
   const fetchData = async () => {
     setLoading(true);
@@ -191,6 +227,44 @@ export default function AgentsPage() {
             
             <button type="submit" disabled={creating} className="w-full bg-blue-600 text-white hover:bg-blue-500 disabled:opacity-50 rounded-xl py-3.5 font-semibold mt-4 transition-all flex justify-center">
               {creating ? <Loader2 className="w-5 h-5 animate-spin" /> : "Create Account"}
+            </button>
+          </form>
+        </div>
+
+        {/* System Settings Card */}
+        <div className="bg-[#111] border border-gray-800 rounded-3xl p-6 relative overflow-hidden group">
+          <h2 className="text-xl font-semibold mb-6 flex items-center gap-2">
+            <Settings className="w-5 h-5 text-blue-400" /> AI System Settings
+          </h2>
+
+          {settingsMessage && (
+            <div className={`p-4 rounded-xl mb-6 text-sm ${settingsMessage.type === 'error' ? 'bg-red-500/10 text-red-400 border border-red-500/20' : 'bg-green-500/10 text-green-400 border border-green-500/20'}`}>
+              {settingsMessage.text}
+            </div>
+          )}
+
+          <form onSubmit={handleSaveSettings} className="space-y-4">
+            <div>
+              <label className="block text-gray-400 text-sm mb-2 font-medium">Groq API Key</label>
+              <input 
+                type="password" 
+                value={groqApiKey} 
+                onChange={e => setGroqApiKey(e.target.value)} 
+                required 
+                placeholder="gsk_..."
+                className="w-full bg-[#1a1a1a] border border-gray-800 rounded-xl p-3 focus:border-blue-500 outline-none text-white font-mono text-sm" 
+              />
+              <p className="text-[10px] text-gray-500 mt-1.5">
+                This API key is stored in the Supabase settings table and used to generate pitch offers and call scripts for agents.
+              </p>
+            </div>
+            
+            <button 
+              type="submit" 
+              disabled={savingSettings} 
+              className="w-full bg-blue-600 text-white hover:bg-blue-500 disabled:opacity-50 rounded-xl py-3.5 font-semibold mt-4 transition-all flex justify-center text-sm"
+            >
+              {savingSettings ? <Loader2 className="w-5 h-5 animate-spin" /> : "Save Settings"}
             </button>
           </form>
         </div>

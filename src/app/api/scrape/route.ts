@@ -8,7 +8,7 @@ puppeteer.use(StealthPlugin());
 export const maxDuration = 300; // Allow up to 5 minutes
 
 export async function POST(req: Request) {
-  const { category, location, maxLeads = 20, mustHaveWebsite, mustHaveInstagram, mustHaveFacebook } = await req.json();
+  const { category, location, maxLeads = 20, mustHaveWebsite, mustHaveInstagram, mustHaveFacebook, mustHavePhone } = await req.json();
 
   if (!category || !location) {
     return NextResponse.json({ error: "Missing category or location" }, { status: 400 });
@@ -23,7 +23,29 @@ export async function POST(req: Request) {
       };
 
       let browser = null;
+      let runId = null;
+
       try {
+        // Log Scraper Run Start
+        try {
+          const { data: runData } = await supabase
+            .from("scraper_runs")
+            .insert({
+              category,
+              location,
+              max_leads: maxLeads,
+              status: "Running",
+              leads_found: 0
+            })
+            .select("id")
+            .single();
+          if (runData) {
+            runId = runData.id;
+          }
+        } catch (e) {
+          console.warn("Failed to log scraper run start (table might not exist):", e);
+        }
+
         sendChunk({ type: "status", message: "Launching browser engine..." });
         
         browser = await puppeteer.launch({
@@ -246,6 +268,7 @@ export async function POST(req: Request) {
             if (mustHaveWebsite) finalBatch = finalBatch.filter(l => l.website);
             if (mustHaveInstagram) finalBatch = finalBatch.filter(l => l.instagram);
             if (mustHaveFacebook) finalBatch = finalBatch.filter(l => l.facebook);
+            if (mustHavePhone) finalBatch = finalBatch.filter(l => l.phone);
 
             // Cap at requested max
             if (totalExtracted + finalBatch.length > maxLeads) {
@@ -270,9 +293,30 @@ export async function POST(req: Request) {
           }
         }
 
+        // Log Completion Success
+        if (runId) {
+          try {
+            await supabase
+              .from("scraper_runs")
+              .update({ status: "Completed", leads_found: totalExtracted })
+              .eq("id", runId);
+          } catch (e) {}
+        }
+
         sendChunk({ type: "done", message: `Scraping complete! Found ${totalExtracted} new unique leads.` });
       } catch (error: any) {
         console.error("Scraping error:", error);
+        
+        // Log Completion Failure
+        if (runId) {
+          try {
+            await supabase
+              .from("scraper_runs")
+              .update({ status: "Failed" })
+              .eq("id", runId);
+          } catch (e) {}
+        }
+
         sendChunk({ type: "error", message: error.message || "Failed to scrape data" });
       } finally {
         if (browser) {

@@ -20,7 +20,7 @@ const FacebookIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-export default function CustomerProfileModal({ lead: initialLead, onClose, currentUserId }: { lead: any; onClose: () => void; currentUserId?: string }) {
+export default function CustomerProfileModal({ lead: initialLead, onClose, currentUserId, onLeadUpdate }: { lead: any; onClose: () => void; currentUserId?: string; onLeadUpdate?: (updatedLead: any) => void }) {
   const [lead, setLead] = useState(initialLead);
   const [logs, setLogs] = useState<any[]>([]);
   const [loadingHistory, setLoadingHistory] = useState(true);
@@ -40,7 +40,32 @@ export default function CustomerProfileModal({ lead: initialLead, onClose, curre
   const [followUpTime, setFollowUpTime] = useState("");
   const [submittingLog, setSubmittingLog] = useState(false);
 
+  // AI Insights State
+  const [insights, setInsights] = useState("");
+  const [loadingInsights, setLoadingInsights] = useState(false);
+
   const supabase = createClient();
+
+  const fetchInsights = async () => {
+    setLoadingInsights(true);
+    setInsights("");
+    try {
+      const res = await fetch("/api/generate-insights", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ lead }),
+      });
+      const data = await res.json();
+      if (data.insights) {
+        setInsights(data.insights);
+      } else {
+        setInsights("Error: " + (data.error || "Could not fetch insights."));
+      }
+    } catch (e) {
+      setInsights("Failed to fetch insights.");
+    }
+    setLoadingInsights(false);
+  };
 
   useEffect(() => {
     fetchHistory();
@@ -89,6 +114,9 @@ export default function CustomerProfileModal({ lead: initialLead, onClose, curre
     setSavingProfile(false);
     if (!error && data) {
       setLead(data);
+      if (onLeadUpdate) {
+        onLeadUpdate(data);
+      }
       alert("Customer profile details updated successfully!");
     } else {
       alert("Failed to update profile: " + (error?.message || "Unknown error"));
@@ -153,6 +181,9 @@ export default function CustomerProfileModal({ lead: initialLead, onClose, curre
       if (updatedLead) {
         setLead(updatedLead);
         setStatus(updatedLead.status);
+        if (onLeadUpdate) {
+          onLeadUpdate(updatedLead);
+        }
       }
       setNewLogNotes("");
       setFollowUpDate("");
@@ -334,6 +365,33 @@ export default function CustomerProfileModal({ lead: initialLead, onClose, curre
                   </div>
                 )}
               </div>
+            </div>
+
+            {/* AI Insights Card */}
+            <div className="mt-6 border-t border-gray-800/80 pt-4 space-y-3">
+              <div className="flex justify-between items-center">
+                <h4 className="text-xs font-bold text-gray-500 uppercase tracking-widest">✨ AI Call Insights (Groq)</h4>
+                {!insights && !loadingInsights && (
+                  <button 
+                    onClick={fetchInsights}
+                    className="bg-blue-600/15 hover:bg-blue-600/25 text-blue-400 border border-blue-500/25 px-2 py-1 rounded text-[10px] font-bold cursor-pointer"
+                  >
+                    Generate Insights
+                  </button>
+                )}
+              </div>
+
+              {loadingInsights ? (
+                <div className="flex justify-center items-center py-6 text-gray-500 text-xs gap-1.5">
+                  <Loader2 className="w-3.5 h-3.5 animate-spin text-blue-400" /> Analyzing lead profiles...
+                </div>
+              ) : insights ? (
+                <div className="text-xs text-gray-300 leading-relaxed bg-[#0a0a0d] p-3.5 rounded-xl border border-gray-850 max-h-[220px] overflow-y-auto pr-1.5 whitespace-pre-wrap font-sans">
+                  {insights}
+                </div>
+              ) : (
+                <p className="text-[10px] text-gray-500 italic">Generate insights to view services to offer and a customized phone script.</p>
+              )}
             </div>
           </div>
 

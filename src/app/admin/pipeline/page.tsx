@@ -70,36 +70,36 @@ export default function AdminPipeline() {
   };
 
   return (
-    <div className="p-8 max-w-[1800px] mx-auto h-[calc(100vh-64px)] flex flex-col">
-      <div className="mb-8 shrink-0">
-        <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500 flex items-center gap-3">
-          <KanbanSquare className="w-8 h-8 text-blue-400" /> Global Pipeline
+    <div className="p-4 max-w-[1800px] mx-auto h-[calc(100vh-64px)] flex flex-col space-y-2">
+      <div className="shrink-0">
+        <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500 flex items-center gap-2">
+          <KanbanSquare className="w-6 h-6 text-blue-400" /> Global Pipeline
         </h1>
-        <p className="text-gray-400 mt-1">Drag and drop leads to instantly update their status across the organization.</p>
+        <p className="text-gray-400 text-xs mt-0.5">Drag and drop leads to instantly update their status across the organization.</p>
       </div>
 
       {loading ? (
         <div className="flex justify-center items-center h-64 text-emerald-400">
-           <Loader2 className="w-8 h-8 animate-spin" />
+           <Loader2 className="w-6 h-6 animate-spin" />
         </div>
       ) : (
-        <div className="flex-1 flex gap-6 overflow-x-auto pb-4 items-start h-full">
-           {COLUMNS.map(column => {
+        <div className="flex-1 flex gap-4 overflow-x-auto pb-2 items-start h-full min-h-0">
+            {COLUMNS.map(column => {
               const columnLeads = leads.filter(l => (l.status || 'New') === column || (column === 'Connected' && ['No Answer', 'Busy'].includes(l.status)));
               
               return (
                  <div 
                    key={column} 
-                   className="min-w-[320px] w-[320px] bg-[#111] border border-gray-800 rounded-2xl p-4 flex flex-col h-full max-h-full"
+                   className="min-w-[260px] w-[260px] bg-[#111] border border-gray-800 rounded-xl p-3 flex flex-col h-full max-h-full"
                    onDragOver={handleDragOver}
                    onDrop={(e) => handleDrop(e, column)}
                  >
-                    <div className="flex justify-between items-center mb-4 pb-3 border-b border-gray-800 shrink-0">
-                       <h3 className="font-bold text-gray-200">{column}</h3>
-                       <span className="bg-gray-800 text-gray-400 text-xs font-bold px-2 py-1 rounded-full">{columnLeads.length}</span>
+                    <div className="flex justify-between items-center mb-2.5 pb-2 border-b border-gray-800 shrink-0">
+                       <h3 className="font-bold text-gray-200 text-xs">{column}</h3>
+                       <span className="bg-gray-800 text-gray-400 text-[10px] font-bold px-1.5 py-0.5 rounded-full">{columnLeads.length}</span>
                     </div>
 
-                    <div className="flex-1 overflow-y-auto space-y-3 pr-1 pb-2 custom-scrollbar">
+                    <div className="flex-1 overflow-y-auto space-y-2 pr-1 pb-1 custom-scrollbar">
                        {columnLeads.map(lead => {
                           const badge = getLeadScoreBadge(lead);
                           return (
@@ -108,38 +108,38 @@ export default function AdminPipeline() {
                                draggable
                                onDragStart={(e) => handleDragStart(e, lead)}
                                onDragEnd={handleDragEnd}
-                               className="bg-[#1a1a1a] border border-gray-700/50 rounded-xl p-4 cursor-grab hover:border-emerald-500/50 transition-colors shadow-lg active:cursor-grabbing"
+                               className="bg-[#1a1a1a] border border-gray-700/50 rounded-lg p-2.5 cursor-grab hover:border-emerald-500/50 transition-colors shadow shadow-black/40 active:cursor-grabbing"
                              >
-                               <div className="flex justify-between items-start mb-2">
-                                  <a href={lead.gmbUrl || '#'} target="_blank" rel="noreferrer" className="font-bold text-gray-100 hover:text-blue-400 transition-colors text-sm line-clamp-2">
+                               <div className="flex justify-between items-start gap-1">
+                                  <a href={lead.gmbUrl || '#'} target="_blank" rel="noreferrer" className="font-bold text-gray-100 hover:text-blue-400 transition-colors text-xs line-clamp-2">
                                     {lead.name}
                                   </a>
-                                  <span className={`px-2 py-0.5 rounded text-[9px] font-bold border shrink-0 ml-2 ${badge.classes}`}>
+                                  <span className={`px-1.5 py-0.5 rounded text-[8px] font-bold border shrink-0 ${badge.classes.split('border')[0]}`}>
                                      {badge.label}
                                   </span>
                                </div>
                                
-                               {lead.category && <p className="text-xs text-gray-500 mb-3">{lead.category}</p>}
+                               {lead.category && <p className="text-[10px] text-gray-500 mt-1 mb-2">{lead.category}</p>}
                                
-                               <div className="flex items-center justify-between border-t border-gray-800 pt-3 mt-3">
-                                  <div className="flex items-center gap-2">
+                               <div className="flex items-center justify-between border-t border-gray-800/80 pt-2 mt-2">
+                                  <div className="flex items-center gap-1.5">
                                      {lead.phone ? (
                                         <>
-                                          <a href={`tel:${lead.phone}`} className="w-8 h-8 rounded bg-blue-500/10 text-blue-400 flex items-center justify-center hover:bg-blue-500/20 transition-colors" title="Call">
-                                            <PhoneCall className="w-3 h-3" />
-                                          </a>
-                                          <a href={getWhatsAppUrl(lead.phone, lead.name)} target="_blank" rel="noreferrer" className="w-8 h-8 rounded bg-emerald-500/10 text-emerald-400 flex items-center justify-center hover:bg-emerald-500/20 transition-colors" title="WhatsApp">
-                                            <MessageCircle className="w-3 h-3" />
-                                          </a>
+                                           <a href={`tel:${lead.phone}`} className="w-6 h-6 rounded bg-blue-500/10 text-blue-400 flex items-center justify-center hover:bg-blue-500/20 transition-colors" title="Call">
+                                             <PhoneCall className="w-2.5 h-2.5" />
+                                           </a>
+                                           <a href={getWhatsAppUrl(lead.phone, lead.name)} target="_blank" rel="noreferrer" className="w-6 h-6 rounded bg-emerald-500/10 text-emerald-400 flex items-center justify-center hover:bg-emerald-500/20 transition-colors" title="WhatsApp">
+                                             <MessageCircle className="w-2.5 h-2.5" />
+                                           </a>
                                         </>
                                      ) : (
-                                        <span className="text-xs text-gray-600 font-medium">No Phone</span>
+                                        <span className="text-[10px] text-gray-600 font-medium">No Phone</span>
                                      )}
                                   </div>
                                   
                                   {lead.website && (
-                                     <a href={lead.website} target="_blank" rel="noreferrer" className="text-gray-400 hover:text-white p-1" title="Website">
-                                        <Globe className="w-4 h-4" />
+                                     <a href={lead.website} target="_blank" rel="noreferrer" className="text-gray-400 hover:text-white p-0.5" title="Website">
+                                        <Globe className="w-3.5 h-3.5 text-blue-400" />
                                      </a>
                                   )}
                                </div>
@@ -147,19 +147,19 @@ export default function AdminPipeline() {
                           );
                        })}
                        {columnLeads.length === 0 && (
-                          <div className="text-center p-6 border-2 border-dashed border-gray-800 rounded-xl text-gray-600 text-sm font-medium">
+                          <div className="text-center py-4 px-2 border border-dashed border-gray-800 rounded-lg text-gray-600 text-xs font-medium">
                              Drop here
                           </div>
                        )}
                     </div>
                  </div>
               )
-           })}
+            })}
         </div>
       )}
       
       <style dangerouslySetInnerHTML={{__html: `
-        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar { width: 3px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #555; }

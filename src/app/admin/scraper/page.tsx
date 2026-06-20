@@ -55,6 +55,11 @@ export default function ScraperPage() {
   const [selectedLeads, setSelectedLeads] = useState<Set<string>>(new Set());
   const [assigningTo, setAssigningTo] = useState("");
   const [isAssigning, setIsAssigning] = useState(false);
+  
+  // Scraper History State
+  const [scraperRuns, setScraperRuns] = useState<any[]>([]);
+  const [loadingHistory, setLoadingHistory] = useState(false);
+
   const supabase = createClient();
 
   useEffect(() => {
@@ -63,7 +68,22 @@ export default function ScraperPage() {
       if (data) setAgents(data);
     };
     fetchAgents();
+    fetchScraperRuns();
   }, [supabase]);
+
+  const fetchScraperRuns = async () => {
+    setLoadingHistory(true);
+    try {
+      const { data, error } = await supabase
+        .from('scraper_runs')
+        .select('*')
+        .order('created_at', { ascending: false });
+      if (data) setScraperRuns(data);
+    } catch (e) {
+      console.error("Failed to fetch scraper runs:", e);
+    }
+    setLoadingHistory(false);
+  };
 
   const toggleSelection = (id: string) => {
     const newSet = new Set(selectedLeads);
@@ -202,6 +222,7 @@ export default function ScraperPage() {
       setError(err.message || "An unexpected error occurred");
     } finally {
       setLoading(false);
+      fetchScraperRuns();
     }
   };
 
@@ -325,65 +346,122 @@ export default function ScraperPage() {
             </div>
 
             <div className="overflow-auto flex-1 w-full bg-[#0a0a0a]">
-              <table className="w-full text-left text-sm border-collapse min-w-[800px]">
-                <thead className="bg-[#111] text-gray-400 sticky top-0 z-10 shadow-sm border-b border-gray-800">
-                  <tr>
-                    <th className="px-6 py-4 w-12">
-                      <input 
-                        type="checkbox" 
-                        className="w-4 h-4 rounded border-gray-600 bg-[#1a1a1a] accent-blue-500 cursor-pointer"
-                        checked={selectedLeads.size > 0 && selectedLeads.size === leads.filter(l => l.id).length}
-                        onChange={toggleAll}
-                        disabled={leads.filter(l => l.id).length === 0}
-                      />
-                    </th>
-                    <th className="px-6 py-4 font-semibold w-1/4">Business Name</th>
-                    <th className="px-6 py-4 font-semibold">Tags</th>
-                    <th className="px-6 py-4 font-semibold">Phone Number</th>
-                    <th className="px-6 py-4 font-semibold">Website</th>
-                    <th className="px-6 py-4 font-semibold">Socials</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-800/50">
-                  {leads.map((lead: any, idx) => (
-                    <tr key={idx} className="hover:bg-[#1a1a1a] transition-colors group">
-                      <td className="px-6 py-4">
-                        {lead.id && (
-                          <input 
-                            type="checkbox" 
-                            className="w-4 h-4 rounded border-gray-600 bg-[#1a1a1a] accent-blue-500 cursor-pointer"
-                            checked={selectedLeads.has(lead.id)}
-                            onChange={() => toggleSelection(lead.id)}
-                          />
-                        )}
-                      </td>
-                      <td className="px-6 py-4">
-                         {lead.gmbUrl ? (
-                           <a href={lead.gmbUrl} target="_blank" rel="noreferrer" className="text-gray-100 font-semibold text-base mb-1 hover:text-blue-400 transition-colors whitespace-normal break-words underline decoration-blue-500/30 underline-offset-4 block">{lead.name}</a>
-                         ) : <div className="text-gray-100 font-semibold text-base mb-1 group-hover:text-blue-400 transition-colors whitespace-normal break-words">{lead.name}</div>}
-                      </td>
-                      <td className="px-6 py-4">
-                         <div className="flex flex-col gap-2 items-start">
-                           {lead.category && <span className="bg-purple-500/10 text-purple-400 border border-purple-500/20 px-2 py-1 rounded-md text-xs font-medium">{lead.category}</span>}
-                           {lead.location && <span className="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-1 rounded-md text-xs font-medium flex items-center gap-1"><MapPin className="w-3 h-3" /> {lead.location}</span>}
-                         </div>
-                      </td>
-                      <td className="px-6 py-4">
-                         <div className="font-mono text-blue-400 bg-blue-500/10 inline-block px-3 py-1.5 rounded-lg border border-blue-500/20 font-medium tracking-wide">
-                            {lead.phone ? `'${lead.phone}` : "No Phone"}
-                         </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        {lead.website ? <a href={lead.website} target="_blank" rel="noreferrer" className="text-gray-300 hover:text-white flex items-center gap-1.5 bg-white/5 hover:bg-white/10 px-3 py-1.5 rounded-lg w-fit transition-colors border border-white/5"><Globe className="w-3.5 h-3.5 text-blue-400" /> {new URL(lead.website).hostname.replace('www.', '')}</a> : <span className="text-gray-700 px-3 py-1.5">N/A</span>}
-                      </td>
-                      <td className="px-6 py-4 flex gap-2 items-center flex-wrap pt-5">
-                          {lead.instagram ? <a href={lead.instagram} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 text-pink-400 hover:text-pink-300 bg-pink-500/10 px-3 py-1.5 rounded-lg hover:bg-pink-500/20 transition-colors font-medium border border-pink-500/10"><InstagramIcon className="w-4 h-4" /> Insta</a> : <div className="flex items-center gap-1.5 px-3 py-1.5 text-gray-700 font-medium"><InstagramIcon className="w-4 h-4" /> Insta</div>}
-                          {lead.facebook ? <a href={lead.facebook} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 text-blue-500 hover:text-blue-400 bg-blue-500/10 px-3 py-1.5 rounded-lg hover:bg-blue-500/20 transition-colors font-medium border border-blue-500/10"><FacebookIcon className="w-4 h-4" /> FB</a> : <div className="flex items-center gap-1.5 px-3 py-1.5 text-gray-700 font-medium"><FacebookIcon className="w-4 h-4" /> FB</div>}
-                      </td>
+              {leads.length === 0 ? (
+                <div className="p-6">
+                  <h4 className="text-gray-400 font-semibold mb-4 text-sm flex items-center gap-2">
+                     <FileText className="w-4 h-4 text-blue-400" /> Previous Scrapes Run History
+                  </h4>
+                  {loadingHistory ? (
+                     <div className="flex justify-center items-center py-20 text-gray-500 gap-2">
+                       <Loader2 className="w-5 h-5 animate-spin" /> Loading run history...
+                     </div>
+                  ) : scraperRuns.length === 0 ? (
+                     <div className="flex flex-col justify-center items-center py-20 text-gray-600 gap-2">
+                       <Search className="w-10 h-10 opacity-30" />
+                       <p className="text-sm">No scraper runs recorded. Use the parameters on the left to start scraping!</p>
+                     </div>
+                  ) : (
+                    <table className="w-full text-left text-sm border-collapse min-w-[700px]">
+                      <thead className="bg-[#111] text-gray-400 sticky top-0 border-b border-gray-800">
+                        <tr>
+                          <th className="px-6 py-3.5 font-semibold">Date & Time</th>
+                          <th className="px-6 py-3.5 font-semibold">Category Niche</th>
+                          <th className="px-6 py-3.5 font-semibold">Location</th>
+                          <th className="px-6 py-3.5 font-semibold text-center">Max Requested</th>
+                          <th className="px-6 py-3.5 font-semibold text-center">New Leads Found</th>
+                          <th className="px-6 py-3.5 font-semibold text-right">Status</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-gray-800/50">
+                        {scraperRuns.map((run) => (
+                          <tr key={run.id} className="hover:bg-[#1a1a1a] transition-colors">
+                            <td className="px-6 py-3.5 font-mono text-xs text-gray-400">
+                              {new Date(run.created_at).toLocaleString()}
+                            </td>
+                            <td className="px-6 py-3.5 font-semibold text-gray-200">
+                              {run.category}
+                            </td>
+                            <td className="px-6 py-3.5 text-gray-300">
+                              <span className="flex items-center gap-1"><MapPin className="w-3.5 h-3.5 text-gray-500" /> {run.location}</span>
+                            </td>
+                            <td className="px-6 py-3.5 text-center font-semibold text-gray-400">
+                              {run.max_leads}
+                            </td>
+                            <td className="px-6 py-3.5 text-center font-bold text-emerald-400">
+                              {run.leads_found || 0}
+                            </td>
+                            <td className="px-6 py-3.5 text-right">
+                              <span className={`px-2 py-0.5 rounded text-xs font-bold border ${run.status === 'Completed' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : run.status === 'Running' ? 'bg-blue-500/10 text-blue-400 border-blue-500/20' : 'bg-red-500/10 text-red-400 border-red-500/20'}`}>
+                                {run.status}
+                              </span>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  )}
+                </div>
+              ) : (
+                <table className="w-full text-left text-sm border-collapse min-w-[800px]">
+                  <thead className="bg-[#111] text-gray-400 sticky top-0 z-10 shadow-sm border-b border-gray-800">
+                    <tr>
+                      <th className="px-6 py-4 w-12">
+                        <input 
+                          type="checkbox" 
+                          className="w-4 h-4 rounded border-gray-600 bg-[#1a1a1a] accent-blue-500 cursor-pointer"
+                          checked={selectedLeads.size > 0 && selectedLeads.size === leads.filter(l => l.id).length}
+                          onChange={toggleAll}
+                          disabled={leads.filter(l => l.id).length === 0}
+                        />
+                      </th>
+                      <th className="px-6 py-4 font-semibold w-1/4">Business Name</th>
+                      <th className="px-6 py-4 font-semibold">Tags</th>
+                      <th className="px-6 py-4 font-semibold">Phone Number</th>
+                      <th className="px-6 py-4 font-semibold">Website</th>
+                      <th className="px-6 py-4 font-semibold">Socials</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-gray-800/50">
+                    {leads.map((lead: any, idx) => (
+                      <tr key={idx} className="hover:bg-[#1a1a1a] transition-colors group">
+                        <td className="px-6 py-4">
+                          {lead.id && (
+                            <input 
+                              type="checkbox" 
+                              className="w-4 h-4 rounded border-gray-600 bg-[#1a1a1a] accent-blue-500 cursor-pointer"
+                              checked={selectedLeads.has(lead.id)}
+                              onChange={() => toggleSelection(lead.id)}
+                            />
+                          )}
+                        </td>
+                        <td className="px-6 py-4">
+                           {lead.gmbUrl ? (
+                             <a href={lead.gmbUrl} target="_blank" rel="noreferrer" className="text-gray-100 font-semibold text-base mb-1 hover:text-blue-400 transition-colors whitespace-normal break-words underline decoration-blue-500/30 underline-offset-4 block">{lead.name}</a>
+                           ) : <div className="text-gray-100 font-semibold text-base mb-1 group-hover:text-blue-400 transition-colors whitespace-normal break-words">{lead.name}</div>}
+                        </td>
+                        <td className="px-6 py-4">
+                           <div className="flex flex-col gap-2 items-start">
+                             {lead.category && <span className="bg-purple-500/10 text-purple-400 border border-purple-500/20 px-2 py-1 rounded-md text-xs font-medium">{lead.category}</span>}
+                             {lead.location && <span className="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-1 rounded-md text-xs font-medium flex items-center gap-1"><MapPin className="w-3 h-3" /> {lead.location}</span>}
+                           </div>
+                        </td>
+                        <td className="px-6 py-4">
+                           <div className="font-mono text-blue-400 bg-blue-500/10 inline-block px-3 py-1.5 rounded-lg border border-blue-500/20 font-medium tracking-wide">
+                              {lead.phone ? `'${lead.phone}` : "No Phone"}
+                           </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          {lead.website ? <a href={lead.website} target="_blank" rel="noreferrer" className="text-gray-300 hover:text-white flex items-center gap-1.5 bg-white/5 hover:bg-white/10 px-3 py-1.5 rounded-lg w-fit transition-colors border border-white/5"><Globe className="w-3.5 h-3.5 text-blue-400" /> {new URL(lead.website).hostname.replace('www.', '')}</a> : <span className="text-gray-700 px-3 py-1.5">N/A</span>}
+                        </td>
+                        <td className="px-6 py-4 flex gap-2 items-center flex-wrap pt-5">
+                            {lead.instagram ? <a href={lead.instagram} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 text-pink-400 hover:text-pink-300 bg-pink-500/10 px-3 py-1.5 rounded-lg hover:bg-pink-500/20 transition-colors font-medium border border-pink-500/10"><InstagramIcon className="w-4 h-4" /> Insta</a> : <div className="flex items-center gap-1.5 px-3 py-1.5 text-gray-700 font-medium"><InstagramIcon className="w-4 h-4" /> Insta</div>}
+                            {lead.facebook ? <a href={lead.facebook} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 text-blue-500 hover:text-blue-400 bg-blue-500/10 px-3 py-1.5 rounded-lg hover:bg-blue-500/20 transition-colors font-medium border border-blue-500/10"><FacebookIcon className="w-4 h-4" /> FB</a> : <div className="flex items-center gap-1.5 px-3 py-1.5 text-gray-700 font-medium"><FacebookIcon className="w-4 h-4" /> FB</div>}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
             </div>
           </div>
         </div>
