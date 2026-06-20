@@ -7,7 +7,7 @@ import autoTable from 'jspdf-autotable';
 import { createClient } from "@/utils/supabase/client";
 import { getWhatsAppUrl } from "@/utils/whatsapp";
 import { getLeadScoreBadge } from "@/utils/scoring";
-import LeadHistoryModal from "@/app/components/LeadHistoryModal";
+import CustomerProfileModal from "@/app/components/CustomerProfileModal";
 import AddLeadModal from "@/app/components/AddLeadModal";
 import { Plus } from "lucide-react";
 
@@ -36,6 +36,8 @@ export default function DatabasePage() {
   const [dbFilterWeb, setDbFilterWeb] = useState(false);
   const [dbFilterPhone, setDbFilterPhone] = useState(false);
   const [dbFilterAssigned, setDbFilterAssigned] = useState("all");
+  const [dateFilter, setDateFilter] = useState("all");
+  const [sortBy, setSortBy] = useState("newest");
 
   // Selection for Assignment
   const [selectedLeads, setSelectedLeads] = useState<Set<string>>(new Set());
@@ -100,21 +102,21 @@ export default function DatabasePage() {
   const handleAutoDistribute = async () => {
     // Distribute selected leads, or if none selected, distribute all unassigned currently filtered
     const leadsToDistribute = selectedLeads.size > 0 
-      ? filteredPastLeads.filter(l => selectedLeads.has(l.id))
-      : filteredPastLeads.filter(l => !l.assigned_to);
+      ? sortedFilteredPastLeads.filter(l => selectedLeads.has(l.id))
+      : sortedFilteredPastLeads.filter(l => !l.assigned_to);
 
     if (leadsToDistribute.length === 0) {
       alert("No valid unassigned leads to distribute!");
       return;
     }
 
-    const activeAgents = agents.filter(a => a.is_active !== false);
+    const activeAgents = agents.filter(a => a.is_active !== false && a.is_available !== false);
     if (activeAgents.length === 0) {
-      alert("No active agents found!");
+      alert("No active and available agents found! Please mark at least one agent as available today.");
       return;
     }
 
-    if (!window.confirm(`Auto-distribute ${leadsToDistribute.length} leads equally across ${activeAgents.length} agents?`)) return;
+    if (!window.confirm(`Auto-distribute ${leadsToDistribute.length} leads equally across ${activeAgents.length} available agents?`)) return;
     setIsAssigning(true);
 
     // Prepare updates
@@ -159,7 +161,45 @@ export default function DatabasePage() {
      if (dbFilterPhone && !lead.phone) return false;
      if (dbFilterAssigned === "unassigned" && lead.assigned_to) return false;
      if (dbFilterAssigned !== "all" && dbFilterAssigned !== "unassigned" && lead.assigned_to !== dbFilterAssigned) return false;
+     
+     // Date Filter
+     if (dateFilter !== "all" && lead.created_at) {
+       const leadDate = new Date(lead.created_at);
+       const now = new Date();
+       const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+       const startOfYesterday = new Date(startOfToday);
+       startOfYesterday.setDate(startOfYesterday.getDate() - 1);
+       
+       if (dateFilter === "today") {
+         if (leadDate < startOfToday) return false;
+       } else if (dateFilter === "yesterday") {
+         if (leadDate < startOfYesterday || leadDate >= startOfToday) return false;
+       } else if (dateFilter === "week") {
+         const sevenDaysAgo = new Date(now);
+         sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+         if (leadDate < sevenDaysAgo) return false;
+       } else if (dateFilter === "month") {
+         const thirtyDaysAgo = new Date(now);
+         thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+         if (leadDate < thirtyDaysAgo) return false;
+       }
+     }
      return true;
+  });
+
+  const sortedFilteredPastLeads = [...filteredPastLeads].sort((a, b) => {
+    if (sortBy === "newest") {
+      return new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime();
+    } else if (sortBy === "oldest") {
+      return new Date(a.created_at || 0).getTime() - new Date(b.created_at || 0).getTime();
+    } else if (sortBy === "name") {
+      return (a.name || "").localeCompare(b.name || "");
+    } else if (sortBy === "rating") {
+      const ratingA = parseFloat(a.rating || "0");
+      const ratingB = parseFloat(b.rating || "0");
+      return ratingB - ratingA;
+    }
+    return 0;
   });
 
   const uniqueLocations = Array.from(new Set(pastLeads.map(l => l.location).filter(Boolean))).sort() as string[];
@@ -289,6 +329,21 @@ export default function DatabasePage() {
                 {agents.map(a => <option key={a.id} value={a.id} className="bg-[#111] text-gray-300">{a.name}</option>)}
              </select>
              <div className="w-px h-5 bg-gray-800"></div>
+             <select value={dateFilter} onChange={(e) => setDateFilter(e.target.value)} className="bg-transparent text-sm text-gray-300 focus:outline-none w-32 px-2 cursor-pointer">
+                <option value="all" className="bg-[#111] text-gray-300">All Dates</option>
+                <option value="today" className="bg-[#111] text-gray-300">Today</option>
+                <option value="yesterday" className="bg-[#111] text-gray-300">Yesterday</option>
+                <option value="week" className="bg-[#111] text-gray-300">Last 7 Days</option>
+                <option value="month" className="bg-[#111] text-gray-300">Last 30 Days</option>
+             </select>
+             <div className="w-px h-5 bg-gray-800"></div>
+             <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className="bg-transparent text-sm text-amber-400 font-semibold focus:outline-none w-36 px-2 cursor-pointer font-medium">
+                <option value="newest" className="bg-[#111] text-gray-300">Newest Scraped</option>
+                <option value="oldest" className="bg-[#111] text-gray-300">Oldest Scraped</option>
+                <option value="name" className="bg-[#111] text-gray-300">Name (A-Z)</option>
+                <option value="rating" className="bg-[#111] text-gray-300">Rating (High-Low)</option>
+             </select>
+             <div className="w-px h-5 bg-gray-800"></div>
              <label className="flex items-center gap-2 cursor-pointer px-2 text-sm text-gray-300">
                 <input type="checkbox" checked={dbFilterWeb} onChange={(e) => setDbFilterWeb(e.target.checked)} className="rounded border-gray-700 bg-gray-900" /> Web
              </label>
@@ -298,26 +353,26 @@ export default function DatabasePage() {
           </div>
 
           <div className="flex gap-3">
-            <span className="bg-gray-800 text-gray-300 px-3 py-1.5 rounded-lg text-sm font-medium mr-2 flex items-center">
-              {filteredPastLeads.length} Leads
-            </span>
-            <button
-               onClick={() => setIsAddLeadOpen(true)}
-               className="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors flex items-center gap-2"
-            >
-               <Plus className="w-4 h-4" /> Add Lead
-            </button>
-            <button onClick={() => handleDownloadCSV(filteredPastLeads, "Exported_Leads")} className="bg-[#1a1a1a] border border-gray-700 hover:bg-gray-800 text-white px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2 transition-colors"><Download className="w-4 h-4"/> CSV</button>
-            <button onClick={() => handleDownloadPDF(filteredPastLeads, "Master Database")} disabled={filteredPastLeads.length === 0} className="flex items-center gap-2 px-3 py-1.5 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-500 disabled:opacity-50">
-              <FileText className="w-4 h-4" /> PDF
-            </button>
+             <span className="bg-gray-800 text-gray-300 px-3 py-1.5 rounded-lg text-sm font-medium mr-2 flex items-center">
+               {sortedFilteredPastLeads.length} Leads
+             </span>
+             <button
+                onClick={() => setIsAddLeadOpen(true)}
+                className="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors flex items-center gap-2"
+             >
+                <Plus className="w-4 h-4" /> Add Lead
+             </button>
+             <button onClick={() => handleDownloadCSV(sortedFilteredPastLeads, "Exported_Leads")} className="bg-[#1a1a1a] border border-gray-700 hover:bg-gray-800 text-white px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2 transition-colors"><Download className="w-4 h-4"/> CSV</button>
+             <button onClick={() => handleDownloadPDF(sortedFilteredPastLeads, "Master Database")} disabled={sortedFilteredPastLeads.length === 0} className="flex items-center gap-2 px-3 py-1.5 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-500 disabled:opacity-50">
+               <FileText className="w-4 h-4" /> PDF
+             </button>
           </div>
         </div>
 
         <div className="overflow-auto flex-1 w-full bg-[#0a0a0a]">
           {loadingPast ? (
             <div className="flex justify-center items-center h-full text-gray-500 gap-2"><Loader2 className="w-5 h-5 animate-spin text-blue-500" /> Loading database...</div>
-          ) : filteredPastLeads.length === 0 ? (
+          ) : sortedFilteredPastLeads.length === 0 ? (
             <div className="flex justify-center items-center h-full text-gray-500">No leads found matching your filters.</div>
           ) : (
             <table className="w-full text-left text-sm border-collapse min-w-[1000px]">
@@ -326,9 +381,9 @@ export default function DatabasePage() {
                   <th className="px-4 py-4 w-12 text-center">
                     <input 
                       type="checkbox" 
-                      checked={selectedLeads.size > 0 && selectedLeads.size === filteredPastLeads.length}
-                      ref={input => { if (input) input.indeterminate = selectedLeads.size > 0 && selectedLeads.size < filteredPastLeads.length; }}
-                      onChange={() => toggleAll(filteredPastLeads)}
+                      checked={selectedLeads.size > 0 && selectedLeads.size === sortedFilteredPastLeads.length}
+                      ref={input => { if (input) input.indeterminate = selectedLeads.size > 0 && selectedLeads.size < sortedFilteredPastLeads.length; }}
+                      onChange={() => toggleAll(sortedFilteredPastLeads)}
                       className="rounded border-gray-700 bg-gray-900 cursor-pointer w-4 h-4"
                     />
                   </th>
@@ -340,7 +395,7 @@ export default function DatabasePage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-800/50">
-                {filteredPastLeads.map((lead: any) => (
+                {sortedFilteredPastLeads.map((lead: any) => (
                   <tr key={lead.id} className={`hover:bg-[#1a1a1a] transition-colors group ${selectedLeads.has(lead.id) ? 'bg-blue-900/10' : ''}`}>
                     <td className="px-4 py-4 text-center">
                        <input 
@@ -414,9 +469,9 @@ export default function DatabasePage() {
         </div>
       </div>
       
-      {/* History Modal */}
+      {/* Customer Profile Modal */}
       {selectedHistoryLead && (
-         <LeadHistoryModal lead={selectedHistoryLead} onClose={() => setSelectedHistoryLead(null)} />
+         <CustomerProfileModal lead={selectedHistoryLead} onClose={() => { setSelectedHistoryLead(null); fetchData(); }} />
       )}
 
       {/* Add Lead Modal */}

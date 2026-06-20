@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { CalendarClock, MapPin, Loader2, Users, MessageCircle, History } from "lucide-react";
 import { createClient } from "@/utils/supabase/client";
 import { getWhatsAppUrl } from "@/utils/whatsapp";
-import LeadHistoryModal from "@/app/components/LeadHistoryModal";
+import CustomerProfileModal from "@/app/components/CustomerProfileModal";
 
 export default function AdminFollowUps() {
   const [leads, setLeads] = useState<any[]>([]);
@@ -161,9 +161,9 @@ export default function AdminFollowUps() {
         </div>
       </div>
 
-      {/* History Modal */}
+      {/* Customer Profile Modal */}
       {selectedHistoryLead && (
-         <LeadHistoryModal lead={selectedHistoryLead} onClose={() => setSelectedHistoryLead(null)} />
+         <CustomerProfileModal lead={selectedHistoryLead} onClose={() => { setSelectedHistoryLead(null); fetchData(); }} />
       )}
     </div>
   );

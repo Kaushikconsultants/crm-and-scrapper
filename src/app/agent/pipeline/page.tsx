@@ -5,6 +5,7 @@ import { Loader2, KanbanSquare, PhoneCall, Globe, MessageCircle } from "lucide-r
 import { createClient } from "@/utils/supabase/client";
 import { getWhatsAppUrl } from "@/utils/whatsapp";
 import { getLeadScoreBadge } from "@/utils/scoring";
+import CustomerProfileModal from "@/app/components/CustomerProfileModal";
 
 const COLUMNS = ['New', 'Connected', 'Follow up', 'Meeting Scheduled', 'Closed', 'Not Interested'];
 
@@ -12,6 +13,7 @@ export default function AgentPipeline() {
   const [leads, setLeads] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [draggedLead, setDraggedLead] = useState<any>(null);
+  const [selectedProfileLead, setSelectedProfileLead] = useState<any>(null);
 
   const supabase = createClient();
 
@@ -112,11 +114,12 @@ export default function AgentPipeline() {
                                onDragStart={(e) => handleDragStart(e, lead)}
                                onDragEnd={handleDragEnd}
                                className="bg-[#1a1a1a] border border-gray-700/50 rounded-xl p-4 cursor-grab hover:border-emerald-500/50 transition-colors shadow-lg active:cursor-grabbing"
+                               onClick={() => setSelectedProfileLead(lead)}
                              >
                                <div className="flex justify-between items-start mb-2">
-                                  <a href={lead.gmbUrl || '#'} target="_blank" rel="noreferrer" className="font-bold text-gray-100 hover:text-blue-400 transition-colors text-sm line-clamp-2">
+                                  <span className="font-bold text-gray-100 hover:text-blue-400 transition-colors text-sm line-clamp-2 cursor-pointer">
                                     {lead.name}
-                                  </a>
+                                  </span>
                                   <span className={`px-2 py-0.5 rounded text-[9px] font-bold border shrink-0 ml-2 ${badge.classes}`}>
                                      {badge.label}
                                   </span>
@@ -128,23 +131,30 @@ export default function AgentPipeline() {
                                   <div className="flex items-center gap-2">
                                      {lead.phone ? (
                                         <>
-                                          <a href={`tel:${lead.phone}`} className="w-8 h-8 rounded bg-blue-500/10 text-blue-400 flex items-center justify-center hover:bg-blue-500/20 transition-colors" title="Call">
-                                            <PhoneCall className="w-3 h-3" />
-                                          </a>
-                                          <a href={getWhatsAppUrl(lead.phone, lead.name)} target="_blank" rel="noreferrer" className="w-8 h-8 rounded bg-emerald-500/10 text-emerald-400 flex items-center justify-center hover:bg-emerald-500/20 transition-colors" title="WhatsApp">
-                                            <MessageCircle className="w-3 h-3" />
-                                          </a>
+                                           <a href={`tel:${lead.phone}`} className="w-8 h-8 rounded bg-blue-500/10 text-blue-400 flex items-center justify-center hover:bg-blue-500/20 transition-colors" title="Call" onClick={e => e.stopPropagation()}>
+                                             <PhoneCall className="w-3 h-3" />
+                                           </a>
+                                           <a href={getWhatsAppUrl(lead.phone, lead.name)} target="_blank" rel="noreferrer" className="w-8 h-8 rounded bg-emerald-500/10 text-emerald-400 flex items-center justify-center hover:bg-emerald-500/20 transition-colors" title="WhatsApp" onClick={e => e.stopPropagation()}>
+                                             <MessageCircle className="w-3 h-3" />
+                                           </a>
                                         </>
                                      ) : (
                                         <span className="text-xs text-gray-600 font-medium">No Phone</span>
                                      )}
                                   </div>
                                   
-                                  {lead.website && (
-                                     <a href={lead.website} target="_blank" rel="noreferrer" className="text-gray-400 hover:text-white p-1" title="Website">
-                                        <Globe className="w-4 h-4" />
-                                     </a>
-                                  )}
+                                  <div className="flex gap-2">
+                                     {lead.gmbUrl && (
+                                        <a href={lead.gmbUrl} target="_blank" rel="noreferrer" className="text-gray-400 hover:text-white p-1" title="Google Maps" onClick={e => e.stopPropagation()}>
+                                           <svg className="w-4 h-4 text-amber-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                                        </a>
+                                     )}
+                                     {lead.website && (
+                                        <a href={lead.website} target="_blank" rel="noreferrer" className="text-gray-400 hover:text-white p-1" title="Website" onClick={e => e.stopPropagation()}>
+                                           <Globe className="w-4 h-4 text-blue-400" />
+                                        </a>
+                                     )}
+                                  </div>
                                </div>
                              </div>
                           );
@@ -161,6 +171,11 @@ export default function AgentPipeline() {
         </div>
       )}
       
+      {/* Customer Profile Modal */}
+      {selectedProfileLead && (
+         <CustomerProfileModal lead={selectedProfileLead} onClose={() => { setSelectedProfileLead(null); fetchLeads(); }} />
+      )}
+
       <style dangerouslySetInnerHTML={{__html: `
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }

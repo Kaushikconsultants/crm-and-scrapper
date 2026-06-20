@@ -5,7 +5,7 @@ import { PhoneCall, CalendarClock, Globe, MapPin, Loader2, CheckCircle2, XCircle
 import { createClient } from "@/utils/supabase/client";
 import { getWhatsAppUrl } from "@/utils/whatsapp";
 import { getLeadScoreBadge } from "@/utils/scoring";
-import LeadHistoryModal from "@/app/components/LeadHistoryModal";
+import CustomerProfileModal from "@/app/components/CustomerProfileModal";
 import AddLeadModal from "@/app/components/AddLeadModal";
 
 export default function AgentDashboard() {
@@ -13,6 +13,7 @@ export default function AgentDashboard() {
   const [loading, setLoading] = useState(true);
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [isAvailable, setIsAvailable] = useState(true);
 
   // Modal State
   const [selectedLead, setSelectedLead] = useState<any>(null);
@@ -40,6 +41,16 @@ export default function AgentDashboard() {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
     setCurrentUser(user);
+
+    // 1.5 Fetch current agent profile for availability status
+    const { data: profile } = await supabase
+      .from('agent_profiles')
+      .select('*')
+      .eq('id', user.id)
+      .single();
+    if (profile) {
+      setIsAvailable(profile.is_available !== false);
+    }
 
     // 2. Fetch all leads explicitly assigned to this user that are not closed/uninterested
     const { data: myLeads } = await supabase
@@ -74,6 +85,20 @@ export default function AgentDashboard() {
       setTotalAgents(Math.max(rankList.length, 1)); // Estimate total active today
     }
     setLoading(false);
+  };
+
+  const toggleAvailability = async () => {
+    if (!currentUser) return;
+    const newStatus = !isAvailable;
+    setIsAvailable(newStatus);
+    const { error } = await supabase
+      .from('agent_profiles')
+      .update({ is_available: newStatus })
+      .eq('id', currentUser.id);
+    if (error) {
+      alert("Error updating availability: " + error.message);
+      setIsAvailable(!newStatus); // Revert
+    }
   };
 
   const handleLogCall = async (e: React.FormEvent) => {
@@ -122,7 +147,15 @@ export default function AgentDashboard() {
       {/* Header & Gamification */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div>
-          <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-blue-500">My Workspace</h1>
+          <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-blue-500 flex items-center gap-3">
+            My Workspace
+            <button 
+              onClick={toggleAvailability}
+              className={`text-xs px-3 py-1.5 rounded-full font-bold border transition-colors cursor-pointer ${isAvailable ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/20' : 'bg-rose-500/10 text-rose-400 border-rose-500/30 hover:bg-rose-500/20'}`}
+            >
+              {isAvailable ? '● Available for Today' : '○ Offline for Today'}
+            </button>
+          </h1>
           <p className="text-gray-400 mt-1">Manage your explicitly assigned leads.</p>
         </div>
         
@@ -339,9 +372,9 @@ export default function AgentDashboard() {
         </div>
       )}
 
-      {/* History Modal */}
+      {/* Customer Profile Modal */}
       {selectedHistoryLead && (
-         <LeadHistoryModal lead={selectedHistoryLead} onClose={() => setSelectedHistoryLead(null)} />
+         <CustomerProfileModal lead={selectedHistoryLead} onClose={() => { setSelectedHistoryLead(null); fetchData(); }} currentUserId={currentUser?.id} />
       )}
 
       {/* Add Lead Modal */}

@@ -12,7 +12,7 @@ export async function POST(req: Request) {
 
     const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey || "");
 
-    const { id, email, password, name, role, is_active } = await req.json();
+    const { id, email, password, name, role, is_active, is_available } = await req.json();
 
     if (!id || !email || !name || !role) {
       return NextResponse.json({ error: "Missing fields" }, { status: 400 });
@@ -36,6 +36,9 @@ export async function POST(req: Request) {
     const profileUpdates: any = { email, name, role };
     if (typeof is_active === "boolean") {
         profileUpdates.is_active = is_active;
+    }
+    if (typeof is_available === "boolean") {
+        profileUpdates.is_available = is_available;
     }
 
     const { error: profileError } = await supabaseAdmin

@@ -24,6 +24,7 @@ export default function AgentsPage() {
   const [editPassword, setEditPassword] = useState("");
   const [editRole, setEditRole] = useState("agent");
   const [editIsActive, setEditIsActive] = useState(true);
+  const [editIsAvailable, setEditIsAvailable] = useState(true);
   const [updating, setUpdating] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
@@ -93,6 +94,7 @@ export default function AgentsPage() {
     setEditEmail(agent.email);
     setEditRole(agent.role);
     setEditIsActive(agent.is_active !== false); // Default true if undefined
+    setEditIsAvailable(agent.is_available !== false); // Default true if undefined
     setEditPassword("");
   };
 
@@ -105,7 +107,7 @@ export default function AgentsPage() {
       const res = await fetch("/api/agents/update", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: selectedAgent.id, name: editName, email: editEmail, password: editPassword, role: editRole, is_active: editIsActive }),
+        body: JSON.stringify({ id: selectedAgent.id, name: editName, email: editEmail, password: editPassword, role: editRole, is_active: editIsActive, is_available: editIsAvailable }),
       });
 
       const data = await res.json();
@@ -239,6 +241,7 @@ export default function AgentsPage() {
                     <tr>
                       <th className="px-6 py-4 font-semibold">Agent Name</th>
                       <th className="px-6 py-4 font-semibold">Role</th>
+                      <th className="px-6 py-4 font-semibold text-center">Availability Status</th>
                       <th className="px-6 py-4 font-semibold text-center">Calls Made Today</th>
                       <th className="px-6 py-4 font-semibold text-center">Total Calls Logged</th>
                       <th className="px-6 py-4 font-semibold text-right">Actions</th>
@@ -260,6 +263,11 @@ export default function AgentsPage() {
                            <span className={`px-2 py-1 rounded-md text-xs font-semibold border ${agent.role === 'admin' ? 'bg-purple-500/10 text-purple-400 border-purple-500/20' : 'bg-gray-800 text-gray-400 border-gray-700'}`}>
                              {agent.role.toUpperCase()}
                            </span>
+                         </td>
+                         <td className="px-6 py-4 text-center">
+                            <span className={`px-2.5 py-1 rounded-full text-xs font-bold border ${agent.is_available !== false ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-rose-500/10 text-rose-400 border-rose-500/20'}`}>
+                              {agent.is_available !== false ? 'AVAILABLE' : 'OFFLINE'}
+                            </span>
                          </td>
                          <td className="px-6 py-4 text-center">
                            <span className="inline-flex items-center gap-1.5 font-mono text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-lg">
@@ -309,22 +317,32 @@ export default function AgentsPage() {
                 <input type="text" value={editPassword} onChange={e => setEditPassword(e.target.value)} className="w-full bg-[#1a1a1a] border border-gray-800 rounded-xl p-3 focus:border-blue-500 outline-none text-white" placeholder="New password" />
               </div>
               <div className="flex gap-4">
-                 <div className="w-1/2">
+                 <div className="w-1/3">
                     <label className="block text-gray-400 text-sm mb-2">System Role</label>
-                    <select value={editRole} onChange={e => setEditRole(e.target.value)} className="w-full bg-[#1a1a1a] border border-gray-800 rounded-xl p-3 focus:border-blue-500 outline-none text-white">
+                    <select value={editRole} onChange={e => setEditRole(e.target.value)} className="w-full bg-[#1a1a1a] border border-gray-800 rounded-xl p-3 focus:border-blue-500 outline-none text-white text-sm">
                       <option value="agent">Standard Agent</option>
                       <option value="admin">System Administrator</option>
                     </select>
                  </div>
-                 <div className="w-1/2">
+                 <div className="w-1/3">
                     <label className="block text-gray-400 text-sm mb-2">Account Status</label>
                     <button 
                       type="button" 
                       onClick={() => setEditIsActive(!editIsActive)}
-                      className={`w-full flex items-center justify-center gap-2 rounded-xl py-3 border font-medium transition-colors ${editIsActive ? 'bg-green-500/10 text-green-400 border-green-500/30 hover:bg-green-500/20' : 'bg-orange-500/10 text-orange-400 border-orange-500/30 hover:bg-orange-500/20'}`}
+                      className={`w-full flex items-center justify-center gap-1.5 rounded-xl py-3 border text-xs font-medium transition-colors ${editIsActive ? 'bg-green-500/10 text-green-400 border-green-500/30 hover:bg-green-500/20' : 'bg-orange-500/10 text-orange-400 border-orange-500/30 hover:bg-orange-500/20'}`}
                     >
-                       {editIsActive ? <ShieldCheck className="w-4 h-4" /> : <ShieldBan className="w-4 h-4" />}
-                       {editIsActive ? 'Active (Can Login)' : 'Banned (Disabled)'}
+                       {editIsActive ? <ShieldCheck className="w-3.5 h-3.5" /> : <ShieldBan className="w-3.5 h-3.5" />}
+                       {editIsActive ? 'Active' : 'Banned'}
+                    </button>
+                 </div>
+                 <div className="w-1/3">
+                    <label className="block text-gray-400 text-sm mb-2">Availability</label>
+                    <button 
+                      type="button" 
+                      onClick={() => setEditIsAvailable(!editIsAvailable)}
+                      className={`w-full flex items-center justify-center gap-1.5 rounded-xl py-3 border text-xs font-medium transition-colors ${editIsAvailable ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/20' : 'bg-rose-500/10 text-rose-400 border-rose-500/30 hover:bg-rose-500/20'}`}
+                    >
+                       {editIsAvailable ? '✓ Available' : '✗ Offline'}
                     </button>
                  </div>
               </div>
