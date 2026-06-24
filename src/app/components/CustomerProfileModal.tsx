@@ -91,7 +91,23 @@ export default function CustomerProfileModal({ lead: initialLead, onClose, curre
       doc.setFontSize(9);
       doc.setTextColor(148, 163, 184);
       doc.text("WE DON'T JUST BUILD WEBSITES — WE BUILD BRANDS.", 60, 33);
-      doc.text("Prepared by Hyperscript Solutions (hyperscriptsolutions.in)", 60, 38);
+      doc.text("Prepared by Hyperscript Solutions (", 60, 38);
+      const prepWidth = doc.getTextWidth("Prepared by Hyperscript Solutions (");
+      doc.setTextColor(96, 165, 250);
+      doc.text("hyperscriptsolutions.in", 60 + prepWidth, 38);
+      const linkW1 = doc.getTextWidth("hyperscriptsolutions.in");
+      doc.link(60 + prepWidth, 38 - (9 * 0.353) + 1, linkW1, 9 * 0.353, { url: "https://hyperscriptsolutions.in" });
+      doc.setTextColor(148, 163, 184);
+      doc.text(")", 60 + prepWidth + linkW1, 38);
+
+      // Digital Presence Health Score calculation
+      let auditScore = 100;
+      if (!lead.website) auditScore -= 35;
+      if (lead.rating && parseFloat(lead.rating) < 4.2) auditScore -= 15;
+      if (!lead.reviews || parseInt(lead.reviews) < 15) auditScore -= 15;
+      if (!lead.instagram) auditScore -= 10;
+      if (!lead.facebook) auditScore -= 10;
+      auditScore = Math.max(auditScore, 20); // Keep it min 20
 
       // Client Title Block
       doc.setFillColor(255, 255, 255);
@@ -116,6 +132,26 @@ export default function CustomerProfileModal({ lead: initialLead, onClose, curre
       doc.text(`Category: ${lead.category || "General Business"}`, 22, 111);
       doc.text(`Date Prepared: ${new Date().toLocaleDateString('en-US', { dateStyle: 'long' })}`, 22, 117);
 
+      // Score Badge on Right Side of Title Block
+      doc.setFillColor(auditScore >= 80 ? 240 : (auditScore >= 50 ? 254 : 254), auditScore >= 80 ? 253 : (auditScore >= 50 ? 243 : 242), auditScore >= 80 ? 250 : (auditScore >= 50 ? 199 : 242));
+      doc.setDrawColor(auditScore >= 80 ? 22 : (auditScore >= 50 ? 217 : 239), auditScore >= 80 ? 163 : (auditScore >= 50 ? 119 : 68), auditScore >= 80 ? 74 : (auditScore >= 50 ? 6 : 68));
+      doc.roundedRect(145, 83, 42, 34, 2, 2, 'FD');
+
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(8);
+      doc.setTextColor(71, 85, 105);
+      doc.text("PRESENCE SCORE", 148, 90);
+
+      doc.setFontSize(18);
+      doc.setTextColor(auditScore >= 80 ? 22 : (auditScore >= 50 ? 217 : 239), auditScore >= 80 ? 163 : (auditScore >= 50 ? 119 : 68), auditScore >= 80 ? 74 : (auditScore >= 50 ? 6 : 68));
+      doc.text(`${auditScore}/100`, 150, 102);
+
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8);
+      doc.setTextColor(100, 116, 139);
+      const grade = auditScore >= 80 ? "Optimized" : (auditScore >= 50 ? "Needs Work" : "Critical Risk");
+      doc.text(grade, 150, 110);
+
       // Section 1: GMB Audit
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(13);
@@ -135,8 +171,18 @@ export default function CustomerProfileModal({ lead: initialLead, onClose, curre
       doc.text(`GMB Rating: ${ratingText}`, 15, 153);
       doc.text(`Review Volume: ${reviewsText}`, 15, 159);
 
+      if (lead.gmbUrl) {
+        doc.text("GMB Listing Link: ", 15, 165);
+        const gmbLabelW = doc.getTextWidth("GMB Listing Link: ");
+        doc.setTextColor(37, 99, 235);
+        doc.text("View Profile on Google Maps", 15 + gmbLabelW, 165);
+        const gmbLinkW = doc.getTextWidth("View Profile on Google Maps");
+        doc.link(15 + gmbLabelW, 165 - (10 * 0.353) + 1, gmbLinkW, 10 * 0.353, { url: lead.gmbUrl });
+        doc.setTextColor(51, 65, 85);
+      }
+
       doc.setFont('helvetica', 'bold');
-      doc.text("GMB Recommendations:", 15, 168);
+      doc.text("GMB Recommendations:", 15, 174);
       doc.setFont('helvetica', 'normal');
       
       const gmbRecs = lead.rating && parseFloat(lead.rating) < 4.2 
@@ -144,15 +190,15 @@ export default function CustomerProfileModal({ lead: initialLead, onClose, curre
         : ["* Setup automated review links to maintain high local standing.", "* Post regular promotional business updates directly on the GMB card.", "* Add local schema markup to search listings."];
       
       gmbRecs.forEach((rec, i) => {
-        doc.text(rec, 15, 175 + (i * 6));
+        doc.text(rec, 15, 181 + (i * 6));
       });
 
       // Section 2: Website Scan
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(13);
       doc.setTextColor(15, 23, 42);
-      doc.text("2. Technical Website Deep Scan", 15, 204);
-      doc.line(15, 207, 95, 207);
+      doc.text("2. Technical Website Deep Scan", 15, 206);
+      doc.line(15, 209, 95, 209);
 
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(10);
@@ -161,20 +207,28 @@ export default function CustomerProfileModal({ lead: initialLead, onClose, curre
       if (!lead.website) {
         doc.setTextColor(220, 38, 38);
         doc.setFont('helvetica', 'bold');
-        doc.text("CRITICAL GAP: Business has NO website link registered on Google Maps.", 15, 215);
+        doc.text("CRITICAL GAP: Business has NO website link registered on Google Maps.", 15, 217);
         doc.setFont('helvetica', 'normal');
         doc.setTextColor(51, 65, 85);
-        doc.text("Impact: Over 60% of local searches are lost to competitors with active websites.", 15, 221);
-        doc.text("Recommendations:", 15, 229);
-        doc.text("* Design a fully responsive, modern website to capture local lead traffic.", 20, 235);
-        doc.text("* Connect custom domain and install SSL to build brand trust.", 20, 241);
+        doc.text("Impact: Over 60% of local searches are lost to competitors with active websites.", 15, 223);
+        doc.text("Recommendations:", 15, 231);
+        doc.text("* Design a fully responsive, modern website to capture local lead traffic.", 20, 237);
+        doc.text("* Connect custom domain and install SSL to build brand trust.", 20, 243);
       } else {
-        doc.text(`Website URL: ${lead.website}`, 15, 215);
-        doc.text("Estimated Load Speed Score: 78/100 (Mobile) | 91/100 (Desktop)", 15, 221);
-        doc.text("Website Optimization Recommendations:", 15, 229);
-        doc.text("* Compress static assets and enable Next-Gen image formatting (WebP).", 20, 235);
-        doc.text("* Improve Mobile Responsiveness and layout shifts (CLS) to satisfy Core Web Vitals.", 20, 241);
-        doc.text("* Fix metadata tags (Title, Description) for target search keywords.", 20, 247);
+        doc.text("Website URL: ", 15, 217);
+        const wLabel = doc.getTextWidth("Website URL: ");
+        doc.setTextColor(37, 99, 235);
+        doc.text(lead.website, 15 + wLabel, 217);
+        const wWidth = doc.getTextWidth(lead.website);
+        const normalizedWeb = lead.website.startsWith('http') ? lead.website : 'https://' + lead.website;
+        doc.link(15 + wLabel, 217 - (10 * 0.353) + 1, wWidth, 10 * 0.353, { url: normalizedWeb });
+        doc.setTextColor(51, 65, 85);
+
+        doc.text("Estimated Load Speed Score: 78/100 (Mobile) | 91/100 (Desktop)", 15, 223);
+        doc.text("Website Optimization Recommendations:", 15, 231);
+        doc.text("* Compress static assets and enable Next-Gen image formatting (WebP).", 20, 237);
+        doc.text("* Improve Mobile Responsiveness and layout shifts (CLS) to satisfy Core Web Vitals.", 20, 243);
+        doc.text("* Fix metadata tags (Title, Description) for target search keywords.", 20, 249);
       }
 
       // Go to Page 2
@@ -200,11 +254,35 @@ export default function CustomerProfileModal({ lead: initialLead, onClose, curre
       doc.setFontSize(10);
       doc.setTextColor(51, 65, 85);
 
-      const instaStatus = lead.instagram ? `Active Profile (${lead.instagram})` : "Missing Profile Link";
-      const fbStatus = lead.facebook ? `Active Page (${lead.facebook})` : "Missing Profile Link";
+      doc.text("Instagram Link: ", 15, 42);
+      const instaLabelW = doc.getTextWidth("Instagram Link: ");
+      if (lead.instagram) {
+        doc.setTextColor(37, 99, 235);
+        doc.text(lead.instagram, 15 + instaLabelW, 42);
+        const instaW = doc.getTextWidth(lead.instagram);
+        const targetInsta = lead.instagram.startsWith('http') ? lead.instagram : `https://instagram.com/${lead.instagram.replace('@', '')}`;
+        doc.link(15 + instaLabelW, 42 - (10 * 0.353) + 1, instaW, 10 * 0.353, { url: targetInsta });
+        doc.setTextColor(51, 65, 85);
+      } else {
+        doc.setTextColor(220, 38, 38);
+        doc.text("Missing Profile Link", 15 + instaLabelW, 42);
+        doc.setTextColor(51, 65, 85);
+      }
 
-      doc.text(`Instagram Link: ${instaStatus}`, 15, 42);
-      doc.text(`Facebook Link: ${fbStatus}`, 15, 48);
+      doc.text("Facebook Link: ", 15, 48);
+      const fbLabelW = doc.getTextWidth("Facebook Link: ");
+      if (lead.facebook) {
+        doc.setTextColor(37, 99, 235);
+        doc.text(lead.facebook, 15 + fbLabelW, 48);
+        const fbW = doc.getTextWidth(lead.facebook);
+        const targetFb = lead.facebook.startsWith('http') ? lead.facebook : `https://facebook.com/${lead.facebook}`;
+        doc.link(15 + fbLabelW, 48 - (10 * 0.353) + 1, fbW, 10 * 0.353, { url: targetFb });
+        doc.setTextColor(51, 65, 85);
+      } else {
+        doc.setTextColor(220, 38, 38);
+        doc.text("Missing Profile Link", 15 + fbLabelW, 48);
+        doc.setTextColor(51, 65, 85);
+      }
 
       doc.setFont('helvetica', 'bold');
       doc.text("Social Media Gaps & Action Items:", 15, 57);
@@ -254,22 +332,51 @@ export default function CustomerProfileModal({ lead: initialLead, onClose, curre
 
       // Section 5: Call to Action Footer
       doc.setFillColor(15, 23, 42);
-      doc.rect(15, 215, 180, 50, 'F');
+      doc.rect(15, 205, 180, 62, 'F');
 
       doc.setFont('helvetica', 'bold');
-      doc.setFontSize(14);
+      doc.setFontSize(13);
       doc.setTextColor(255, 255, 255);
-      doc.text("LET'S BUILD YOUR BRAND", 25, 230);
+      doc.text("LET'S BUILD YOUR BRAND", 25, 218);
 
       doc.setFont('helvetica', 'normal');
-      doc.setFontSize(10);
+      doc.setFontSize(9.5);
       doc.setTextColor(148, 163, 184);
-      doc.text("Ready to fix these gaps and grow your revenue? Contact us today.", 25, 238);
+      doc.text("Ready to fix these gaps and grow your revenue? Contact us today.", 25, 225);
       
+      // Let's print the contact handles and make them clickable
       doc.setTextColor(255, 255, 255);
-      doc.setFont('helvetica', 'bold');
-      doc.text("Website: hyperscriptsolutions.in  |  Instagram: @hyperscriptsolutions", 25, 248);
-      doc.text("Tagline: WE DON'T JUST BUILD WEBSITES — WE BUILD BRANDS.", 25, 254);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9.5);
+      
+      doc.text("Website: ", 25, 236);
+      let fW = doc.getTextWidth("Website: ");
+      doc.setTextColor(96, 165, 250); // Light blue for contrast in dark banner
+      doc.text("hyperscriptsolutions.in", 25 + fW, 236);
+      let linkW = doc.getTextWidth("hyperscriptsolutions.in");
+      doc.link(25 + fW, 236 - (9.5 * 0.353) + 1, linkW, 9.5 * 0.353, { url: "https://hyperscriptsolutions.in" });
+
+      doc.setTextColor(255, 255, 255);
+      doc.text("  |  Instagram: ", 25 + fW + linkW, 236);
+      let fW2 = doc.getTextWidth("  |  Instagram: ");
+      doc.setTextColor(96, 165, 250);
+      doc.text("@hyperscriptsolutions", 25 + fW + linkW + fW2, 236);
+      let linkW2 = doc.getTextWidth("@hyperscriptsolutions");
+      doc.link(25 + fW + linkW + fW2, 236 - (9.5 * 0.353) + 1, linkW2, 9.5 * 0.353, { url: "https://instagram.com/hyperscriptsolutions" });
+
+      // Call Mobile number
+      doc.setTextColor(255, 255, 255);
+      doc.text("Call / WhatsApp: ", 25, 244);
+      let fW3 = doc.getTextWidth("Call / WhatsApp: ");
+      doc.setTextColor(96, 165, 250);
+      doc.text("+91 9306302402", 25 + fW3, 244);
+      let linkW3 = doc.getTextWidth("+91 9306302402");
+      doc.link(25 + fW3, 244 - (9.5 * 0.353) + 1, linkW3, 9.5 * 0.353, { url: "tel:+919306302402" });
+
+      doc.setTextColor(148, 163, 184);
+      doc.setFont('helvetica', 'italic');
+      doc.setFontSize(8.5);
+      doc.text("Tagline: WE DON'T JUST BUILD WEBSITES — WE BUILD BRANDS.", 25, 255);
 
       // Save PDF
       doc.save(`${lead.name.replace(/\s+/g, '_')}_Audit_Report.pdf`);
@@ -326,11 +433,27 @@ export default function CustomerProfileModal({ lead: initialLead, onClose, curre
 
   const fetchHistory = async () => {
     setLoadingHistory(true);
-    const { data: logsData } = await supabase
+    
+    const { data: { user } } = await supabase.auth.getUser();
+    const activeUserId = currentUserId || user?.id;
+    
+    let isAdmin = false;
+    if (activeUserId) {
+      const { data: profile } = await supabase.from('agent_profiles').select('role').eq('id', activeUserId).single();
+      isAdmin = profile?.role === 'admin';
+    }
+
+    let query = supabase
       .from('call_logs')
       .select('*')
       .eq('lead_id', lead.id)
       .order('created_at', { ascending: false });
+
+    if (!isAdmin && activeUserId) {
+      query = query.eq('agent_id', activeUserId);
+    }
+
+    const { data: logsData } = await query;
 
     if (logsData && logsData.length > 0) {
       const agentIds = Array.from(new Set(logsData.map(l => l.agent_id)));

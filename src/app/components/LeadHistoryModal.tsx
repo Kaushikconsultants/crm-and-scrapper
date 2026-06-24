@@ -15,11 +15,26 @@ export default function LeadHistoryModal({ lead, onClose }: { lead: any; onClose
     setLoading(true);
     
     // Fetch logs
-    const { data: logsData } = await supabase
+    const { data: { user } } = await supabase.auth.getUser();
+    const activeUserId = user?.id;
+    
+    let isAdmin = false;
+    if (activeUserId) {
+      const { data: profile } = await supabase.from('agent_profiles').select('role').eq('id', activeUserId).single();
+      isAdmin = profile?.role === 'admin';
+    }
+
+    let query = supabase
       .from('call_logs')
       .select('*')
       .eq('lead_id', lead.id)
       .order('created_at', { ascending: false });
+
+    if (!isAdmin && activeUserId) {
+      query = query.eq('agent_id', activeUserId);
+    }
+
+    const { data: logsData } = await query;
 
     if (logsData && logsData.length > 0) {
       // Manually map agent names due to PGRST200 missing foreign key config
