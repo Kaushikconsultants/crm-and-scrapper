@@ -281,7 +281,7 @@ export default function DatabasePage() {
       <div className="flex justify-between items-end flex-wrap gap-4">
         <div>
           <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">Master Database</h1>
-          <p className="text-gray-400 text-xs mt-0.5">Assign leads to agents and view your complete historical data.</p>
+          <p className="text-gray-600 text-xs mt-0.5">Assign leads to agents and view your complete historical data.</p>
         </div>
 
         {selectedLeads.size > 0 && (
@@ -290,7 +290,7 @@ export default function DatabasePage() {
              <select 
                value={assigningTo}
                onChange={(e) => setAssigningTo(e.target.value)}
-               className="bg-[#111] border border-gray-700 text-white text-sm rounded-lg p-2 focus:outline-none"
+               className="bg-white border border-gray-700 text-gray-900 text-sm rounded-lg p-2 focus:outline-none"
              >
                <option value="">-- Assign To --</option>
                <option value="unassigned">Unassign</option>
@@ -299,14 +299,14 @@ export default function DatabasePage() {
              <button 
                onClick={handleAssign}
                disabled={!assigningTo || isAssigning}
-               className="bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white px-4 py-2 rounded-lg text-sm font-semibold"
+               className="bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-gray-900 px-4 py-2 rounded-lg text-sm font-semibold"
              >
                {isAssigning ? "Working..." : "Assign / Reassign"}
              </button>
              <button 
                onClick={handleAutoDistribute}
                disabled={isAssigning}
-               className="bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2"
+               className="bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-gray-900 px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2"
                title="Distribute selected leads evenly among active agents"
              >
                <Shuffle className="w-4 h-4" /> Auto-Distribute
@@ -315,49 +315,49 @@ export default function DatabasePage() {
         )}
       </div>
 
-      <div className="bg-[#111] border border-gray-800 rounded-2xl flex flex-col flex-1 overflow-hidden min-h-[600px]">
-        <div className="p-2.5 border-b border-gray-800 flex justify-between items-center bg-[#1a1a1a] flex-wrap gap-3">
-          <div className="flex items-center gap-2 bg-[#0a0a0a] p-1 rounded-xl border border-gray-800 flex-wrap">
-             <div className="flex items-center px-2 border-r border-gray-800">
-                <Filter className="w-3.5 h-3.5 text-gray-400 mr-1.5" />
-                <span className="text-xs text-gray-400 font-medium">Filters</span>
+      <div className="bg-white border border-gray-200 rounded-2xl flex flex-col flex-1 overflow-hidden min-h-[600px]">
+        <div className="p-2.5 border-b border-gray-200 flex justify-between items-center bg-gray-100 flex-wrap gap-3">
+          <div className="flex items-center gap-2 bg-[#0a0a0a] p-1 rounded-xl border border-gray-200 flex-wrap">
+             <div className="flex items-center px-2 border-r border-gray-200">
+                <Filter className="w-3.5 h-3.5 text-gray-600 mr-1.5" />
+                <span className="text-xs text-gray-600 font-medium">Filters</span>
              </div>
-             <select value={dbFilterLoc} onChange={(e) => setDbFilterLoc(e.target.value)} className="bg-transparent text-xs text-gray-300 focus:outline-none w-28 px-1 cursor-pointer">
-                <option value="" className="bg-[#111] text-gray-300">All Locations</option>
-                {uniqueLocations.map(loc => <option key={loc} value={loc} className="bg-[#111]">{loc}</option>)}
+             <select value={dbFilterLoc} onChange={(e) => setDbFilterLoc(e.target.value)} className="bg-transparent text-xs text-gray-700 focus:outline-none w-28 px-1 cursor-pointer">
+                <option value="" className="bg-white text-gray-700">All Locations</option>
+                {uniqueLocations.map(loc => <option key={loc} value={loc} className="bg-white">{loc}</option>)}
              </select>
-             <div className="w-px h-4 bg-gray-800"></div>
-             <select value={dbFilterCat} onChange={(e) => setDbFilterCat(e.target.value)} className="bg-transparent text-xs text-gray-300 focus:outline-none w-28 px-1 cursor-pointer">
-                <option value="" className="bg-[#111] text-gray-300">All Categories</option>
-                {uniqueCategories.map(cat => <option key={cat} value={cat} className="bg-[#111]">{cat}</option>)}
+             <div className="w-px h-4 bg-gray-200"></div>
+             <select value={dbFilterCat} onChange={(e) => setDbFilterCat(e.target.value)} className="bg-transparent text-xs text-gray-700 focus:outline-none w-28 px-1 cursor-pointer">
+                <option value="" className="bg-white text-gray-700">All Categories</option>
+                {uniqueCategories.map(cat => <option key={cat} value={cat} className="bg-white">{cat}</option>)}
              </select>
-             <div className="w-px h-4 bg-gray-800"></div>
+             <div className="w-px h-4 bg-gray-200"></div>
              <select value={dbFilterAssigned} onChange={(e) => setDbFilterAssigned(e.target.value)} className="bg-transparent text-xs text-blue-400 font-medium focus:outline-none w-32 px-1 cursor-pointer">
-                <option value="all" className="bg-[#111] text-gray-300">All Agents</option>
-                <option value="unassigned" className="bg-[#111] text-gray-300">Unassigned Only</option>
-                {agents.map(a => <option key={a.id} value={a.id} className="bg-[#111] text-gray-300">{a.name}</option>)}
+                <option value="all" className="bg-white text-gray-700">All Agents</option>
+                <option value="unassigned" className="bg-white text-gray-700">Unassigned Only</option>
+                {agents.map(a => <option key={a.id} value={a.id} className="bg-white text-gray-700">{a.name}</option>)}
              </select>
-             <div className="w-px h-4 bg-gray-800"></div>
-             <select value={dateFilter} onChange={(e) => setDateFilter(e.target.value)} className="bg-transparent text-xs text-gray-300 focus:outline-none w-28 px-1 cursor-pointer">
-                <option value="all" className="bg-[#111] text-gray-300">All Dates</option>
-                <option value="today" className="bg-[#111] text-gray-300">Today</option>
-                <option value="yesterday" className="bg-[#111] text-gray-300">Yesterday</option>
-                <option value="week" className="bg-[#111] text-gray-300">Last 7 Days</option>
-                <option value="month" className="bg-[#111] text-gray-300">Last 30 Days</option>
+             <div className="w-px h-4 bg-gray-200"></div>
+             <select value={dateFilter} onChange={(e) => setDateFilter(e.target.value)} className="bg-transparent text-xs text-gray-700 focus:outline-none w-28 px-1 cursor-pointer">
+                <option value="all" className="bg-white text-gray-700">All Dates</option>
+                <option value="today" className="bg-white text-gray-700">Today</option>
+                <option value="yesterday" className="bg-white text-gray-700">Yesterday</option>
+                <option value="week" className="bg-white text-gray-700">Last 7 Days</option>
+                <option value="month" className="bg-white text-gray-700">Last 30 Days</option>
              </select>
-             <div className="w-px h-4 bg-gray-800"></div>
+             <div className="w-px h-4 bg-gray-200"></div>
              <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className="bg-transparent text-xs text-amber-400 font-semibold focus:outline-none w-32 px-1 cursor-pointer font-medium">
-                <option value="newest" className="bg-[#111] text-gray-300">Newest Scraped</option>
-                <option value="oldest" className="bg-[#111] text-gray-300">Oldest Scraped</option>
-                <option value="name" className="bg-[#111] text-gray-300">Name (A-Z)</option>
-                <option value="rating" className="bg-[#111] text-gray-300">Rating (High-Low)</option>
+                <option value="newest" className="bg-white text-gray-700">Newest Scraped</option>
+                <option value="oldest" className="bg-white text-gray-700">Oldest Scraped</option>
+                <option value="name" className="bg-white text-gray-700">Name (A-Z)</option>
+                <option value="rating" className="bg-white text-gray-700">Rating (High-Low)</option>
              </select>
-             <div className="w-px h-4 bg-gray-800"></div>
-             <label className="flex items-center gap-1.5 cursor-pointer px-1 text-xs text-gray-300">
-                <input type="checkbox" checked={dbFilterWeb} onChange={(e) => setDbFilterWeb(e.target.checked)} className="rounded border-gray-700 bg-gray-900 w-3 h-3" /> Web
+             <div className="w-px h-4 bg-gray-200"></div>
+             <label className="flex items-center gap-1.5 cursor-pointer px-1 text-xs text-gray-700">
+                <input type="checkbox" checked={dbFilterWeb} onChange={(e) => setDbFilterWeb(e.target.checked)} className="rounded border-gray-700 bg-gray-50 w-3 h-3" /> Web
              </label>
-             <label className="flex items-center gap-1.5 cursor-pointer pr-2 text-xs text-gray-300">
-                <input type="checkbox" checked={dbFilterPhone} onChange={(e) => setDbFilterPhone(e.target.checked)} className="rounded border-gray-700 bg-gray-900 w-3 h-3" /> Phone
+             <label className="flex items-center gap-1.5 cursor-pointer pr-2 text-xs text-gray-700">
+                <input type="checkbox" checked={dbFilterPhone} onChange={(e) => setDbFilterPhone(e.target.checked)} className="rounded border-gray-700 bg-gray-50 w-3 h-3" /> Phone
              </label>
           </div>
 
@@ -369,20 +369,20 @@ export default function DatabasePage() {
                  placeholder="Search name/phone..."
                  value={searchTerm}
                  onChange={(e) => setSearchTerm(e.target.value)}
-                 className="bg-[#0a0a0a] border border-gray-800 rounded-lg pl-8 pr-3 py-1.5 text-xs text-white focus:outline-none focus:border-blue-500 w-44"
+                 className="bg-[#0a0a0a] border border-gray-200 rounded-lg pl-8 pr-3 py-1.5 text-xs text-gray-900 focus:outline-none focus:border-blue-500 w-44"
                />
              </div>
-             <span className="bg-gray-800 text-gray-300 px-2 py-1.5 rounded-lg text-xs font-medium flex items-center shrink-0">
+             <span className="bg-gray-200 text-gray-700 px-2 py-1.5 rounded-lg text-xs font-medium flex items-center shrink-0">
                {sortedFilteredPastLeads.length} Leads
              </span>
              <button
                 onClick={() => setIsAddLeadOpen(true)}
-                className="bg-blue-600 hover:bg-blue-500 text-white px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1.5 shrink-0"
+                className="bg-blue-600 hover:bg-blue-500 text-gray-900 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1.5 shrink-0"
              >
                 <Plus className="w-3.5 h-3.5" /> Add Lead
              </button>
-             <button onClick={() => handleDownloadCSV(sortedFilteredPastLeads, "Exported_Leads")} className="bg-[#1a1a1a] border border-gray-700 hover:bg-gray-800 text-white px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors shrink-0"><Download className="w-3.5 h-3.5"/> CSV</button>
-             <button onClick={() => handleDownloadPDF(sortedFilteredPastLeads, "Master Database")} disabled={sortedFilteredPastLeads.length === 0} className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 text-white rounded-lg text-xs font-medium hover:bg-blue-500 disabled:opacity-50 shrink-0">
+             <button onClick={() => handleDownloadCSV(sortedFilteredPastLeads, "Exported_Leads")} className="bg-gray-100 border border-gray-700 hover:bg-gray-200 text-gray-900 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors shrink-0"><Download className="w-3.5 h-3.5"/> CSV</button>
+             <button onClick={() => handleDownloadPDF(sortedFilteredPastLeads, "Master Database")} disabled={sortedFilteredPastLeads.length === 0} className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 text-gray-900 rounded-lg text-xs font-medium hover:bg-blue-500 disabled:opacity-50 shrink-0">
                <FileText className="w-3.5 h-3.5" /> PDF
              </button>
           </div>
@@ -395,7 +395,7 @@ export default function DatabasePage() {
             <div className="flex justify-center items-center h-full text-gray-500">No leads found matching your filters.</div>
           ) : (
             <table className="w-full text-left text-xs border-collapse min-w-[800px] table-fixed">
-              <thead className="bg-[#111] text-gray-400 sticky top-0 z-10 shadow-sm border-b border-gray-800">
+              <thead className="bg-white text-gray-600 sticky top-0 z-10 shadow-sm border-b border-gray-200">
                 <tr>
                   <th className="px-3 py-3 w-10 text-center">
                     <input 
@@ -403,26 +403,26 @@ export default function DatabasePage() {
                       checked={selectedLeads.size > 0 && selectedLeads.size === sortedFilteredPastLeads.length}
                       ref={input => { if (input) input.indeterminate = selectedLeads.size > 0 && selectedLeads.size < sortedFilteredPastLeads.length; }}
                       onChange={() => toggleAll(sortedFilteredPastLeads)}
-                      className="rounded border-gray-700 bg-gray-900 cursor-pointer w-3.5 h-3.5"
+                      className="rounded border-gray-700 bg-gray-50 cursor-pointer w-3.5 h-3.5"
                     />
                   </th>
-                  <th className="px-4 py-2.5 font-semibold text-xs text-gray-400 w-2/5">Business Name & Details</th>
-                  <th className="px-4 py-2.5 font-semibold text-xs text-gray-400 text-center">Assignment / Status</th>
-                  <th className="px-4 py-2.5 font-semibold text-xs text-gray-400 text-center">Phone Number</th>
-                  <th className="px-4 py-2.5 font-semibold text-xs text-gray-400 text-center">Socials</th>
+                  <th className="px-4 py-2.5 font-semibold text-xs text-gray-600 w-2/5">Business Name & Details</th>
+                  <th className="px-4 py-2.5 font-semibold text-xs text-gray-600 text-center">Assignment / Status</th>
+                  <th className="px-4 py-2.5 font-semibold text-xs text-gray-600 text-center">Phone Number</th>
+                  <th className="px-4 py-2.5 font-semibold text-xs text-gray-600 text-center">Socials</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-800/50">
                 {sortedFilteredPastLeads.map((lead: any) => {
                   const badge = getLeadScoreBadge(lead);
                   return (
-                    <tr key={lead.id} className={`hover:bg-[#1a1a1a] transition-colors group ${selectedLeads.has(lead.id) ? 'bg-blue-900/10' : ''}`}>
+                    <tr key={lead.id} className={`hover:bg-gray-100 transition-colors group ${selectedLeads.has(lead.id) ? 'bg-blue-900/10' : ''}`}>
                       <td className="px-3 py-2.5 text-center align-middle">
                          <input 
                            type="checkbox" 
                            checked={selectedLeads.has(lead.id)}
                            onChange={() => toggleSelection(lead.id)}
-                           className="rounded border-gray-700 bg-gray-900 cursor-pointer w-3.5 h-3.5"
+                           className="rounded border-gray-700 bg-gray-50 cursor-pointer w-3.5 h-3.5"
                          />
                       </td>
                       <td className="px-4 py-2.5 align-middle">
@@ -449,7 +449,7 @@ export default function DatabasePage() {
                              {lead.source_platform && (
                                <>
                                  <span>•</span>
-                                 <span className="text-gray-400">{lead.source_platform}</span>
+                                 <span className="text-gray-600">{lead.source_platform}</span>
                                </>
                              )}
                            </div>
@@ -462,7 +462,7 @@ export default function DatabasePage() {
                                  <Users className="w-2.5 h-2.5" /> {lead.agent_profiles?.name || 'Agent'}
                                </span>
                             ) : (
-                               <span className="bg-gray-800/40 text-gray-400 px-2 py-0.5 rounded text-[11px] font-medium border border-gray-700/50">Unassigned</span>
+                               <span className="bg-gray-200/40 text-gray-600 px-2 py-0.5 rounded text-[11px] font-medium border border-gray-700/50">Unassigned</span>
                             )}
                             <span className={`px-2 py-0.5 rounded text-[11px] font-medium border ${lead.status === 'New' ? 'bg-green-500/10 text-green-400 border-green-500/20' : 'bg-orange-500/10 text-orange-400 border-orange-500/20'}`}>
                               {lead.status || 'New'}
@@ -483,7 +483,7 @@ export default function DatabasePage() {
                       </td>
                       <td className="px-4 py-2.5 align-middle text-center">
                         <div className="flex gap-1.5 items-center justify-center flex-wrap">
-                           {lead.website && <a href={lead.website} target="_blank" rel="noreferrer" className="text-gray-400 hover:text-white bg-white/5 hover:bg-white/10 p-1.5 rounded" title="Website"><Globe className="w-3.5 h-3.5 text-blue-400" /></a>}
+                           {lead.website && <a href={lead.website} target="_blank" rel="noreferrer" className="text-gray-600 hover:text-gray-900 bg-white/5 hover:bg-white/10 p-1.5 rounded" title="Website"><Globe className="w-3.5 h-3.5 text-blue-400" /></a>}
                            {lead.instagram && <a href={lead.instagram} target="_blank" rel="noreferrer" className="text-pink-400 hover:text-pink-300 bg-pink-500/10 p-1.5 rounded hover:bg-pink-500/20" title="Instagram"><InstagramIcon className="w-3.5 h-3.5" /></a>}
                            {lead.facebook && <a href={lead.facebook} target="_blank" rel="noreferrer" className="text-blue-500 hover:text-blue-400 bg-blue-500/10 p-1.5 rounded hover:bg-blue-500/20" title="Facebook"><FacebookIcon className="w-3.5 h-3.5" /></a>}
                         </div>

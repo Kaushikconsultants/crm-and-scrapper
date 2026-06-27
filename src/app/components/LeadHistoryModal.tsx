@@ -61,21 +61,21 @@ export default function LeadHistoryModal({ lead, onClose }: { lead: any; onClose
       case 'Follow up': return 'text-orange-400 bg-orange-500/10 border-orange-500/30';
       case 'Scheduled': return 'text-blue-400 bg-blue-500/10 border-blue-500/30';
       case 'Connected': return 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30';
-      default: return 'text-gray-400 bg-gray-500/10 border-gray-500/30';
+      default: return 'text-gray-600 bg-gray-500/10 border-gray-500/30';
     }
   };
 
   return (
     <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-[100] p-4 backdrop-blur-sm">
-      <div className="bg-[#111] border border-gray-800 rounded-3xl w-full max-w-2xl shadow-2xl relative flex flex-col h-[80vh] max-h-[800px]">
+      <div className="bg-white border border-gray-200 rounded-3xl w-full max-w-2xl shadow-2xl relative flex flex-col h-[80vh] max-h-[800px]">
         
         {/* Header */}
-        <div className="p-6 border-b border-gray-800 flex justify-between items-center bg-[#1a1a1a] rounded-t-3xl shrink-0">
+        <div className="p-6 border-b border-gray-200 flex justify-between items-center bg-gray-100 rounded-t-3xl shrink-0">
            <div>
-             <h2 className="text-xl font-bold text-white mb-1">Timeline History</h2>
+             <h2 className="text-xl font-bold text-gray-900 mb-1">Timeline History</h2>
              <p className="text-sm text-blue-400 font-medium">{lead.name}</p>
            </div>
-           <button onClick={onClose} className="text-gray-500 hover:text-white transition-colors">
+           <button onClick={onClose} className="text-gray-500 hover:text-gray-900 transition-colors">
              <XCircle className="w-7 h-7" />
            </button>
         </div>
@@ -96,20 +96,20 @@ export default function LeadHistoryModal({ lead, onClose }: { lead: any; onClose
                {logs.map((log, idx) => (
                  <div key={log.id} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
                    {/* Icon */}
-                   <div className="flex items-center justify-center w-10 h-10 rounded-full border border-gray-800 bg-[#111] text-emerald-400 shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 shadow">
+                   <div className="flex items-center justify-center w-10 h-10 rounded-full border border-gray-200 bg-white text-emerald-400 shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 shadow">
                      <PhoneCall className="w-4 h-4" />
                    </div>
                    
                    {/* Card */}
-                   <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded-xl border border-gray-800 bg-[#111] shadow">
+                   <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded-xl border border-gray-200 bg-white shadow">
                      <div className="flex items-center justify-between mb-2">
-                       <span className="font-bold text-gray-200">{log.agent_name}</span>
+                       <span className="font-bold text-gray-800">{log.agent_name}</span>
                        <time className="font-mono text-xs text-gray-500">{new Date(log.created_at).toLocaleString()}</time>
                      </div>
                      <div className={`inline-block px-2 py-0.5 rounded text-xs font-semibold border mb-3 ${getStatusColor(log.status_marked)}`}>
                         {log.status_marked}
                      </div>
-                     <p className="text-sm text-gray-400 whitespace-pre-wrap">{log.notes || "No notes provided."}</p>
+                     <p className="text-sm text-gray-600 whitespace-pre-wrap">{log.notes || "No notes provided."}</p>
                    </div>
                  </div>
                ))}

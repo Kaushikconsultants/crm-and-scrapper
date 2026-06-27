@@ -415,12 +415,12 @@ export default function AgentsPage() {
   return (
     <div className="p-8 max-w-[1600px] mx-auto space-y-8">
       {/* Top Header / Tab Switcher */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pb-6 border-b border-gray-800">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pb-6 border-b border-gray-200">
         <div>
           <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">
             {activeTab === "team" ? "Team Management" : activeTab === "analytics" ? "Performance & Analytics" : "AI & Knowledge Settings"}
           </h1>
-          <p className="text-gray-400 mt-1">
+          <p className="text-gray-600 mt-1">
             {activeTab === "team" 
               ? "Create new accounts and monitor active agent availability." 
               : activeTab === "analytics"
@@ -429,13 +429,13 @@ export default function AgentsPage() {
           </p>
         </div>
 
-        <div className="flex bg-[#111] border border-gray-800 p-1 rounded-2xl shrink-0">
+        <div className="flex bg-white border border-gray-200 p-1 rounded-2xl shrink-0">
           <button 
             onClick={() => setActiveTab("team")}
             className={`px-6 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 ${
               activeTab === "team" 
-                ? "bg-blue-600 text-white shadow-lg shadow-blue-500/20" 
-                : "text-gray-400 hover:text-white"
+                ? "bg-blue-600 text-gray-900 shadow-lg shadow-blue-500/20" 
+                : "text-gray-600 hover:text-gray-900"
             }`}
           >
             <Users className="w-4 h-4" /> Team Management
@@ -444,8 +444,8 @@ export default function AgentsPage() {
             onClick={() => setActiveTab("analytics")}
             className={`px-6 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 ${
               activeTab === "analytics" 
-                ? "bg-blue-600 text-white shadow-lg shadow-blue-500/20" 
-                : "text-gray-400 hover:text-white"
+                ? "bg-blue-600 text-gray-900 shadow-lg shadow-blue-500/20" 
+                : "text-gray-600 hover:text-gray-900"
             }`}
           >
             <BarChart2 className="w-4 h-4" /> Analytics & Reports
@@ -454,8 +454,8 @@ export default function AgentsPage() {
             onClick={() => setActiveTab("settings")}
             className={`px-6 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 ${
               activeTab === "settings" 
-                ? "bg-blue-600 text-white shadow-lg shadow-blue-500/20" 
-                : "text-gray-400 hover:text-white"
+                ? "bg-blue-600 text-gray-900 shadow-lg shadow-blue-500/20" 
+                : "text-gray-600 hover:text-gray-900"
             }`}
           >
             <Settings className="w-4 h-4" /> AI & Knowledge Settings
@@ -467,7 +467,7 @@ export default function AgentsPage() {
         <div className="grid grid-cols-1 xl:grid-cols-12 gap-8 animate-fadeIn">
           {/* Left Column: Create Agent */}
           <div className="xl:col-span-4 space-y-6">
-            <div className="bg-[#111] border border-gray-800 rounded-3xl p-6 relative overflow-hidden group">
+            <div className="bg-white border border-gray-200 rounded-3xl p-6 relative overflow-hidden group">
               <h2 className="text-xl font-semibold mb-6 flex items-center gap-2">
                 <UserPlus className="w-5 h-5 text-blue-400" /> Create New Account
               </h2>
@@ -480,26 +480,26 @@ export default function AgentsPage() {
 
               <form onSubmit={handleCreateAgent} className="space-y-4">
                 <div>
-                  <label className="block text-gray-400 text-sm mb-2">Full Name</label>
-                  <input type="text" value={name} onChange={e => setName(e.target.value)} required className="w-full bg-[#1a1a1a] border border-gray-800 rounded-xl p-3 focus:border-blue-500 outline-none" />
+                  <label className="block text-gray-600 text-sm mb-2">Full Name</label>
+                  <input type="text" value={name} onChange={e => setName(e.target.value)} required className="w-full bg-gray-100 border border-gray-200 rounded-xl p-3 focus:border-blue-500 outline-none" />
                 </div>
                 <div>
-                  <label className="block text-gray-400 text-sm mb-2">Email Address (Login ID)</label>
-                  <input type="email" value={email} onChange={e => setEmail(e.target.value)} required className="w-full bg-[#1a1a1a] border border-gray-800 rounded-xl p-3 focus:border-blue-500 outline-none" />
+                  <label className="block text-gray-600 text-sm mb-2">Email Address (Login ID)</label>
+                  <input type="email" value={email} onChange={e => setEmail(e.target.value)} required className="w-full bg-gray-100 border border-gray-200 rounded-xl p-3 focus:border-blue-500 outline-none" />
                 </div>
                 <div>
-                  <label className="block text-gray-400 text-sm mb-2">Temporary Password</label>
-                  <input type="text" value={password} onChange={e => setPassword(e.target.value)} required className="w-full bg-[#1a1a1a] border border-gray-800 rounded-xl p-3 focus:border-blue-500 outline-none" />
+                  <label className="block text-gray-600 text-sm mb-2">Temporary Password</label>
+                  <input type="text" value={password} onChange={e => setPassword(e.target.value)} required className="w-full bg-gray-100 border border-gray-200 rounded-xl p-3 focus:border-blue-500 outline-none" />
                 </div>
                 <div>
-                  <label className="block text-gray-400 text-sm mb-2">System Role</label>
-                  <select value={role} onChange={e => setRole(e.target.value)} className="w-full bg-[#1a1a1a] border border-gray-800 rounded-xl p-3 focus:border-blue-500 outline-none">
+                  <label className="block text-gray-600 text-sm mb-2">System Role</label>
+                  <select value={role} onChange={e => setRole(e.target.value)} className="w-full bg-gray-100 border border-gray-200 rounded-xl p-3 focus:border-blue-500 outline-none">
                     <option value="agent">Standard Agent</option>
                     <option value="admin">System Administrator</option>
                   </select>
                 </div>
                 
-                <button type="submit" disabled={creating} className="w-full bg-blue-600 text-white hover:bg-blue-500 disabled:opacity-50 rounded-xl py-3.5 font-semibold mt-4 transition-all flex justify-center">
+                <button type="submit" disabled={creating} className="w-full bg-blue-600 text-gray-900 hover:bg-blue-500 disabled:opacity-50 rounded-xl py-3.5 font-semibold mt-4 transition-all flex justify-center">
                   {creating ? <Loader2 className="w-5 h-5 animate-spin" /> : "Create Account"}
                 </button>
               </form>
@@ -514,7 +514,7 @@ export default function AgentsPage() {
                 <div className="flex items-center gap-4">
                   <div className="w-14 h-14 rounded-full bg-yellow-500/20 text-yellow-500 flex items-center justify-center font-bold relative">
                     <Trophy className="w-7 h-7" />
-                    <div className="absolute -bottom-1 -right-1 bg-yellow-500 text-black text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-[#111]">1</div>
+                    <div className="absolute -bottom-1 -right-1 bg-yellow-500 text-black text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white">1</div>
                   </div>
                   <div>
                     <h3 className="text-sm text-yellow-500 font-bold tracking-widest uppercase mb-1">Top Performer Today</h3>
@@ -526,8 +526,8 @@ export default function AgentsPage() {
                       }, agents[0]);
                       const calls = callStats[topAgent.id]?.today || 0;
                       return (
-                        <p className="text-2xl font-bold text-white">
-                          {topAgent.name} <span className="text-sm font-normal text-gray-400">with {calls} calls</span>
+                        <p className="text-2xl font-bold text-gray-900">
+                          {topAgent.name} <span className="text-sm font-normal text-gray-600">with {calls} calls</span>
                         </p>
                       );
                     })()}
@@ -536,17 +536,17 @@ export default function AgentsPage() {
               </div>
             )}
 
-            <div className="bg-[#111] border border-gray-800 rounded-3xl p-6 flex flex-col min-h-[500px]">
+            <div className="bg-white border border-gray-200 rounded-3xl p-6 flex flex-col min-h-[500px]">
               <h2 className="text-xl font-semibold mb-6 flex items-center gap-2">
                 <TrendingUp className="w-5 h-5 text-blue-400" /> Agent Performance Dashboard
               </h2>
 
-              <div className="overflow-auto flex-1 w-full bg-[#0a0a0a] rounded-xl border border-gray-800">
+              <div className="overflow-auto flex-1 w-full bg-[#0a0a0a] rounded-xl border border-gray-200">
                 {loading ? (
                   <div className="flex justify-center items-center h-full text-gray-500"><Loader2 className="w-5 h-5 animate-spin mr-2" /> Loading stats...</div>
                 ) : (
                   <table className="w-full text-left text-sm border-collapse min-w-[600px]">
-                    <thead className="bg-[#111] text-gray-400 sticky top-0 border-b border-gray-800">
+                    <thead className="bg-white text-gray-600 sticky top-0 border-b border-gray-200">
                       <tr>
                         <th className="px-6 py-4 font-semibold">Agent Name</th>
                         <th className="px-6 py-4 font-semibold">Role</th>
@@ -558,8 +558,8 @@ export default function AgentsPage() {
                     </thead>
                     <tbody className="divide-y divide-gray-800/50">
                       {agents.map((agent) => (
-                        <tr key={agent.id} className="hover:bg-[#1a1a1a] transition-colors">
-                          <td className="px-6 py-4 font-medium text-gray-200 flex items-center gap-3">
+                        <tr key={agent.id} className="hover:bg-gray-100 transition-colors">
+                          <td className="px-6 py-4 font-medium text-gray-800 flex items-center gap-3">
                             <div className="w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold">
                               {agent.name.charAt(0)}
                             </div>
@@ -569,7 +569,7 @@ export default function AgentsPage() {
                             </div>
                           </td>
                           <td className="px-6 py-4">
-                            <span className={`px-2 py-1 rounded-md text-xs font-semibold border ${agent.role === 'admin' ? 'bg-purple-500/10 text-purple-400 border-purple-500/20' : 'bg-gray-800 text-gray-400 border-gray-700'}`}>
+                            <span className={`px-2 py-1 rounded-md text-xs font-semibold border ${agent.role === 'admin' ? 'bg-purple-500/10 text-purple-400 border-purple-500/20' : 'bg-gray-200 text-gray-600 border-gray-700'}`}>
                               {agent.role.toUpperCase()}
                             </span>
                           </td>
@@ -584,12 +584,12 @@ export default function AgentsPage() {
                             </span>
                           </td>
                           <td className="px-6 py-4 text-center">
-                            <span className="font-mono text-gray-400">
+                            <span className="font-mono text-gray-600">
                               {callStats[agent.id]?.total || 0}
                             </span>
                           </td>
                           <td className="px-6 py-4 text-right">
-                            <button onClick={() => openEditModal(agent)} className="bg-gray-800 hover:bg-gray-700 text-gray-300 p-2 rounded-lg transition-colors">
+                            <button onClick={() => openEditModal(agent)} className="bg-gray-200 hover:bg-gray-700 text-gray-700 p-2 rounded-lg transition-colors">
                               <Settings className="w-4 h-4" />
                             </button>
                           </td>
@@ -613,54 +613,54 @@ export default function AgentsPage() {
             <>
               {/* Summary Cards */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div className="bg-[#111] border border-gray-800 rounded-3xl p-6 relative overflow-hidden group hover:border-blue-500/40 transition-all">
+                <div className="bg-white border border-gray-200 rounded-3xl p-6 relative overflow-hidden group hover:border-blue-500/40 transition-all">
                   <div className="absolute top-0 right-0 w-24 h-24 bg-blue-500/5 rounded-bl-full pointer-events-none transition-all group-hover:bg-blue-500/10"></div>
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 rounded-2xl bg-blue-500/10 text-blue-400 flex items-center justify-center">
                       <Users className="w-6 h-6" />
                     </div>
                     <div>
-                      <p className="text-gray-400 text-xs font-semibold uppercase tracking-wider">Total Leads</p>
-                      <h3 className="text-3xl font-extrabold text-white mt-1 font-mono">{totalLeads}</h3>
+                      <p className="text-gray-600 text-xs font-semibold uppercase tracking-wider">Total Leads</p>
+                      <h3 className="text-3xl font-extrabold text-gray-900 mt-1 font-mono">{totalLeads}</h3>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-[#111] border border-gray-800 rounded-3xl p-6 relative overflow-hidden group hover:border-emerald-500/40 transition-all">
+                <div className="bg-white border border-gray-200 rounded-3xl p-6 relative overflow-hidden group hover:border-emerald-500/40 transition-all">
                   <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-500/5 rounded-bl-full pointer-events-none transition-all group-hover:bg-emerald-500/10"></div>
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
                       <CheckCircle2 className="w-6 h-6" />
                     </div>
                     <div>
-                      <p className="text-gray-400 text-xs font-semibold uppercase tracking-wider">Overall Conversion</p>
+                      <p className="text-gray-600 text-xs font-semibold uppercase tracking-wider">Overall Conversion</p>
                       <h3 className="text-3xl font-extrabold text-emerald-400 mt-1 font-mono">{conversionRate}%</h3>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-[#111] border border-gray-800 rounded-3xl p-6 relative overflow-hidden group hover:border-purple-500/40 transition-all">
+                <div className="bg-white border border-gray-200 rounded-3xl p-6 relative overflow-hidden group hover:border-purple-500/40 transition-all">
                   <div className="absolute top-0 right-0 w-24 h-24 bg-purple-500/5 rounded-bl-full pointer-events-none transition-all group-hover:bg-purple-500/10"></div>
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 rounded-2xl bg-purple-500/10 text-purple-400 flex items-center justify-center">
                       <PhoneCall className="w-6 h-6" />
                     </div>
                     <div>
-                      <p className="text-gray-400 text-xs font-semibold uppercase tracking-wider">Total Logged Calls</p>
-                      <h3 className="text-3xl font-extrabold text-white mt-1 font-mono">{totalCalls}</h3>
+                      <p className="text-gray-600 text-xs font-semibold uppercase tracking-wider">Total Logged Calls</p>
+                      <h3 className="text-3xl font-extrabold text-gray-900 mt-1 font-mono">{totalCalls}</h3>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-[#111] border border-gray-800 rounded-3xl p-6 relative overflow-hidden group hover:border-amber-500/40 transition-all">
+                <div className="bg-white border border-gray-200 rounded-3xl p-6 relative overflow-hidden group hover:border-amber-500/40 transition-all">
                   <div className="absolute top-0 right-0 w-24 h-24 bg-amber-500/5 rounded-bl-full pointer-events-none transition-all group-hover:bg-amber-500/10"></div>
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-400 flex items-center justify-center">
                       <Calendar className="w-6 h-6" />
                     </div>
                     <div>
-                      <p className="text-gray-400 text-xs font-semibold uppercase tracking-wider">Active Follow-ups</p>
-                      <h3 className="text-3xl font-extrabold text-white mt-1 font-mono">{activeFollowups}</h3>
+                      <p className="text-gray-600 text-xs font-semibold uppercase tracking-wider">Active Follow-ups</p>
+                      <h3 className="text-3xl font-extrabold text-gray-900 mt-1 font-mono">{activeFollowups}</h3>
                     </div>
                   </div>
                 </div>
@@ -669,15 +669,15 @@ export default function AgentsPage() {
               {/* Main Graphs / Funnel Area */}
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                 {/* 7-Day call history bar chart */}
-                <div className="lg:col-span-8 bg-[#111] border border-gray-800 rounded-3xl p-6 flex flex-col justify-between">
+                <div className="lg:col-span-8 bg-white border border-gray-200 rounded-3xl p-6 flex flex-col justify-between">
                   <div>
-                    <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                    <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
                       <Calendar className="w-5 h-5 text-blue-400" /> 7-Day Call History Timeline
                     </h3>
-                    <p className="text-gray-400 text-xs mt-1">Daily aggregated call volumes for active lead outreach.</p>
+                    <p className="text-gray-600 text-xs mt-1">Daily aggregated call volumes for active lead outreach.</p>
                   </div>
 
-                  <div className="h-64 mt-8 flex items-end justify-between px-4 pb-2 border-b border-gray-800/80 relative">
+                  <div className="h-64 mt-8 flex items-end justify-between px-4 pb-2 border-b border-gray-200/80 relative">
                     {/* SVG grid lines */}
                     <div className="absolute inset-0 flex flex-col justify-between pointer-events-none opacity-5 pr-2">
                       <div className="w-full border-t border-white"></div>
@@ -691,7 +691,7 @@ export default function AgentsPage() {
                       return (
                         <div key={idx} className="flex flex-col items-center gap-3 w-full group relative">
                           {/* Tooltip */}
-                          <div className="absolute bottom-full mb-2 bg-[#1c1c1e] text-white border border-gray-800 text-[10px] font-bold px-2 py-1 rounded shadow-xl opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-20">
+                          <div className="absolute bottom-full mb-2 bg-[#1c1c1e] text-gray-900 border border-gray-200 text-[10px] font-bold px-2 py-1 rounded shadow-xl opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-20">
                             {day.count} Calls
                           </div>
                           
@@ -700,7 +700,7 @@ export default function AgentsPage() {
                             <div className="h-1 bg-blue-300 w-full rounded-t-lg"></div>
                           </div>
 
-                          <span className="text-[10px] font-medium text-gray-500 group-hover:text-white transition-colors">{day.label}</span>
+                          <span className="text-[10px] font-medium text-gray-500 group-hover:text-gray-900 transition-colors">{day.label}</span>
                         </div>
                       );
                     })}
@@ -708,12 +708,12 @@ export default function AgentsPage() {
                 </div>
 
                 {/* Conversion Funnel */}
-                <div className="lg:col-span-4 bg-[#111] border border-gray-800 rounded-3xl p-6 flex flex-col justify-between">
+                <div className="lg:col-span-4 bg-white border border-gray-200 rounded-3xl p-6 flex flex-col justify-between">
                   <div>
-                    <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                    <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
                       <PieChart className="w-5 h-5 text-purple-400" /> Lead Pipeline Conversion
                     </h3>
-                    <p className="text-gray-400 text-xs mt-1">Status conversion conversion rate mapping.</p>
+                    <p className="text-gray-600 text-xs mt-1">Status conversion conversion rate mapping.</p>
                   </div>
 
                   {/* Funnel Layout */}
@@ -726,10 +726,10 @@ export default function AgentsPage() {
                     ].map((step, idx) => (
                       <div key={idx} className="relative group">
                         <div className="flex justify-between items-center text-xs mb-1.5 px-1">
-                          <span className="font-semibold text-gray-300">{step.label}</span>
-                          <span className="font-mono text-gray-400 font-bold">{step.count} ({step.pct}%)</span>
+                          <span className="font-semibold text-gray-700">{step.label}</span>
+                          <span className="font-mono text-gray-600 font-bold">{step.count} ({step.pct}%)</span>
                         </div>
-                        <div className="w-full bg-gray-900 border border-gray-800 rounded-full h-3 overflow-hidden">
+                        <div className="w-full bg-gray-50 border border-gray-200 rounded-full h-3 overflow-hidden">
                           <div className={`bg-gradient-to-r ${step.color} h-full rounded-full transition-all duration-500`} style={{ width: `${step.pct}%` }}></div>
                         </div>
                       </div>
@@ -741,12 +741,12 @@ export default function AgentsPage() {
               {/* Second Row: Categories, Scrapes & Top Closing Leaders */}
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                 {/* Category statistics */}
-                <div className="lg:col-span-4 bg-[#111] border border-gray-800 rounded-3xl p-6 flex flex-col justify-between">
+                <div className="lg:col-span-4 bg-white border border-gray-200 rounded-3xl p-6 flex flex-col justify-between">
                   <div>
-                    <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                    <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
                       <MapPin className="w-5 h-5 text-amber-400" /> Top Lead Categories
                     </h3>
-                    <p className="text-gray-400 text-xs mt-1">Lead distribution by business category niches.</p>
+                    <p className="text-gray-600 text-xs mt-1">Lead distribution by business category niches.</p>
                   </div>
 
                   <div className="space-y-4 mt-6 flex-1 flex flex-col justify-center">
@@ -758,10 +758,10 @@ export default function AgentsPage() {
                         return (
                           <div key={idx} className="space-y-1">
                             <div className="flex justify-between items-center text-xs">
-                              <span className="text-gray-300 font-medium">{cat.category}</span>
+                              <span className="text-gray-700 font-medium">{cat.category}</span>
                               <span className="text-gray-500 font-mono font-bold">{cat.count} leads</span>
                             </div>
-                            <div className="w-full bg-gray-900 border border-gray-800/80 rounded-lg h-2 overflow-hidden">
+                            <div className="w-full bg-gray-50 border border-gray-200/80 rounded-lg h-2 overflow-hidden">
                               <div className="bg-amber-500 h-full rounded-lg" style={{ width: `${pct}%` }}></div>
                             </div>
                           </div>
@@ -772,12 +772,12 @@ export default function AgentsPage() {
                 </div>
 
                 {/* Scraper Run History */}
-                <div className="lg:col-span-4 bg-[#111] border border-gray-800 rounded-3xl p-6 flex flex-col justify-between">
+                <div className="lg:col-span-4 bg-white border border-gray-200 rounded-3xl p-6 flex flex-col justify-between">
                   <div>
-                    <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                    <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
                       <BarChart2 className="w-5 h-5 text-blue-400" /> Scraper History
                     </h3>
-                    <p className="text-gray-400 text-xs mt-1">Audit log of recent lead generation scrapes.</p>
+                    <p className="text-gray-600 text-xs mt-1">Audit log of recent lead generation scrapes.</p>
                   </div>
 
                   <div className="space-y-3 mt-6 flex-1 overflow-y-auto max-h-56 pr-1 custom-scrollbar">
@@ -785,9 +785,9 @@ export default function AgentsPage() {
                       <p className="text-gray-500 text-sm text-center py-8">No runs logged yet</p>
                     ) : (
                       scraperRuns.map((run, idx) => (
-                        <div key={run.id || idx} className="bg-[#1a1a1a] border border-gray-800/80 rounded-xl p-3 flex justify-between items-center hover:border-blue-500/20 transition-all">
+                        <div key={run.id || idx} className="bg-gray-100 border border-gray-200/80 rounded-xl p-3 flex justify-between items-center hover:border-blue-500/20 transition-all">
                           <div>
-                            <span className="text-xs font-bold text-gray-200 block truncate max-w-[150px]" title={run.category}>{run.category}</span>
+                            <span className="text-xs font-bold text-gray-800 block truncate max-w-[150px]" title={run.category}>{run.category}</span>
                             <span className="text-[10px] text-gray-500 flex items-center gap-0.5 mt-0.5">
                               <MapPin className="w-2.5 h-2.5 text-gray-600" /> {run.location}
                             </span>
@@ -811,16 +811,16 @@ export default function AgentsPage() {
                 </div>
 
                 {/* Deal-Closer Leaderboard */}
-                <div className="lg:col-span-4 bg-[#111] border border-gray-800 rounded-3xl p-6">
-                  <h3 className="text-lg font-bold text-white flex items-center gap-2 mb-2">
+                <div className="lg:col-span-4 bg-white border border-gray-200 rounded-3xl p-6">
+                  <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2 mb-2">
                     <Trophy className="w-5 h-5 text-yellow-500" /> Agent Leaderboard
                   </h3>
-                  <p className="text-gray-400 text-xs mb-6">Ranking agents based on closed deals.</p>
+                  <p className="text-gray-600 text-xs mb-6">Ranking agents based on closed deals.</p>
 
                   <div className="overflow-x-auto">
                     <table className="w-full text-left text-xs border-collapse">
                       <thead>
-                        <tr className="border-b border-gray-800 text-gray-500 pb-3">
+                        <tr className="border-b border-gray-200 text-gray-500 pb-3">
                           <th className="pb-3 font-semibold">Agent</th>
                           <th className="pb-3 font-semibold text-center">Calls</th>
                           <th className="pb-3 font-semibold text-right text-yellow-500">Won</th>
@@ -833,15 +833,15 @@ export default function AgentsPage() {
                               <span className={`w-5 h-5 rounded-full flex items-center justify-center font-bold text-[10px] ${
                                 index === 0 ? 'bg-yellow-500 text-black' : 
                                 index === 1 ? 'bg-gray-300 text-black' : 
-                                index === 2 ? 'bg-amber-600 text-black' : 'bg-gray-800 text-gray-400'
+                                index === 2 ? 'bg-amber-600 text-black' : 'bg-gray-200 text-gray-600'
                               }`}>
                                 {index + 1}
                               </span>
                               <div>
-                                <span className="font-bold text-gray-200 block max-w-[80px] truncate">{agent.name}</span>
+                                <span className="font-bold text-gray-800 block max-w-[80px] truncate">{agent.name}</span>
                               </div>
                             </td>
-                            <td className="py-3 text-center font-mono text-gray-400">{agent.callsLogged}</td>
+                            <td className="py-3 text-center font-mono text-gray-600">{agent.callsLogged}</td>
                             <td className="py-3 text-right font-mono font-bold text-emerald-400 text-sm">{agent.closedCount}</td>
                           </tr>
                         ))}
@@ -858,7 +858,7 @@ export default function AgentsPage() {
         <div className="grid grid-cols-1 xl:grid-cols-12 gap-8 animate-fadeIn">
           {/* Left Column: Groq Settings */}
           <div className="xl:col-span-4 space-y-6">
-             <div className="bg-[#111] border border-gray-800 rounded-3xl p-6 relative overflow-hidden group">
+             <div className="bg-white border border-gray-200 rounded-3xl p-6 relative overflow-hidden group">
                <h2 className="text-xl font-semibold mb-6 flex items-center gap-2">
                  <Settings className="w-5 h-5 text-blue-400" /> AI System Settings
                </h2>
@@ -871,14 +871,14 @@ export default function AgentsPage() {
 
                <form onSubmit={handleSaveSettings} className="space-y-4">
                  <div>
-                   <label className="block text-gray-400 text-sm mb-2 font-medium">Groq API Key</label>
+                   <label className="block text-gray-600 text-sm mb-2 font-medium">Groq API Key</label>
                    <input 
                      type="password" 
                      value={groqApiKey} 
                      onChange={e => setGroqApiKey(e.target.value)} 
                      required 
                      placeholder="gsk_..."
-                     className="w-full bg-[#1a1a1a] border border-gray-800 rounded-xl p-3 focus:border-blue-500 outline-none text-white font-mono text-sm" 
+                     className="w-full bg-gray-100 border border-gray-200 rounded-xl p-3 focus:border-blue-500 outline-none text-gray-900 font-mono text-sm" 
                    />
                    <p className="text-[10px] text-gray-500 mt-1.5">
                      This API key is stored in the Supabase settings table and used to generate pitch offers and call scripts for agents.
@@ -886,12 +886,12 @@ export default function AgentsPage() {
                  </div>
 
                  <div>
-                   <label className="block text-gray-400 text-sm mb-2 font-medium">Groq Model</label>
+                   <label className="block text-gray-600 text-sm mb-2 font-medium">Groq Model</label>
                    <select 
                      value={groqModel} 
                      onChange={e => setGroqModel(e.target.value)} 
                      required 
-                     className="w-full bg-[#1a1a1a] border border-gray-800 rounded-xl p-3 focus:border-blue-500 outline-none text-white text-sm"
+                     className="w-full bg-gray-100 border border-gray-200 rounded-xl p-3 focus:border-blue-500 outline-none text-gray-900 text-sm"
                    >
                      <option value="llama-3.3-70b-specdec">llama-3.3-70b-specdec (High performance reasoning)</option>
                      <option value="llama-3.3-70b-versatile">llama-3.3-70b-versatile (Recommended default)</option>
@@ -905,7 +905,7 @@ export default function AgentsPage() {
                  <button 
                    type="submit" 
                    disabled={savingSettings} 
-                   className="w-full bg-blue-600 text-white hover:bg-blue-500 disabled:opacity-50 rounded-xl py-3.5 font-semibold mt-4 transition-all flex justify-center text-sm cursor-pointer"
+                   className="w-full bg-blue-600 text-gray-900 hover:bg-blue-500 disabled:opacity-50 rounded-xl py-3.5 font-semibold mt-4 transition-all flex justify-center text-sm cursor-pointer"
                  >
                    {savingSettings ? <Loader2 className="w-5 h-5 animate-spin" /> : "Save Settings"}
                  </button>
@@ -915,11 +915,11 @@ export default function AgentsPage() {
 
           {/* Right Column: Knowledge Base Manager */}
           <div className="xl:col-span-8 space-y-6">
-             <div className="bg-[#111] border border-gray-800 rounded-3xl p-6 relative overflow-hidden">
+             <div className="bg-white border border-gray-200 rounded-3xl p-6 relative overflow-hidden">
                <h2 className="text-xl font-semibold mb-2 flex items-center gap-2">
                  <Settings className="w-5 h-5 text-purple-400" /> AI Knowledge Base
                </h2>
-               <p className="text-gray-400 text-xs mb-6">Upload PDFs, reference websites/URLs, or type raw guidelines to seed client offers and script generation context.</p>
+               <p className="text-gray-600 text-xs mb-6">Upload PDFs, reference websites/URLs, or type raw guidelines to seed client offers and script generation context.</p>
 
                {kbMessage && (
                  <div className={`p-4 rounded-xl mb-6 text-sm ${kbMessage.type === 'error' ? 'bg-red-500/10 text-red-400 border border-red-500/20' : 'bg-green-500/10 text-green-400 border border-green-500/20'}`}>
@@ -930,7 +930,7 @@ export default function AgentsPage() {
                <form onSubmit={handleAddKb} className="space-y-6">
                  {/* Source Type Selector */}
                  <div>
-                   <label className="block text-gray-400 text-sm mb-2.5 font-semibold">Knowledge Source Type</label>
+                   <label className="block text-gray-600 text-sm mb-2.5 font-semibold">Knowledge Source Type</label>
                    <div className="grid grid-cols-3 gap-3">
                      {[
                        { value: "text", label: "Raw Text / Guidelines" },
@@ -947,7 +947,7 @@ export default function AgentsPage() {
                          className={`py-3 rounded-xl border text-sm font-semibold transition-all ${
                            kbType === opt.value 
                              ? "bg-purple-600/15 border-purple-500 text-purple-300"
-                             : "bg-[#1a1a1a] border-gray-800 text-gray-400 hover:text-white"
+                             : "bg-gray-100 border-gray-200 text-gray-600 hover:text-gray-900"
                          }`}
                        >
                          {opt.label}
@@ -958,28 +958,28 @@ export default function AgentsPage() {
 
                  {/* Title Input */}
                  <div>
-                   <label className="block text-gray-400 text-sm mb-2 font-medium">Document / Source Title</label>
+                   <label className="block text-gray-600 text-sm mb-2 font-medium">Document / Source Title</label>
                    <input 
                      type="text" 
                      value={kbTitle} 
                      onChange={e => setKbTitle(e.target.value)} 
                      required 
                      placeholder="e.g. Hyperscript Web Development Catalog" 
-                     className="w-full bg-[#1a1a1a] border border-gray-800 rounded-xl p-3 focus:border-purple-500 outline-none text-white text-sm"
+                     className="w-full bg-gray-100 border border-gray-200 rounded-xl p-3 focus:border-purple-500 outline-none text-gray-900 text-sm"
                    />
                  </div>
 
                  {/* Conditional Fields based on KB Type */}
                  {kbType === "text" && (
                    <div className="animate-fadeIn">
-                     <label className="block text-gray-400 text-sm mb-2 font-medium">Raw Guidelines / Text Content</label>
+                     <label className="block text-gray-600 text-sm mb-2 font-medium">Raw Guidelines / Text Content</label>
                      <textarea
                        rows={6}
                        value={kbContent}
                        onChange={e => setKbContent(e.target.value)}
                        required
                        placeholder="Paste service catalogs, business details, or pitch instructions..."
-                       className="w-full bg-[#1a1a1a] border border-gray-800 rounded-xl p-3 focus:border-purple-500 outline-none text-white text-sm font-mono"
+                       className="w-full bg-gray-100 border border-gray-200 rounded-xl p-3 focus:border-purple-500 outline-none text-gray-900 text-sm font-mono"
                      />
                    </div>
                  )}
@@ -987,14 +987,14 @@ export default function AgentsPage() {
                  {kbType === "url" && (
                    <div className="animate-fadeIn space-y-4">
                      <div>
-                       <label className="block text-gray-400 text-sm mb-2 font-medium">Website URL</label>
+                       <label className="block text-gray-600 text-sm mb-2 font-medium">Website URL</label>
                        <input 
                          type="url" 
                          value={kbUrl} 
                          onChange={e => setKbUrl(e.target.value)} 
                          required 
                          placeholder="https://example.com/services" 
-                         className="w-full bg-[#1a1a1a] border border-gray-800 rounded-xl p-3 focus:border-purple-500 outline-none text-white text-sm font-mono"
+                         className="w-full bg-gray-100 border border-gray-200 rounded-xl p-3 focus:border-purple-500 outline-none text-gray-900 text-sm font-mono"
                        />
                      </div>
                      <p className="text-[10px] text-gray-500">Note: The AI agent will refer to this URL link as context to tailor services and pitches for your team.</p>
@@ -1004,19 +1004,19 @@ export default function AgentsPage() {
                  {kbType === "pdf" && (
                    <div className="animate-fadeIn space-y-4">
                      <div>
-                       <label className="block text-gray-400 text-sm mb-2 font-medium">Choose PDF Document</label>
+                       <label className="block text-gray-600 text-sm mb-2 font-medium">Choose PDF Document</label>
                        <input 
                          type="file" 
                          accept="application/pdf"
                          onChange={handlePdfUpload}
-                         className="w-full bg-[#1a1a1a] border border-gray-800 rounded-xl p-3 file:bg-purple-600 file:border-none file:text-white file:px-3 file:py-1.5 file:rounded-lg file:text-xs file:font-bold file:mr-4 file:cursor-pointer text-gray-400 text-sm cursor-pointer"
+                         className="w-full bg-gray-100 border border-gray-200 rounded-xl p-3 file:bg-purple-600 file:border-none file:text-gray-900 file:px-3 file:py-1.5 file:rounded-lg file:text-xs file:font-bold file:mr-4 file:cursor-pointer text-gray-600 text-sm cursor-pointer"
                        />
                      </div>
 
                      {kbContent && (
                        <div className="space-y-2">
                          <label className="block text-emerald-400 text-xs font-semibold">Extracted PDF Text Preview</label>
-                         <div className="w-full bg-[#0a0a0a] border border-gray-800 rounded-xl p-3 max-h-48 overflow-y-auto text-xs font-mono text-gray-400 whitespace-pre-wrap">
+                         <div className="w-full bg-[#0a0a0a] border border-gray-200 rounded-xl p-3 max-h-48 overflow-y-auto text-xs font-mono text-gray-600 whitespace-pre-wrap">
                            {kbContent}
                          </div>
                        </div>
@@ -1027,7 +1027,7 @@ export default function AgentsPage() {
                  <button
                    type="submit"
                    disabled={addingKb || (kbType === "pdf" && !kbContent) || (kbType === "url" && !kbUrl) || (kbType === "text" && !kbContent)}
-                   className="w-full bg-purple-600 text-white hover:bg-purple-500 disabled:opacity-50 rounded-xl py-3.5 font-semibold mt-4 transition-all flex justify-center text-sm cursor-pointer"
+                   className="w-full bg-purple-600 text-gray-900 hover:bg-purple-500 disabled:opacity-50 rounded-xl py-3.5 font-semibold mt-4 transition-all flex justify-center text-sm cursor-pointer"
                  >
                    {addingKb ? <Loader2 className="w-5 h-5 animate-spin" /> : "Add Knowledge Source"}
                  </button>
@@ -1035,8 +1035,8 @@ export default function AgentsPage() {
              </div>
 
              {/* Existing Knowledge Sources List */}
-             <div className="bg-[#111] border border-gray-800 rounded-3xl p-6 relative overflow-hidden">
-               <h3 className="text-lg font-bold text-white mb-6">Active Knowledge Sources</h3>
+             <div className="bg-white border border-gray-200 rounded-3xl p-6 relative overflow-hidden">
+               <h3 className="text-lg font-bold text-gray-900 mb-6">Active Knowledge Sources</h3>
                
                {kbItems.length === 0 ? (
                  <div className="text-center py-8 text-gray-500 text-sm">No knowledge items uploaded yet.</div>
@@ -1044,7 +1044,7 @@ export default function AgentsPage() {
                  <div className="overflow-x-auto">
                    <table className="w-full text-left text-xs border-collapse">
                      <thead>
-                       <tr className="border-b border-gray-800 text-gray-500 pb-3">
+                       <tr className="border-b border-gray-200 text-gray-500 pb-3">
                          <th className="pb-3 font-semibold">Type</th>
                          <th className="pb-3 font-semibold">Source Title</th>
                          <th className="pb-3 font-semibold">Source Details</th>
@@ -1063,8 +1063,8 @@ export default function AgentsPage() {
                                {item.type}
                              </span>
                            </td>
-                           <td className="py-3 font-bold text-gray-200">{item.title}</td>
-                           <td className="py-3 text-gray-400 max-w-xs truncate font-mono">
+                           <td className="py-3 font-bold text-gray-800">{item.title}</td>
+                           <td className="py-3 text-gray-600 max-w-xs truncate font-mono">
                              {item.type === 'url' ? item.source_url : item.file_name || (item.content ? item.content.slice(0, 50) + "..." : "")}
                            </td>
                            <td className="py-3 text-right">
@@ -1089,36 +1089,36 @@ export default function AgentsPage() {
       {/* Edit Agent Modal */}
       {selectedAgent && (
         <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
-          <div className="bg-[#111] border border-gray-800 rounded-3xl p-6 w-full max-w-lg shadow-2xl relative">
-            <button onClick={() => setSelectedAgent(null)} className="absolute top-4 right-4 text-gray-500 hover:text-white">
+          <div className="bg-white border border-gray-200 rounded-3xl p-6 w-full max-w-lg shadow-2xl relative">
+            <button onClick={() => setSelectedAgent(null)} className="absolute top-4 right-4 text-gray-500 hover:text-gray-900">
               <XCircle className="w-6 h-6" />
             </button>
             
-            <h2 className="text-xl font-bold text-white mb-6">Manage Agent: {selectedAgent.name}</h2>
+            <h2 className="text-xl font-bold text-gray-900 mb-6">Manage Agent: {selectedAgent.name}</h2>
 
             <form onSubmit={handleUpdateAgent} className="space-y-4">
               <div>
-                <label className="block text-gray-400 text-sm mb-2">Full Name</label>
-                <input type="text" value={editName} onChange={e => setEditName(e.target.value)} required className="w-full bg-[#1a1a1a] border border-gray-800 rounded-xl p-3 focus:border-blue-500 outline-none text-white" />
+                <label className="block text-gray-600 text-sm mb-2">Full Name</label>
+                <input type="text" value={editName} onChange={e => setEditName(e.target.value)} required className="w-full bg-gray-100 border border-gray-200 rounded-xl p-3 focus:border-blue-500 outline-none text-gray-900" />
               </div>
               <div>
-                <label className="block text-gray-400 text-sm mb-2">Login Email Address</label>
-                <input type="email" value={editEmail} onChange={e => setEditEmail(e.target.value)} required className="w-full bg-[#1a1a1a] border border-gray-800 rounded-xl p-3 focus:border-blue-500 outline-none text-white" />
+                <label className="block text-gray-600 text-sm mb-2">Login Email Address</label>
+                <input type="email" value={editEmail} onChange={e => setEditEmail(e.target.value)} required className="w-full bg-gray-100 border border-gray-200 rounded-xl p-3 focus:border-blue-500 outline-none text-gray-900" />
               </div>
               <div>
-                <label className="block text-gray-400 text-sm mb-2">Reset Password <span className="text-gray-600 text-xs">(Leave blank to keep current)</span></label>
-                <input type="text" value={editPassword} onChange={e => setEditPassword(e.target.value)} className="w-full bg-[#1a1a1a] border border-gray-800 rounded-xl p-3 focus:border-blue-500 outline-none text-white" placeholder="New password" />
+                <label className="block text-gray-600 text-sm mb-2">Reset Password <span className="text-gray-600 text-xs">(Leave blank to keep current)</span></label>
+                <input type="text" value={editPassword} onChange={e => setEditPassword(e.target.value)} className="w-full bg-gray-100 border border-gray-200 rounded-xl p-3 focus:border-blue-500 outline-none text-gray-900" placeholder="New password" />
               </div>
               <div className="flex gap-4">
                  <div className="w-1/3">
-                    <label className="block text-gray-400 text-sm mb-2">System Role</label>
-                    <select value={editRole} onChange={e => setEditRole(e.target.value)} className="w-full bg-[#1a1a1a] border border-gray-800 rounded-xl p-3 focus:border-blue-500 outline-none text-white text-sm">
+                    <label className="block text-gray-600 text-sm mb-2">System Role</label>
+                    <select value={editRole} onChange={e => setEditRole(e.target.value)} className="w-full bg-gray-100 border border-gray-200 rounded-xl p-3 focus:border-blue-500 outline-none text-gray-900 text-sm">
                       <option value="agent">Standard Agent</option>
                       <option value="admin">System Administrator</option>
                     </select>
                  </div>
                  <div className="w-1/3">
-                    <label className="block text-gray-400 text-sm mb-2">Account Status</label>
+                    <label className="block text-gray-600 text-sm mb-2">Account Status</label>
                     <button 
                       type="button" 
                       onClick={() => setEditIsActive(!editIsActive)}
@@ -1129,7 +1129,7 @@ export default function AgentsPage() {
                     </button>
                  </div>
                  <div className="w-1/3">
-                    <label className="block text-gray-400 text-sm mb-2">Availability</label>
+                    <label className="block text-gray-600 text-sm mb-2">Availability</label>
                     <button 
                       type="button" 
                       onClick={() => setEditIsAvailable(!editIsAvailable)}
@@ -1140,11 +1140,11 @@ export default function AgentsPage() {
                  </div>
               </div>
               
-              <div className="flex gap-3 pt-4 mt-6 border-t border-gray-800">
+              <div className="flex gap-3 pt-4 mt-6 border-t border-gray-200">
                 <button type="button" onClick={handleDeleteAgent} disabled={deleting || updating} className="flex-1 bg-red-600/10 hover:bg-red-600/20 text-red-500 border border-red-500/30 rounded-xl py-3 font-semibold transition-all flex justify-center items-center gap-2">
                   {deleting ? <Loader2 className="w-4 h-4 animate-spin" /> : <><Trash2 className="w-4 h-4" /> Delete Agent</>}
                 </button>
-                <button type="submit" disabled={updating || deleting} className="flex-[2] bg-blue-600 hover:bg-blue-500 text-white disabled:opacity-50 rounded-xl py-3 font-semibold transition-all flex justify-center">
+                <button type="submit" disabled={updating || deleting} className="flex-[2] bg-blue-600 hover:bg-blue-500 text-gray-900 disabled:opacity-50 rounded-xl py-3 font-semibold transition-all flex justify-center">
                   {updating ? <Loader2 className="w-5 h-5 animate-spin" /> : "Save Changes"}
                 </button>
               </div>

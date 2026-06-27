@@ -36,10 +36,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   ];
 
   return (
-    <div className="flex min-h-screen bg-[#050505] text-white">
+    <div className="flex min-h-screen bg-gray-50 text-gray-900">
       {/* Sidebar */}
-      <aside className={`${isCollapsed ? "w-16" : "w-52"} bg-[#111] border-r border-gray-800 flex flex-col transition-all duration-300 relative shrink-0`}>
-        <div className="p-4 border-b border-gray-800 flex items-center justify-between">
+      <aside className={`${isCollapsed ? "w-16" : "w-52"} bg-white border-r border-gray-200 flex flex-col transition-all duration-300 relative shrink-0`}>
+        <div className="p-4 border-b border-gray-200 flex items-center justify-between">
           {!isCollapsed && (
             <h1 className="text-lg font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent truncate">
               Admin Portal
@@ -47,7 +47,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           )}
           <button 
             onClick={() => setIsCollapsed(!isCollapsed)} 
-            className="p-1.5 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-400 hover:text-white transition-colors mx-auto"
+            className="p-1.5 rounded-lg bg-gray-200 hover:bg-gray-700 text-gray-600 hover:text-gray-900 transition-colors mx-auto"
             title={isCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
           >
             {isCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
@@ -62,7 +62,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 key={link.href}
                 href={link.href}
                 className={`flex items-center gap-3 px-3 py-2 rounded-xl transition-colors ${
-                  isActive ? "bg-blue-600/10 text-blue-400 border border-blue-500/20" : "text-gray-400 hover:bg-white/5 hover:text-white"
+                  isActive ? "bg-blue-600/10 text-blue-400 border border-blue-500/20" : "text-gray-600 hover:bg-white/5 hover:text-gray-900"
                 }`}
                 title={isCollapsed ? link.label : undefined}
               >
@@ -73,7 +73,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           })}
         </nav>
 
-        <div className="p-2 border-t border-gray-800">
+        <div className="p-2 border-t border-gray-200">
           <button
             onClick={handleLogout}
             className="flex items-center gap-3 px-3 py-2 w-full rounded-xl text-red-400 hover:bg-red-500/10 transition-colors"

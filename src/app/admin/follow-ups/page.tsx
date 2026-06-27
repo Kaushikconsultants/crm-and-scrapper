@@ -60,23 +60,23 @@ export default function AdminFollowUps() {
     <div className="p-4 max-w-7xl mx-auto h-full flex flex-col space-y-4">
       <div>
         <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-orange-400 to-red-500">Global Follow-ups</h1>
-        <p className="text-gray-400 text-xs mt-0.5">Master view of all scheduled follow-ups across your team.</p>
+        <p className="text-gray-600 text-xs mt-0.5">Master view of all scheduled follow-ups across your team.</p>
       </div>
 
-      <div className="bg-[#111] border border-gray-800 rounded-xl overflow-hidden flex flex-col flex-1 min-h-0">
-        <div className="p-3 border-b border-gray-800 flex justify-between items-center bg-[#1a1a1a] flex-wrap gap-3">
-           <h3 className="font-semibold text-sm text-white flex items-center gap-2">
+      <div className="bg-white border border-gray-200 rounded-xl overflow-hidden flex flex-col flex-1 min-h-0">
+        <div className="p-3 border-b border-gray-200 flex justify-between items-center bg-gray-100 flex-wrap gap-3">
+           <h3 className="font-semibold text-sm text-gray-900 flex items-center gap-2">
              <CalendarClock className="w-4 h-4 text-orange-500" /> All Scheduled Follow-ups ({filteredLeads.length})
            </h3>
            <div className="flex items-center gap-2.5">
-              <span className="text-xs text-gray-400 font-medium">Filter by Date:</span>
+              <span className="text-xs text-gray-600 font-medium">Filter by Date:</span>
               <input 
                 type="date" 
                 value={filterDate}
                 onChange={(e) => setFilterDate(e.target.value)}
                 onKeyDown={(e) => e.preventDefault()}
                 onClick={(e) => e.currentTarget.showPicker && e.currentTarget.showPicker()}
-                className="bg-[#0a0a0a] border border-gray-700 text-white text-xs rounded-lg p-1.5 focus:outline-none focus:border-orange-500 cursor-pointer"
+                className="bg-[#0a0a0a] border border-gray-700 text-gray-900 text-xs rounded-lg p-1.5 focus:outline-none focus:border-orange-500 cursor-pointer"
               />
               {filterDate && (
                  <button onClick={() => setFilterDate("")} className="text-xs text-orange-400 hover:text-orange-300">Clear</button>
@@ -93,23 +93,23 @@ export default function AdminFollowUps() {
              </div>
           ) : (
             <table className="w-full text-left text-xs border-collapse min-w-[800px] table-fixed">
-              <thead className="bg-[#111] text-gray-400 sticky top-0 z-10 border-b border-gray-800">
+              <thead className="bg-white text-gray-600 sticky top-0 z-10 border-b border-gray-200">
                 <tr>
-                  <th className="px-4 py-2.5 font-semibold text-gray-400 w-2/5">Business Name & Details</th>
-                  <th className="px-4 py-2.5 font-semibold text-gray-400 text-center w-1/4">Contact Info</th>
-                  <th className="px-4 py-2.5 font-semibold text-gray-400 text-center w-1/5">Assigned Agent</th>
-                  <th className="px-4 py-2.5 font-semibold text-gray-400 text-center w-1/5">Scheduled For</th>
+                  <th className="px-4 py-2.5 font-semibold text-gray-600 w-2/5">Business Name & Details</th>
+                  <th className="px-4 py-2.5 font-semibold text-gray-600 text-center w-1/4">Contact Info</th>
+                  <th className="px-4 py-2.5 font-semibold text-gray-600 text-center w-1/5">Assigned Agent</th>
+                  <th className="px-4 py-2.5 font-semibold text-gray-600 text-center w-1/5">Scheduled For</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-800/50">
                 {filteredLeads.map((lead) => (
-                  <tr key={lead.id} className={`hover:bg-[#1a1a1a] transition-colors ${isOverdue(lead.follow_up_date) ? 'bg-red-500/5' : ''}`}>
+                  <tr key={lead.id} className={`hover:bg-gray-100 transition-colors ${isOverdue(lead.follow_up_date) ? 'bg-red-500/5' : ''}`}>
                     <td className="px-4 py-2.5 align-middle">
                        <div className="flex flex-col gap-0.5">
                          <div className="flex items-center gap-1.5 flex-wrap">
                            <button 
                              onClick={() => setSelectedHistoryLead(lead)} 
-                             className="text-white font-semibold text-sm hover:text-orange-400 transition-colors text-left font-sans hover:underline decoration-orange-500/30 underline-offset-2"
+                             className="text-gray-900 font-semibold text-sm hover:text-orange-400 transition-colors text-left font-sans hover:underline decoration-orange-500/30 underline-offset-2"
                            >
                              {lead.name}
                            </button>
@@ -126,7 +126,7 @@ export default function AdminFollowUps() {
                            {lead.source_platform && (
                              <>
                                <span>•</span>
-                               <span className="text-gray-400">{lead.source_platform}</span>
+                               <span className="text-gray-600">{lead.source_platform}</span>
                              </>
                            )}
                          </div>
@@ -145,7 +145,7 @@ export default function AdminFollowUps() {
                        </div>
                     </td>
                     <td className="px-4 py-2.5 align-middle text-center">
-                       <div className="flex items-center justify-center gap-1.5 text-gray-300">
+                       <div className="flex items-center justify-center gap-1.5 text-gray-700">
                           <Users className="w-3.5 h-3.5 text-emerald-400" />
                           <span className="font-medium">{lead.agent_profiles?.name || 'Unassigned'}</span>
                        </div>

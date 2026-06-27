@@ -228,12 +228,12 @@ export default function ScraperPage() {
 
   const FilterCheckbox = ({ label, checked, onChange, icon: Icon }: any) => (
     <label className="flex items-center gap-3 cursor-pointer group">
-      <div className={`w-5 h-5 rounded border flex items-center justify-center transition-all ${checked ? 'bg-blue-500 border-blue-500' : 'bg-[#1a1a1a] border-gray-700 group-hover:border-gray-500'}`}>
-        {checked && <CheckCircle2 className="w-3 h-3 text-white" />}
+      <div className={`w-5 h-5 rounded border flex items-center justify-center transition-all ${checked ? 'bg-blue-500 border-blue-500' : 'bg-gray-100 border-gray-700 group-hover:border-gray-500'}`}>
+        {checked && <CheckCircle2 className="w-3 h-3 text-gray-900" />}
       </div>
       <input type="checkbox" className="hidden" checked={checked} onChange={(e) => onChange(e.target.checked)} />
-      <span className="text-sm text-gray-300 flex items-center gap-1.5">
-         {Icon && <Icon className="w-4 h-4 text-gray-400" />} {label}
+      <span className="text-sm text-gray-700 flex items-center gap-1.5">
+         {Icon && <Icon className="w-4 h-4 text-gray-600" />} {label}
       </span>
     </label>
   );
@@ -242,30 +242,30 @@ export default function ScraperPage() {
     <div className="p-8 max-w-7xl mx-auto">
       <div className="mb-8">
         <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">Live Scraper</h1>
-        <p className="text-gray-400">Extract high-quality leads from Google Maps instantly.</p>
+        <p className="text-gray-600">Extract high-quality leads from Google Maps instantly.</p>
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-8">
         <div className="xl:col-span-4 space-y-6">
-          <div className="bg-[#111] border border-gray-800 rounded-3xl p-6 relative overflow-hidden group">
+          <div className="bg-white border border-gray-200 rounded-3xl p-6 relative overflow-hidden group">
             <h2 className="text-xl font-semibold mb-6 flex items-center gap-2">
               <Search className="w-5 h-5 text-blue-400" /> Search Parameters
             </h2>
             <form onSubmit={handleScrape} className="space-y-5 relative z-10">
               <div className="space-y-2">
-                <label className="text-sm text-gray-400 font-medium">Business Category</label>
+                <label className="text-sm text-gray-600 font-medium">Business Category</label>
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
                   <select 
                     value={category} onChange={(e) => setCategory(e.target.value)}
-                    className="w-full bg-[#1a1a1a] border border-gray-800 rounded-xl py-3 pl-10 pr-4 text-white appearance-none focus:outline-none focus:border-blue-500/50"
+                    className="w-full bg-gray-100 border border-gray-200 rounded-xl py-3 pl-10 pr-4 text-gray-900 appearance-none focus:outline-none focus:border-blue-500/50"
                   >
                     {COMMON_CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
                   </select>
                 </div>
               </div>
               <div className="space-y-2">
-                <label className="text-sm text-gray-400 font-medium">Location</label>
+                <label className="text-sm text-gray-600 font-medium">Location</label>
                 <div className="relative z-50">
                   <CreatableSelect 
                     instanceId="location-select" isClearable options={locationOptions}
@@ -284,18 +284,18 @@ export default function ScraperPage() {
               </div>
               <div className="space-y-2">
                 <div className="flex justify-between">
-                   <label className="text-sm text-gray-400 font-medium">Max Leads</label>
+                   <label className="text-sm text-gray-600 font-medium">Max Leads</label>
                    <span className="text-sm text-blue-400 font-bold">{maxLeads}</span>
                 </div>
                 <input type="range" min="10" max="200" step="10" value={maxLeads} onChange={(e) => setMaxLeads(parseInt(e.target.value))} className="w-full accent-blue-500" />
               </div>
-              <div className="pt-2 space-y-3 bg-[#0a0a0a] p-4 rounded-xl border border-gray-800">
-                <h3 className="text-sm font-semibold text-gray-400 mb-2">Required Socials / Web</h3>
+              <div className="pt-2 space-y-3 bg-[#0a0a0a] p-4 rounded-xl border border-gray-200">
+                <h3 className="text-sm font-semibold text-gray-600 mb-2">Required Socials / Web</h3>
                 <FilterCheckbox label="Website" icon={Globe} checked={mustHaveWebsite} onChange={setMustHaveWebsite} />
                 <FilterCheckbox label="Instagram" icon={InstagramIcon} checked={mustHaveInstagram} onChange={setMustHaveInstagram} />
                 <FilterCheckbox label="Facebook" icon={FacebookIcon} checked={mustHaveFacebook} onChange={setMustHaveFacebook} />
               </div>
-              <button type="submit" disabled={loading} className="w-full bg-blue-600 text-white hover:bg-blue-500 disabled:bg-gray-800 disabled:text-gray-500 rounded-xl py-3.5 font-semibold transition-all flex items-center justify-center gap-2 mt-4">
+              <button type="submit" disabled={loading} className="w-full bg-blue-600 text-gray-900 hover:bg-blue-500 disabled:bg-gray-200 disabled:text-gray-500 rounded-xl py-3.5 font-semibold transition-all flex items-center justify-center gap-2 mt-4">
                 {loading ? <><Loader2 className="w-5 h-5 animate-spin" /> Extracting Leads...</> : "Start Scraping"}
               </button>
             </form>
@@ -310,9 +310,9 @@ export default function ScraperPage() {
             </div>
           )}
 
-          <div className="bg-[#111] border border-gray-800 rounded-2xl overflow-hidden flex flex-col h-[700px]">
-            <div className="p-4 border-b border-gray-800 flex justify-between items-center bg-[#1a1a1a]">
-              <h3 className="font-semibold text-white flex items-center gap-2">
+          <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden flex flex-col h-[700px]">
+            <div className="p-4 border-b border-gray-200 flex justify-between items-center bg-gray-100">
+              <h3 className="font-semibold text-gray-900 flex items-center gap-2">
                 {loading ? <><Loader2 className="w-4 h-4 animate-spin text-blue-500" /> {statusMessage}</> : <><CheckCircle2 className="w-4 h-4 text-green-500" /> {statusMessage || "Ready"}</>}
               </h3>
               <div className="flex gap-3 items-center">
@@ -322,7 +322,7 @@ export default function ScraperPage() {
                     <select 
                       value={assigningTo} 
                       onChange={e => setAssigningTo(e.target.value)}
-                      className="bg-transparent text-sm text-white focus:outline-none w-32"
+                      className="bg-transparent text-sm text-gray-900 focus:outline-none w-32"
                     >
                       <option value="" className="text-black">Assign to...</option>
                       {agents.map(a => <option key={a.id} value={a.id} className="text-black">{a.name}</option>)}
@@ -330,7 +330,7 @@ export default function ScraperPage() {
                     <button 
                       onClick={handleAssign}
                       disabled={!assigningTo || isAssigning}
-                      className="bg-blue-600 hover:bg-blue-500 text-white px-3 py-1 rounded-lg text-xs font-bold disabled:opacity-50"
+                      className="bg-blue-600 hover:bg-blue-500 text-gray-900 px-3 py-1 rounded-lg text-xs font-bold disabled:opacity-50"
                     >
                       {isAssigning ? "..." : "Assign"}
                     </button>
@@ -339,7 +339,7 @@ export default function ScraperPage() {
                 <button onClick={() => handleDownloadCSV(leads, "Live Scrape")} disabled={leads.length === 0} className="flex items-center gap-2 px-3 py-1.5 bg-white text-black rounded-lg text-sm font-medium hover:bg-gray-200 disabled:opacity-50 transition-colors">
                   <Download className="w-4 h-4" /> CSV
                 </button>
-                <button onClick={() => handleDownloadPDF(leads, "Live Scrape")} disabled={leads.length === 0} className="flex items-center gap-2 px-3 py-1.5 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-500 disabled:opacity-50 transition-colors">
+                <button onClick={() => handleDownloadPDF(leads, "Live Scrape")} disabled={leads.length === 0} className="flex items-center gap-2 px-3 py-1.5 bg-blue-600 text-gray-900 rounded-lg text-sm font-medium hover:bg-blue-500 disabled:opacity-50 transition-colors">
                   <FileText className="w-4 h-4" /> PDF
                 </button>
               </div>
@@ -348,7 +348,7 @@ export default function ScraperPage() {
             <div className="overflow-auto flex-1 w-full bg-[#0a0a0a]">
               {leads.length === 0 ? (
                 <div className="p-6">
-                  <h4 className="text-gray-400 font-semibold mb-4 text-sm flex items-center gap-2">
+                  <h4 className="text-gray-600 font-semibold mb-4 text-sm flex items-center gap-2">
                      <FileText className="w-4 h-4 text-blue-400" /> Previous Scrapes Run History
                   </h4>
                   {loadingHistory ? (
@@ -362,7 +362,7 @@ export default function ScraperPage() {
                      </div>
                   ) : (
                     <table className="w-full text-left text-sm border-collapse min-w-[700px]">
-                      <thead className="bg-[#111] text-gray-400 sticky top-0 border-b border-gray-800">
+                      <thead className="bg-white text-gray-600 sticky top-0 border-b border-gray-200">
                         <tr>
                           <th className="px-6 py-3.5 font-semibold">Date & Time</th>
                           <th className="px-6 py-3.5 font-semibold">Category Niche</th>
@@ -374,17 +374,17 @@ export default function ScraperPage() {
                       </thead>
                       <tbody className="divide-y divide-gray-800/50">
                         {scraperRuns.map((run) => (
-                          <tr key={run.id} className="hover:bg-[#1a1a1a] transition-colors">
-                            <td className="px-6 py-3.5 font-mono text-xs text-gray-400">
+                          <tr key={run.id} className="hover:bg-gray-100 transition-colors">
+                            <td className="px-6 py-3.5 font-mono text-xs text-gray-600">
                               {new Date(run.created_at).toLocaleString()}
                             </td>
-                            <td className="px-6 py-3.5 font-semibold text-gray-200">
+                            <td className="px-6 py-3.5 font-semibold text-gray-800">
                               {run.category}
                             </td>
-                            <td className="px-6 py-3.5 text-gray-300">
+                            <td className="px-6 py-3.5 text-gray-700">
                               <span className="flex items-center gap-1"><MapPin className="w-3.5 h-3.5 text-gray-500" /> {run.location}</span>
                             </td>
-                            <td className="px-6 py-3.5 text-center font-semibold text-gray-400">
+                            <td className="px-6 py-3.5 text-center font-semibold text-gray-600">
                               {run.max_leads}
                             </td>
                             <td className="px-6 py-3.5 text-center font-bold text-emerald-400">
@@ -403,12 +403,12 @@ export default function ScraperPage() {
                 </div>
               ) : (
                 <table className="w-full text-left text-sm border-collapse min-w-[800px]">
-                  <thead className="bg-[#111] text-gray-400 sticky top-0 z-10 shadow-sm border-b border-gray-800">
+                  <thead className="bg-white text-gray-600 sticky top-0 z-10 shadow-sm border-b border-gray-200">
                     <tr>
                       <th className="px-6 py-4 w-12">
                         <input 
                           type="checkbox" 
-                          className="w-4 h-4 rounded border-gray-600 bg-[#1a1a1a] accent-blue-500 cursor-pointer"
+                          className="w-4 h-4 rounded border-gray-600 bg-gray-100 accent-blue-500 cursor-pointer"
                           checked={selectedLeads.size > 0 && selectedLeads.size === leads.filter(l => l.id).length}
                           onChange={toggleAll}
                           disabled={leads.filter(l => l.id).length === 0}
@@ -423,12 +423,12 @@ export default function ScraperPage() {
                   </thead>
                   <tbody className="divide-y divide-gray-800/50">
                     {leads.map((lead: any, idx) => (
-                      <tr key={idx} className="hover:bg-[#1a1a1a] transition-colors group">
+                      <tr key={idx} className="hover:bg-gray-100 transition-colors group">
                         <td className="px-6 py-4">
                           {lead.id && (
                             <input 
                               type="checkbox" 
-                              className="w-4 h-4 rounded border-gray-600 bg-[#1a1a1a] accent-blue-500 cursor-pointer"
+                              className="w-4 h-4 rounded border-gray-600 bg-gray-100 accent-blue-500 cursor-pointer"
                               checked={selectedLeads.has(lead.id)}
                               onChange={() => toggleSelection(lead.id)}
                             />
@@ -451,7 +451,7 @@ export default function ScraperPage() {
                            </div>
                         </td>
                         <td className="px-6 py-4">
-                          {lead.website ? <a href={lead.website} target="_blank" rel="noreferrer" className="text-gray-300 hover:text-white flex items-center gap-1.5 bg-white/5 hover:bg-white/10 px-3 py-1.5 rounded-lg w-fit transition-colors border border-white/5"><Globe className="w-3.5 h-3.5 text-blue-400" /> {new URL(lead.website).hostname.replace('www.', '')}</a> : <span className="text-gray-700 px-3 py-1.5">N/A</span>}
+                          {lead.website ? <a href={lead.website} target="_blank" rel="noreferrer" className="text-gray-700 hover:text-gray-900 flex items-center gap-1.5 bg-white/5 hover:bg-white/10 px-3 py-1.5 rounded-lg w-fit transition-colors border border-white/5"><Globe className="w-3.5 h-3.5 text-blue-400" /> {new URL(lead.website).hostname.replace('www.', '')}</a> : <span className="text-gray-700 px-3 py-1.5">N/A</span>}
                         </td>
                         <td className="px-6 py-4 flex gap-2 items-center flex-wrap pt-5">
                             {lead.instagram ? <a href={lead.instagram} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 text-pink-400 hover:text-pink-300 bg-pink-500/10 px-3 py-1.5 rounded-lg hover:bg-pink-500/20 transition-colors font-medium border border-pink-500/10"><InstagramIcon className="w-4 h-4" /> Insta</a> : <div className="flex items-center gap-1.5 px-3 py-1.5 text-gray-700 font-medium"><InstagramIcon className="w-4 h-4" /> Insta</div>}

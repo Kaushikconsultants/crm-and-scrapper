@@ -287,37 +287,37 @@ export default function AgentDashboard() {
               {isAvailable ? '● Available' : '○ Offline'}
             </button>
           </h1>
-          <p className="text-gray-400 text-xs mt-0.5">Manage your explicitly assigned leads.</p>
+          <p className="text-gray-600 text-xs mt-0.5">Manage your explicitly assigned leads.</p>
         </div>
         
         {/* Gamification Widget */}
-        <div className="bg-[#111] border border-gray-800 rounded-xl p-2.5 flex items-center gap-4 shadow-lg">
+        <div className="bg-white border border-gray-200 rounded-xl p-2.5 flex items-center gap-4 shadow-lg">
            <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-full bg-orange-500/10 text-orange-400 flex items-center justify-center">
                  <Trophy className="w-4 h-4" />
               </div>
               <div>
                  <p className="text-[10px] text-gray-500 uppercase tracking-wider font-semibold">Rank</p>
-                 <p className="text-sm font-bold text-white">#{myRank} <span className="text-[10px] font-normal text-gray-500">/ {totalAgents}</span></p>
+                 <p className="text-sm font-bold text-gray-900">#{myRank} <span className="text-[10px] font-normal text-gray-500">/ {totalAgents}</span></p>
               </div>
            </div>
-           <div className="w-px h-8 bg-gray-800"></div>
+           <div className="w-px h-8 bg-gray-200"></div>
            <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-full bg-blue-500/10 text-blue-400 flex items-center justify-center">
                  <Target className="w-4 h-4" />
               </div>
               <div>
                  <p className="text-[10px] text-gray-500 uppercase tracking-wider font-semibold">Calls Today</p>
-                 <p className="text-sm font-bold text-white">{myCallsToday}</p>
+                 <p className="text-sm font-bold text-gray-900">{myCallsToday}</p>
               </div>
            </div>
         </div>
       </div>
 
       {/* Main Board */}
-      <div className="bg-[#111] border border-gray-800 rounded-xl overflow-hidden flex flex-col flex-1 min-h-0">
-        <div className="p-3 border-b border-gray-800 flex justify-between items-center bg-[#1a1a1a]">
-           <h3 className="font-semibold text-sm text-white flex items-center gap-2">
+      <div className="bg-white border border-gray-200 rounded-xl overflow-hidden flex flex-col flex-1 min-h-0">
+        <div className="p-3 border-b border-gray-200 flex justify-between items-center bg-gray-100">
+           <h3 className="font-semibold text-sm text-gray-900 flex items-center gap-2">
              <PhoneCall className="w-4 h-4 text-emerald-500" /> Action Required ({leads.length})
            </h3>
            <div className="flex items-center gap-3">
@@ -328,13 +328,13 @@ export default function AgentDashboard() {
                    placeholder="Search by name or phone..."
                    value={searchTerm}
                    onChange={(e) => setSearchTerm(e.target.value)}
-                   className="bg-[#111] border border-gray-800 rounded-lg pl-8 pr-3 py-1.5 text-xs text-white focus:outline-none focus:border-emerald-500 w-56"
+                   className="bg-white border border-gray-200 rounded-lg pl-8 pr-3 py-1.5 text-xs text-gray-900 focus:outline-none focus:border-emerald-500 w-56"
                  />
               </div>
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="bg-[#111] border border-gray-800 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-emerald-500 cursor-pointer"
+                className="bg-white border border-gray-200 rounded-lg px-3 py-1.5 text-xs text-gray-900 focus:outline-none focus:border-emerald-500 cursor-pointer"
               >
                 <option value="all">All Statuses</option>
                 <option value="New">New Leads</option>
@@ -351,7 +351,7 @@ export default function AgentDashboard() {
                   setAiLanguage(e.target.value);
                   localStorage.setItem("ai_outreach_language", e.target.value);
                 }}
-                className="bg-[#111] border border-gray-800 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-emerald-500 cursor-pointer"
+                className="bg-white border border-gray-200 rounded-lg px-3 py-1.5 text-xs text-gray-900 focus:outline-none focus:border-emerald-500 cursor-pointer"
                 title="AI Language"
               >
                 <option value="English">AI Language: English</option>
@@ -367,13 +367,13 @@ export default function AgentDashboard() {
                    setDialerIndex(0);
                    setIsDialerActive(!isDialerActive);
                  }}
-                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1.5 cursor-pointer ${isDialerActive ? 'bg-rose-600 hover:bg-rose-500 text-white' : 'bg-emerald-600 hover:bg-emerald-500 text-white'}`}
+                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1.5 cursor-pointer ${isDialerActive ? 'bg-rose-600 hover:bg-rose-500 text-gray-900' : 'bg-emerald-600 hover:bg-emerald-500 text-gray-900'}`}
               >
                  <PhoneCall className="w-3.5 h-3.5" /> {isDialerActive ? "Exit Dialer" : "Power Dialer"}
               </button>
               <button
                  onClick={() => setIsAddLeadOpen(true)}
-                 className="bg-blue-600 hover:bg-blue-500 text-white px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1.5"
+                 className="bg-blue-600 hover:bg-blue-500 text-gray-900 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1.5"
               >
                  <Plus className="w-3.5 h-3.5" /> Add Lead
               </button>
@@ -397,13 +397,13 @@ export default function AgentDashboard() {
                 <div className="flex flex-col xl:flex-row h-full min-h-[500px] divide-y xl:divide-y-0 xl:divide-x divide-gray-800">
                   {/* Left Column: Lead Info and AI Pitch Insights */}
                   <div className="w-full xl:w-7/12 p-6 overflow-y-auto space-y-6">
-                    <div className="flex justify-between items-start flex-wrap gap-4 border-b border-gray-800/60 pb-4">
+                    <div className="flex justify-between items-start flex-wrap gap-4 border-b border-gray-200/60 pb-4">
                       <div>
                         <div className="flex items-center gap-2 flex-wrap">
-                          <h2 className="text-xl font-bold text-white tracking-tight">{currentLead.name}</h2>
+                          <h2 className="text-xl font-bold text-gray-900 tracking-tight">{currentLead.name}</h2>
                           <span className={`px-2 py-0.5 rounded text-[10px] font-bold border ${badge.classes}`}>{badge.label}</span>
                         </div>
-                        <p className="text-xs text-gray-400 mt-1 flex items-center gap-1.5 flex-wrap">
+                        <p className="text-xs text-gray-600 mt-1 flex items-center gap-1.5 flex-wrap">
                           <span className="bg-purple-500/10 text-purple-400 px-2 py-0.5 rounded text-[10px] font-semibold">{currentLead.category || "General"}</span>
                           <span className="text-gray-700">•</span>
                           <a 
@@ -419,21 +419,21 @@ export default function AgentDashboard() {
                       </div>
 
                       {/* Pagination Controls */}
-                      <div className="flex items-center gap-2 bg-[#111] border border-gray-800 rounded-lg p-1">
+                      <div className="flex items-center gap-2 bg-white border border-gray-200 rounded-lg p-1">
                         <button 
                           onClick={() => setDialerIndex(prev => Math.max(0, prev - 1))}
                           disabled={dialerIndex === 0}
-                          className="px-2 py-1 text-xs text-gray-400 hover:text-white disabled:opacity-30 cursor-pointer"
+                          className="px-2 py-1 text-xs text-gray-600 hover:text-gray-900 disabled:opacity-30 cursor-pointer"
                         >
                           ◀ Prev
                         </button>
-                        <span className="text-xs text-gray-300 font-mono px-2">
+                        <span className="text-xs text-gray-700 font-mono px-2">
                           {dialerIndex + 1} / {filteredLeads.length}
                         </span>
                         <button 
                           onClick={() => setDialerIndex(prev => Math.min(filteredLeads.length - 1, prev + 1))}
                           disabled={dialerIndex === filteredLeads.length - 1}
-                          className="px-2 py-1 text-xs text-gray-400 hover:text-white disabled:opacity-30 cursor-pointer"
+                          className="px-2 py-1 text-xs text-gray-600 hover:text-gray-900 disabled:opacity-30 cursor-pointer"
                         >
                           Next ▶
                         </button>
@@ -442,14 +442,14 @@ export default function AgentDashboard() {
 
                     {/* Quick Channels & Info */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="bg-[#111] border border-gray-800 rounded-xl p-4 space-y-2">
-                        <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-widest">Contact details</h4>
+                      <div className="bg-white border border-gray-200 rounded-xl p-4 space-y-2">
+                        <h4 className="text-xs font-semibold text-gray-600 uppercase tracking-widest">Contact details</h4>
                         <div className="space-y-1.5">
-                          <div className="text-xs text-gray-300 flex justify-between">
+                          <div className="text-xs text-gray-700 flex justify-between">
                             <span>Phone:</span>
                             <span className="font-mono text-blue-400 font-semibold">{currentLead.phone || "No Phone"}</span>
                           </div>
-                          <div className="text-xs text-gray-300 flex justify-between">
+                          <div className="text-xs text-gray-700 flex justify-between">
                             <span>Website:</span>
                             {currentLead.website ? (
                               <a href={currentLead.website} target="_blank" rel="noreferrer" className="text-blue-400 hover:underline truncate max-w-[150px]">{currentLead.website}</a>
@@ -458,15 +458,15 @@ export default function AgentDashboard() {
                         </div>
                       </div>
 
-                      <div className="bg-[#111] border border-gray-800 rounded-xl p-4 space-y-2">
+                      <div className="bg-white border border-gray-200 rounded-xl p-4 space-y-2">
                         <div className="flex justify-between items-center">
-                          <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-widest">Google maps data</h4>
+                          <h4 className="text-xs font-semibold text-gray-600 uppercase tracking-widest">Google maps data</h4>
                           {currentLead.gmbUrl && (
                             <a href={currentLead.gmbUrl} target="_blank" rel="noreferrer" className="text-[10px] text-emerald-400 hover:underline">View GMB</a>
                           )}
                         </div>
                         <div className="space-y-1.5">
-                          <div className="text-xs text-gray-300 flex justify-between">
+                          <div className="text-xs text-gray-700 flex justify-between">
                             <span>Rating:</span>
                             {currentLead.gmbUrl ? (
                               <a href={currentLead.gmbUrl} target="_blank" rel="noreferrer" className="text-amber-400 font-bold hover:underline">{currentLead.rating || "N/A"} ⭐</a>
@@ -474,12 +474,12 @@ export default function AgentDashboard() {
                               <span className="text-amber-400 font-bold">{currentLead.rating || "N/A"} ⭐</span>
                             )}
                           </div>
-                          <div className="text-xs text-gray-300 flex justify-between">
+                          <div className="text-xs text-gray-700 flex justify-between">
                             <span>Reviews:</span>
                             {currentLead.gmbUrl ? (
-                              <a href={currentLead.gmbUrl} target="_blank" rel="noreferrer" className="text-gray-400 hover:underline">{currentLead.reviews || "N/A"} reviews</a>
+                              <a href={currentLead.gmbUrl} target="_blank" rel="noreferrer" className="text-gray-600 hover:underline">{currentLead.reviews || "N/A"} reviews</a>
                             ) : (
-                              <span className="text-gray-400">{currentLead.reviews || "N/A"} reviews</span>
+                              <span className="text-gray-600">{currentLead.reviews || "N/A"} reviews</span>
                             )}
                           </div>
                         </div>
@@ -487,9 +487,9 @@ export default function AgentDashboard() {
                     </div>
 
                     {/* AI Pitch & Script Panel */}
-                    <div className="bg-[#121217] border border-gray-800 rounded-xl p-4 space-y-3">
+                    <div className="bg-[#121217] border border-gray-200 rounded-xl p-4 space-y-3">
                       <div className="flex justify-between items-center">
-                        <h3 className="text-sm font-bold text-gray-300 uppercase tracking-wider flex items-center gap-1.5">
+                        <h3 className="text-sm font-bold text-gray-700 uppercase tracking-wider flex items-center gap-1.5">
                           ✨ AI Call Insights (Groq)
                         </h3>
                         {!dialerInsights && !loadingInsights && (
@@ -507,7 +507,7 @@ export default function AgentDashboard() {
                           <Loader2 className="w-4 h-4 animate-spin text-blue-400" /> Analyzing GMB, Website & Social profiles...
                         </div>
                       ) : dialerInsights ? (
-                        <div className="text-xs text-gray-300 leading-relaxed max-h-[250px] overflow-y-auto pr-2 whitespace-pre-wrap font-sans bg-[#0a0a0d] p-3 rounded-lg border border-gray-800/80">
+                        <div className="text-xs text-gray-700 leading-relaxed max-h-[250px] overflow-y-auto pr-2 whitespace-pre-wrap font-sans bg-[#0a0a0d] p-3 rounded-lg border border-gray-200/80">
                           {dialerInsights}
                         </div>
                       ) : (
@@ -518,7 +518,7 @@ export default function AgentDashboard() {
 
                   {/* Right Column: Calls-Only Dialer Form */}
                   <div className="w-full xl:w-5/12 p-6 bg-[#111115] overflow-y-auto space-y-6">
-                    <h3 className="text-base font-bold text-gray-300 uppercase tracking-wider flex items-center gap-2">
+                    <h3 className="text-base font-bold text-gray-700 uppercase tracking-wider flex items-center gap-2">
                       <PhoneCall className="w-4 h-4 text-emerald-500 animate-pulse" /> Call Execution Log
                     </h3>
 
@@ -526,23 +526,23 @@ export default function AgentDashboard() {
                     {currentLead.phone ? (
                       <a 
                         href={`tel:${currentLead.phone}`}
-                        className="w-full bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl py-4 font-bold text-center block transition-all shadow-lg hover:shadow-emerald-500/10 flex justify-center items-center gap-2 cursor-pointer"
+                        className="w-full bg-emerald-600 hover:bg-emerald-500 text-gray-900 rounded-xl py-4 font-bold text-center block transition-all shadow-lg hover:shadow-emerald-500/10 flex justify-center items-center gap-2 cursor-pointer"
                       >
                         <PhoneCall className="w-5 h-5" /> Click to Call: {currentLead.phone}
                       </a>
                     ) : (
-                      <div className="w-full bg-gray-800 text-gray-500 rounded-xl py-4 font-bold text-center cursor-not-allowed border border-gray-700">
+                      <div className="w-full bg-gray-200 text-gray-500 rounded-xl py-4 font-bold text-center cursor-not-allowed border border-gray-700">
                         No Phone Number Available
                       </div>
                     )}
 
-                    <form onSubmit={handleDialerLogCall} className="space-y-4 pt-4 border-t border-gray-800/60">
+                    <form onSubmit={handleDialerLogCall} className="space-y-4 pt-4 border-t border-gray-200/60">
                       <div>
-                        <label className="block text-gray-400 text-xs mb-1.5 font-medium">Call Outcome</label>
+                        <label className="block text-gray-600 text-xs mb-1.5 font-medium">Call Outcome</label>
                         <select 
                           value={dialerStatus} 
                           onChange={(e) => setDialerStatus(e.target.value)}
-                          className="w-full bg-[#1a1a24] border border-gray-800 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
+                          className="w-full bg-[#1a1a24] border border-gray-200 rounded-lg p-2.5 text-xs text-gray-900 focus:outline-none focus:border-emerald-500"
                         >
                           <option value="Called (No Answer)">Called (No Answer)</option>
                           <option value="Connected">Connected</option>
@@ -566,7 +566,7 @@ export default function AgentDashboard() {
                               onChange={(e) => setDialerFollowUpDate(e.target.value)}
                               onKeyDown={(e) => e.preventDefault()}
                               onClick={(e) => e.currentTarget.showPicker && e.currentTarget.showPicker()}
-                              className="w-1/2 bg-[#1a1a24] border border-orange-500/50 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-orange-500 cursor-pointer"
+                              className="w-1/2 bg-[#1a1a24] border border-orange-500/50 rounded-lg p-2.5 text-xs text-gray-900 focus:outline-none focus:border-orange-500 cursor-pointer"
                             />
                             <input 
                               type="time" 
@@ -575,27 +575,27 @@ export default function AgentDashboard() {
                               onChange={(e) => setDialerFollowUpTime(e.target.value)}
                               onKeyDown={(e) => e.preventDefault()}
                               onClick={(e) => e.currentTarget.showPicker && e.currentTarget.showPicker()}
-                              className="w-1/2 bg-[#1a1a24] border border-orange-500/50 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-orange-500 cursor-pointer"
+                              className="w-1/2 bg-[#1a1a24] border border-orange-500/50 rounded-lg p-2.5 text-xs text-gray-900 focus:outline-none focus:border-orange-500 cursor-pointer"
                             />
                           </div>
                         </div>
                       )}
 
                       <div>
-                        <label className="block text-gray-400 text-xs mb-1.5 font-medium">Interaction & Pitch Notes</label>
+                        <label className="block text-gray-600 text-xs mb-1.5 font-medium">Interaction & Pitch Notes</label>
                         <textarea 
                           rows={4}
                           value={dialerNotes}
                           onChange={(e) => setDialerNotes(e.target.value)}
                           placeholder="What did they say? What was offered?"
-                          className="w-full bg-[#1a1a24] border border-gray-800 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-emerald-500 resize-none"
+                          className="w-full bg-[#1a1a24] border border-gray-200 rounded-lg p-2.5 text-xs text-gray-900 focus:outline-none focus:border-emerald-500 resize-none"
                         />
                       </div>
 
                       <button 
                         type="submit" 
                         disabled={loggingCall}
-                        className="w-full bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white rounded-lg py-3 font-semibold transition-all flex justify-center items-center gap-1.5 text-xs cursor-pointer"
+                        className="w-full bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-gray-900 rounded-lg py-3 font-semibold transition-all flex justify-center items-center gap-1.5 text-xs cursor-pointer"
                       >
                         {loggingCall ? <Loader2 className="w-4 h-4 animate-spin" /> : <><CheckCircle2 className="w-4 h-4" /> Save Outcome & Next Lead</>}
                       </button>
@@ -613,25 +613,25 @@ export default function AgentDashboard() {
              </div>
           ) : (
             <table className="w-full text-left text-xs border-collapse min-w-[800px] table-fixed">
-              <thead className="bg-[#111] text-gray-400 sticky top-0 z-10 border-b border-gray-800">
+              <thead className="bg-white text-gray-600 sticky top-0 z-10 border-b border-gray-200">
                 <tr>
-                  <th className="px-4 py-2.5 font-semibold text-gray-400 w-2/5">Business Name & Details</th>
-                  <th className="px-4 py-2.5 font-semibold text-gray-400 text-center w-1/4">Contact Info</th>
-                  <th className="px-4 py-2.5 font-semibold text-gray-400 text-center w-1/6">Status</th>
-                  <th className="px-4 py-2.5 font-semibold text-gray-400 text-center w-1/6">Actions</th>
+                  <th className="px-4 py-2.5 font-semibold text-gray-600 w-2/5">Business Name & Details</th>
+                  <th className="px-4 py-2.5 font-semibold text-gray-600 text-center w-1/4">Contact Info</th>
+                  <th className="px-4 py-2.5 font-semibold text-gray-600 text-center w-1/6">Status</th>
+                  <th className="px-4 py-2.5 font-semibold text-gray-600 text-center w-1/6">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-800/50">
                 {filteredLeads.map((lead) => {
                   const badge = getLeadScoreBadge(lead);
                   return (
-                    <tr key={lead.id} className="hover:bg-[#1a1a1a] transition-colors">
+                    <tr key={lead.id} className="hover:bg-gray-100 transition-colors">
                       <td className="px-4 py-2.5 align-middle">
                          <div className="flex flex-col gap-0.5">
                            <div className="flex items-center gap-1.5 flex-wrap">
                              <button 
                                onClick={() => setSelectedHistoryLead(lead)} 
-                               className="text-white font-semibold text-sm hover:text-emerald-400 transition-colors text-left font-sans hover:underline decoration-emerald-500/30 underline-offset-2"
+                               className="text-gray-900 font-semibold text-sm hover:text-emerald-400 transition-colors text-left font-sans hover:underline decoration-emerald-500/30 underline-offset-2"
                              >
                                {lead.name}
                              </button>
@@ -650,7 +650,7 @@ export default function AgentDashboard() {
                              {lead.source_platform && (
                                <>
                                  <span>•</span>
-                                 <span className="text-gray-400">{lead.source_platform}</span>
+                                 <span className="text-gray-600">{lead.source_platform}</span>
                                </>
                              )}
                            </div>
@@ -667,7 +667,7 @@ export default function AgentDashboard() {
                               </a>
                            )}
                            {lead.website && (
-                             <a href={lead.website} target="_blank" rel="noreferrer" className="text-gray-400 hover:text-white bg-white/5 hover:bg-white/10 p-1.5 rounded" title="Website">
+                             <a href={lead.website} target="_blank" rel="noreferrer" className="text-gray-600 hover:text-gray-900 bg-white/5 hover:bg-white/10 p-1.5 rounded" title="Website">
                                <Globe className="w-3.5 h-3.5 text-blue-400" />
                              </a>
                            )}
@@ -681,7 +681,7 @@ export default function AgentDashboard() {
                       <td className="px-4 py-2.5 align-middle text-center">
                         <button 
                           onClick={() => setSelectedLead(lead)}
-                          className="bg-emerald-600 hover:bg-emerald-500 text-white px-2.5 py-1 rounded text-xs font-semibold transition-colors"
+                          className="bg-emerald-600 hover:bg-emerald-500 text-gray-900 px-2.5 py-1 rounded text-xs font-semibold transition-colors"
                         >
                           Log Call
                         </button>
@@ -698,21 +698,21 @@ export default function AgentDashboard() {
       {/* Call Logging Modal */}
       {selectedLead && (
         <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
-          <div className="bg-[#111] border border-gray-800 rounded-2xl p-4 w-full max-w-md shadow-2xl relative">
-            <button onClick={() => setSelectedLead(null)} className="absolute top-3 right-3 text-gray-500 hover:text-white">
+          <div className="bg-white border border-gray-200 rounded-2xl p-4 w-full max-w-md shadow-2xl relative">
+            <button onClick={() => setSelectedLead(null)} className="absolute top-3 right-3 text-gray-500 hover:text-gray-900">
               <XCircle className="w-5 h-5" />
             </button>
             
-            <h2 className="text-lg font-bold text-white mb-0.5">Log Call: {selectedLead.name}</h2>
-            <p className="text-xs text-gray-400 mb-4 font-mono text-emerald-400">{selectedLead.phone}</p>
+            <h2 className="text-lg font-bold text-gray-900 mb-0.5">Log Call: {selectedLead.name}</h2>
+            <p className="text-xs text-gray-600 mb-4 font-mono text-emerald-400">{selectedLead.phone}</p>
 
             <form onSubmit={handleLogCall} className="space-y-4">
               <div>
-                <label className="block text-gray-400 text-xs mb-1.5 font-medium">Call Outcome</label>
+                <label className="block text-gray-600 text-xs mb-1.5 font-medium">Call Outcome</label>
                 <select 
                   value={status} 
                   onChange={(e) => setStatus(e.target.value)}
-                  className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-emerald-500"
+                  className="w-full bg-gray-100 border border-gray-200 rounded-lg p-2.5 text-xs text-gray-900 focus:outline-none focus:border-emerald-500"
                 >
                   <option value="Called (No Answer)">Called (No Answer)</option>
                   <option value="Connected">Connected</option>
@@ -736,7 +736,7 @@ export default function AgentDashboard() {
                       onChange={(e) => setFollowUpDate(e.target.value)}
                       onKeyDown={(e) => e.preventDefault()}
                       onClick={(e) => e.currentTarget.showPicker && e.currentTarget.showPicker()}
-                      className="w-1/2 bg-[#1a1a1a] border border-orange-500/50 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-orange-500 cursor-pointer"
+                      className="w-1/2 bg-gray-100 border border-orange-500/50 rounded-lg p-2.5 text-xs text-gray-900 focus:outline-none focus:border-orange-500 cursor-pointer"
                     />
                     <input 
                       type="time" 
@@ -745,27 +745,27 @@ export default function AgentDashboard() {
                       onChange={(e) => setFollowUpTime(e.target.value)}
                       onKeyDown={(e) => e.preventDefault()}
                       onClick={(e) => e.currentTarget.showPicker && e.currentTarget.showPicker()}
-                      className="w-1/2 bg-[#1a1a1a] border border-orange-500/50 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-orange-500 cursor-pointer"
+                      className="w-1/2 bg-gray-100 border border-orange-500/50 rounded-lg p-2.5 text-xs text-gray-900 focus:outline-none focus:border-orange-500 cursor-pointer"
                     />
                   </div>
                 </div>
               )}
 
               <div>
-                <label className="block text-gray-400 text-xs mb-1.5 font-medium">Call Notes</label>
+                <label className="block text-gray-600 text-xs mb-1.5 font-medium">Call Notes</label>
                 <textarea 
                   rows={3}
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
                   placeholder="What was discussed?"
-                  className="w-full bg-[#1a1a1a] border border-gray-800 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-emerald-500 resize-none text-xs"
+                  className="w-full bg-gray-100 border border-gray-200 rounded-lg p-2.5 text-xs text-gray-900 focus:outline-none focus:border-emerald-500 resize-none text-xs"
                 />
               </div>
 
               <button 
                 type="submit" 
                 disabled={loggingCall}
-                className="w-full bg-emerald-600 text-white hover:bg-emerald-500 disabled:opacity-50 rounded-lg py-2.5 font-semibold transition-all flex justify-center items-center gap-1.5 text-xs"
+                className="w-full bg-emerald-600 text-gray-900 hover:bg-emerald-500 disabled:opacity-50 rounded-lg py-2.5 font-semibold transition-all flex justify-center items-center gap-1.5 text-xs"
               >
                 {loggingCall ? <Loader2 className="w-4 h-4 animate-spin" /> : <><CheckCircle2 className="w-4 h-4" /> Save Call Log</>}
               </button>

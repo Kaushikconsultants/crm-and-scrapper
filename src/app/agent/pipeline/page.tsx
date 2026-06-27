@@ -88,7 +88,7 @@ export default function AgentPipeline() {
         <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-teal-500 flex items-center gap-2">
           <KanbanSquare className="w-6 h-6 text-emerald-400" /> My Pipeline
         </h1>
-        <p className="text-gray-400 text-xs mt-0.5">Drag and drop leads to instantly update their status.</p>
+        <p className="text-gray-600 text-xs mt-0.5">Drag and drop leads to instantly update their status.</p>
       </div>
 
       {loading ? (
@@ -103,13 +103,13 @@ export default function AgentPipeline() {
               return (
                  <div 
                    key={column} 
-                   className="min-w-[260px] w-[260px] bg-[#111] border border-gray-800 rounded-xl p-3 flex flex-col h-full max-h-full"
+                   className="min-w-[260px] w-[260px] bg-white border border-gray-200 rounded-xl p-3 flex flex-col h-full max-h-full"
                    onDragOver={handleDragOver}
                    onDrop={(e) => handleDrop(e, column)}
                  >
-                    <div className="flex justify-between items-center mb-2.5 pb-2 border-b border-gray-800 shrink-0">
-                       <h3 className="font-bold text-gray-200 text-xs">{column}</h3>
-                       <span className="bg-gray-800 text-gray-400 text-[10px] font-bold px-1.5 py-0.5 rounded-full">{columnLeads.length}</span>
+                    <div className="flex justify-between items-center mb-2.5 pb-2 border-b border-gray-200 shrink-0">
+                       <h3 className="font-bold text-gray-800 text-xs">{column}</h3>
+                       <span className="bg-gray-200 text-gray-600 text-[10px] font-bold px-1.5 py-0.5 rounded-full">{columnLeads.length}</span>
                     </div>
 
                     <div className="flex-1 overflow-y-auto space-y-2 pr-1 pb-1 custom-scrollbar">
@@ -121,7 +121,7 @@ export default function AgentPipeline() {
                                draggable
                                onDragStart={(e) => handleDragStart(e, lead)}
                                onDragEnd={handleDragEnd}
-                               className="bg-[#1a1a1a] border border-gray-700/50 rounded-lg p-2.5 cursor-grab hover:border-emerald-500/50 transition-colors shadow shadow-black/40 active:cursor-grabbing"
+                               className="bg-gray-100 border border-gray-700/50 rounded-lg p-2.5 cursor-grab hover:border-emerald-500/50 transition-colors shadow shadow-black/40 active:cursor-grabbing"
                                onClick={() => setSelectedProfileLead(lead)}
                              >
                                <div className="flex justify-between items-start gap-1">
@@ -135,7 +135,7 @@ export default function AgentPipeline() {
                                
                                {lead.category && <p className="text-[10px] text-gray-500 mt-1 mb-2">{lead.category}</p>}
                                
-                               <div className="flex items-center justify-between border-t border-gray-800/80 pt-2 mt-2">
+                               <div className="flex items-center justify-between border-t border-gray-200/80 pt-2 mt-2">
                                   <div className="flex items-center gap-1.5">
                                      {lead.phone ? (
                                         <>
@@ -153,12 +153,12 @@ export default function AgentPipeline() {
                                   
                                   <div className="flex gap-1.5">
                                      {lead.gmbUrl && (
-                                        <a href={lead.gmbUrl} target="_blank" rel="noreferrer" className="text-gray-400 hover:text-white p-0.5" title="Google Maps" onClick={e => e.stopPropagation()}>
+                                        <a href={lead.gmbUrl} target="_blank" rel="noreferrer" className="text-gray-600 hover:text-gray-900 p-0.5" title="Google Maps" onClick={e => e.stopPropagation()}>
                                            <svg className="w-3.5 h-3.5 text-amber-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
                                         </a>
                                      )}
                                      {lead.website && (
-                                        <a href={lead.website} target="_blank" rel="noreferrer" className="text-gray-400 hover:text-white p-0.5" title="Website" onClick={e => e.stopPropagation()}>
+                                        <a href={lead.website} target="_blank" rel="noreferrer" className="text-gray-600 hover:text-gray-900 p-0.5" title="Website" onClick={e => e.stopPropagation()}>
                                            <Globe className="w-3.5 h-3.5 text-blue-400" />
                                         </a>
                                      )}
@@ -168,7 +168,7 @@ export default function AgentPipeline() {
                           );
                        })}
                        {columnLeads.length === 0 && (
-                          <div className="text-center py-4 px-2 border border-dashed border-gray-800 rounded-lg text-gray-600 text-xs font-medium">
+                          <div className="text-center py-4 px-2 border border-dashed border-gray-200 rounded-lg text-gray-600 text-xs font-medium">
                              Drop here
                           </div>
                        )}
