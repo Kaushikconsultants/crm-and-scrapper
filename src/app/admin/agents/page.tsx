@@ -417,7 +417,7 @@ export default function AgentsPage() {
       {/* Top Header / Tab Switcher */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pb-6 border-b border-gray-200">
         <div>
-          <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">
+          <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600">
             {activeTab === "team" ? "Team Management" : activeTab === "analytics" ? "Performance & Analytics" : "AI & Knowledge Settings"}
           </h1>
           <p className="text-gray-600 mt-1">
@@ -434,7 +434,7 @@ export default function AgentsPage() {
             onClick={() => setActiveTab("team")}
             className={`px-6 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 ${
               activeTab === "team" 
-                ? "bg-blue-600 text-gray-900 shadow-lg shadow-blue-500/20" 
+                ? "bg-blue-600 text-white shadow-lg shadow-blue-500/20" 
                 : "text-gray-600 hover:text-gray-900"
             }`}
           >
@@ -444,7 +444,7 @@ export default function AgentsPage() {
             onClick={() => setActiveTab("analytics")}
             className={`px-6 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 ${
               activeTab === "analytics" 
-                ? "bg-blue-600 text-gray-900 shadow-lg shadow-blue-500/20" 
+                ? "bg-blue-600 text-white shadow-lg shadow-blue-500/20" 
                 : "text-gray-600 hover:text-gray-900"
             }`}
           >
@@ -454,7 +454,7 @@ export default function AgentsPage() {
             onClick={() => setActiveTab("settings")}
             className={`px-6 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 ${
               activeTab === "settings" 
-                ? "bg-blue-600 text-gray-900 shadow-lg shadow-blue-500/20" 
+                ? "bg-blue-600 text-white shadow-lg shadow-blue-500/20" 
                 : "text-gray-600 hover:text-gray-900"
             }`}
           >
@@ -499,7 +499,7 @@ export default function AgentsPage() {
                   </select>
                 </div>
                 
-                <button type="submit" disabled={creating} className="w-full bg-blue-600 text-gray-900 hover:bg-blue-500 disabled:opacity-50 rounded-xl py-3.5 font-semibold mt-4 transition-all flex justify-center">
+                <button type="submit" disabled={creating} className="w-full bg-blue-600 text-white hover:bg-blue-500 disabled:opacity-50 rounded-xl py-3.5 font-semibold mt-4 transition-all flex justify-center">
                   {creating ? <Loader2 className="w-5 h-5 animate-spin" /> : "Create Account"}
                 </button>
               </form>
@@ -541,7 +541,7 @@ export default function AgentsPage() {
                 <TrendingUp className="w-5 h-5 text-blue-400" /> Agent Performance Dashboard
               </h2>
 
-              <div className="overflow-auto flex-1 w-full bg-[#0a0a0a] rounded-xl border border-gray-200">
+              <div className="overflow-auto flex-1 w-full bg-white rounded-xl border border-gray-200">
                 {loading ? (
                   <div className="flex justify-center items-center h-full text-gray-500"><Loader2 className="w-5 h-5 animate-spin mr-2" /> Loading stats...</div>
                 ) : (
@@ -905,7 +905,7 @@ export default function AgentsPage() {
                  <button 
                    type="submit" 
                    disabled={savingSettings} 
-                   className="w-full bg-blue-600 text-gray-900 hover:bg-blue-500 disabled:opacity-50 rounded-xl py-3.5 font-semibold mt-4 transition-all flex justify-center text-sm cursor-pointer"
+                   className="w-full bg-blue-600 text-white hover:bg-blue-500 disabled:opacity-50 rounded-xl py-3.5 font-semibold mt-4 transition-all flex justify-center text-sm cursor-pointer"
                  >
                    {savingSettings ? <Loader2 className="w-5 h-5 animate-spin" /> : "Save Settings"}
                  </button>
@@ -1016,7 +1016,7 @@ export default function AgentsPage() {
                      {kbContent && (
                        <div className="space-y-2">
                          <label className="block text-emerald-400 text-xs font-semibold">Extracted PDF Text Preview</label>
-                         <div className="w-full bg-[#0a0a0a] border border-gray-200 rounded-xl p-3 max-h-48 overflow-y-auto text-xs font-mono text-gray-600 whitespace-pre-wrap">
+                         <div className="w-full bg-white border border-gray-200 rounded-xl p-3 max-h-48 overflow-y-auto text-xs font-mono text-gray-600 whitespace-pre-wrap">
                            {kbContent}
                          </div>
                        </div>
@@ -1088,7 +1088,7 @@ export default function AgentsPage() {
 
       {/* Edit Agent Modal */}
       {selectedAgent && (
-        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
+        <div className="fixed inset-0 bg-white/80 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
           <div className="bg-white border border-gray-200 rounded-3xl p-6 w-full max-w-lg shadow-2xl relative">
             <button onClick={() => setSelectedAgent(null)} className="absolute top-4 right-4 text-gray-500 hover:text-gray-900">
               <XCircle className="w-6 h-6" />
@@ -1144,7 +1144,7 @@ export default function AgentsPage() {
                 <button type="button" onClick={handleDeleteAgent} disabled={deleting || updating} className="flex-1 bg-red-600/10 hover:bg-red-600/20 text-red-500 border border-red-500/30 rounded-xl py-3 font-semibold transition-all flex justify-center items-center gap-2">
                   {deleting ? <Loader2 className="w-4 h-4 animate-spin" /> : <><Trash2 className="w-4 h-4" /> Delete Agent</>}
                 </button>
-                <button type="submit" disabled={updating || deleting} className="flex-[2] bg-blue-600 hover:bg-blue-500 text-gray-900 disabled:opacity-50 rounded-xl py-3 font-semibold transition-all flex justify-center">
+                <button type="submit" disabled={updating || deleting} className="flex-[2] bg-blue-600 hover:bg-blue-500 text-white disabled:opacity-50 rounded-xl py-3 font-semibold transition-all flex justify-center">
                   {updating ? <Loader2 className="w-5 h-5 animate-spin" /> : "Save Changes"}
                 </button>
               </div>

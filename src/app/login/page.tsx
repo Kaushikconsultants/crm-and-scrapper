@@ -60,7 +60,7 @@ export default function LoginPage() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full bg-[#0a0a0a] text-gray-900 border border-gray-200 p-3 rounded-xl focus:outline-none focus:border-blue-500 transition-colors"
+              className="w-full bg-white text-gray-900 border border-gray-200 p-3 rounded-xl focus:outline-none focus:border-blue-500 transition-colors"
               required
             />
           </div>
@@ -70,14 +70,14 @@ export default function LoginPage() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full bg-[#0a0a0a] text-gray-900 border border-gray-200 p-3 rounded-xl focus:outline-none focus:border-blue-500 transition-colors"
+              className="w-full bg-white text-gray-900 border border-gray-200 p-3 rounded-xl focus:outline-none focus:border-blue-500 transition-colors"
               required
             />
           </div>
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 text-gray-900 font-semibold p-3 rounded-xl hover:bg-blue-500 disabled:opacity-50 transition-colors mt-4"
+            className="w-full bg-blue-600 text-white font-semibold p-3 rounded-xl hover:bg-blue-500 disabled:opacity-50 transition-colors mt-4"
           >
             {loading ? "Signing In..." : "Sign In"}
           </button>

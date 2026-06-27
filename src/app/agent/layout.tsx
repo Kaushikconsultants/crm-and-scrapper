@@ -217,14 +217,14 @@ export default function AgentLayout({ children }: { children: React.ReactNode })
                     href={getWhatsAppUrl(toast.phone, toast.name)}
                     target="_blank"
                     rel="noreferrer"
-                    className="text-[10px] bg-emerald-600 hover:bg-emerald-500 text-gray-900 font-bold px-2 py-1 rounded inline-flex items-center gap-1 transition-colors"
+                    className="text-[10px] bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-2 py-1 rounded inline-flex items-center gap-1 transition-colors"
                   >
                     <MessageCircle className="w-3 h-3" /> Message
                   </a>
                 )}
                 <button 
                   onClick={() => { openLeadProfile(toast.id); closeToast(toast.id); }}
-                  className="text-[10px] bg-blue-600 hover:bg-blue-500 text-gray-900 font-bold px-2 py-1 rounded inline-flex items-center gap-1 transition-colors cursor-pointer"
+                  className="text-[10px] bg-blue-600 hover:bg-blue-500 text-white font-bold px-2 py-1 rounded inline-flex items-center gap-1 transition-colors cursor-pointer"
                 >
                   Log Call / Profile
                 </button>

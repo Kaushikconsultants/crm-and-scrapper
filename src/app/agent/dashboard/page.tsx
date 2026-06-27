@@ -367,20 +367,20 @@ export default function AgentDashboard() {
                    setDialerIndex(0);
                    setIsDialerActive(!isDialerActive);
                  }}
-                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1.5 cursor-pointer ${isDialerActive ? 'bg-rose-600 hover:bg-rose-500 text-gray-900' : 'bg-emerald-600 hover:bg-emerald-500 text-gray-900'}`}
+                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1.5 cursor-pointer ${isDialerActive ? 'bg-rose-600 hover:bg-rose-500 text-white' : 'bg-emerald-600 hover:bg-emerald-500 text-white'}`}
               >
                  <PhoneCall className="w-3.5 h-3.5" /> {isDialerActive ? "Exit Dialer" : "Power Dialer"}
               </button>
               <button
                  onClick={() => setIsAddLeadOpen(true)}
-                 className="bg-blue-600 hover:bg-blue-500 text-gray-900 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1.5"
+                 className="bg-blue-600 hover:bg-blue-500 text-white px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1.5"
               >
                  <Plus className="w-3.5 h-3.5" /> Add Lead
               </button>
            </div>
         </div>
 
-        <div className="overflow-auto flex-1 w-full bg-[#0a0a0a] max-h-[calc(100vh-220px)]">
+        <div className="overflow-auto flex-1 w-full bg-white max-h-[calc(100vh-220px)]">
           {isDialerActive ? (
             (() => {
               const currentLead = filteredLeads[dialerIndex];
@@ -526,7 +526,7 @@ export default function AgentDashboard() {
                     {currentLead.phone ? (
                       <a 
                         href={`tel:${currentLead.phone}`}
-                        className="w-full bg-emerald-600 hover:bg-emerald-500 text-gray-900 rounded-xl py-4 font-bold text-center block transition-all shadow-lg hover:shadow-emerald-500/10 flex justify-center items-center gap-2 cursor-pointer"
+                        className="w-full bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl py-4 font-bold text-center block transition-all shadow-lg hover:shadow-emerald-500/10 flex justify-center items-center gap-2 cursor-pointer"
                       >
                         <PhoneCall className="w-5 h-5" /> Click to Call: {currentLead.phone}
                       </a>
@@ -681,7 +681,7 @@ export default function AgentDashboard() {
                       <td className="px-4 py-2.5 align-middle text-center">
                         <button 
                           onClick={() => setSelectedLead(lead)}
-                          className="bg-emerald-600 hover:bg-emerald-500 text-gray-900 px-2.5 py-1 rounded text-xs font-semibold transition-colors"
+                          className="bg-emerald-600 hover:bg-emerald-500 text-white px-2.5 py-1 rounded text-xs font-semibold transition-colors"
                         >
                           Log Call
                         </button>
@@ -697,7 +697,7 @@ export default function AgentDashboard() {
 
       {/* Call Logging Modal */}
       {selectedLead && (
-        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
+        <div className="fixed inset-0 bg-white/80 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
           <div className="bg-white border border-gray-200 rounded-2xl p-4 w-full max-w-md shadow-2xl relative">
             <button onClick={() => setSelectedLead(null)} className="absolute top-3 right-3 text-gray-500 hover:text-gray-900">
               <XCircle className="w-5 h-5" />
@@ -765,7 +765,7 @@ export default function AgentDashboard() {
               <button 
                 type="submit" 
                 disabled={loggingCall}
-                className="w-full bg-emerald-600 text-gray-900 hover:bg-emerald-500 disabled:opacity-50 rounded-lg py-2.5 font-semibold transition-all flex justify-center items-center gap-1.5 text-xs"
+                className="w-full bg-emerald-600 text-white hover:bg-emerald-500 disabled:opacity-50 rounded-lg py-2.5 font-semibold transition-all flex justify-center items-center gap-1.5 text-xs"
               >
                 {loggingCall ? <Loader2 className="w-4 h-4 animate-spin" /> : <><CheckCircle2 className="w-4 h-4" /> Save Call Log</>}
               </button>

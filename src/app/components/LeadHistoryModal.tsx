@@ -66,7 +66,7 @@ export default function LeadHistoryModal({ lead, onClose }: { lead: any; onClose
   };
 
   return (
-    <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-[100] p-4 backdrop-blur-sm">
+    <div className="fixed inset-0 bg-white/80 flex items-center justify-center z-[100] p-4 backdrop-blur-sm">
       <div className="bg-white border border-gray-200 rounded-3xl w-full max-w-2xl shadow-2xl relative flex flex-col h-[80vh] max-h-[800px]">
         
         {/* Header */}
@@ -81,7 +81,7 @@ export default function LeadHistoryModal({ lead, onClose }: { lead: any; onClose
         </div>
 
         {/* Timeline Body */}
-        <div className="p-6 overflow-y-auto flex-1 bg-[#0a0a0a] rounded-b-3xl">
+        <div className="p-6 overflow-y-auto flex-1 bg-white rounded-b-3xl">
           {loading ? (
              <div className="flex justify-center items-center h-full text-gray-500 gap-2">
                <Loader2 className="w-6 h-6 animate-spin" /> Loading timeline...

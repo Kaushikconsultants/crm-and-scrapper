@@ -76,7 +76,7 @@ export default function AdminFollowUps() {
                 onChange={(e) => setFilterDate(e.target.value)}
                 onKeyDown={(e) => e.preventDefault()}
                 onClick={(e) => e.currentTarget.showPicker && e.currentTarget.showPicker()}
-                className="bg-[#0a0a0a] border border-gray-700 text-gray-900 text-xs rounded-lg p-1.5 focus:outline-none focus:border-orange-500 cursor-pointer"
+                className="bg-white border border-gray-700 text-gray-900 text-xs rounded-lg p-1.5 focus:outline-none focus:border-orange-500 cursor-pointer"
               />
               {filterDate && (
                  <button onClick={() => setFilterDate("")} className="text-xs text-orange-400 hover:text-orange-300">Clear</button>
@@ -84,7 +84,7 @@ export default function AdminFollowUps() {
            </div>
         </div>
 
-        <div className="overflow-auto flex-1 w-full bg-[#0a0a0a] max-h-[calc(100vh-200px)]">
+        <div className="overflow-auto flex-1 w-full bg-white max-h-[calc(100vh-200px)]">
           {loading ? (
              <div className="flex justify-center items-center h-full text-gray-500 gap-2"><Loader2 className="w-4 h-4 animate-spin text-orange-500" /> Loading global calendar...</div>
           ) : filteredLeads.length === 0 ? (

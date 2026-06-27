@@ -56,7 +56,7 @@ export default function AddLeadModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-white/60 backdrop-blur-sm">
       <div className="bg-gray-100 border border-gray-200 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden flex flex-col">
         <div className="p-6 border-b border-gray-200 flex items-center justify-between bg-white">
           <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
@@ -148,7 +148,7 @@ export default function AddLeadModal({
           <button 
             onClick={handleSubmit}
             disabled={loading || !formData.name}
-            className="px-4 py-2 rounded-lg bg-blue-600 text-gray-900 font-medium hover:bg-blue-700 transition-colors disabled:opacity-50 flex items-center gap-2"
+            className="px-4 py-2 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition-colors disabled:opacity-50 flex items-center gap-2"
           >
             {loading ? 'Saving...' : <><Save className="w-4 h-4" /> Save Lead</>}
           </button>

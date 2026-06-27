@@ -113,7 +113,7 @@ export default function AgentFollowUps() {
                 onChange={(e) => setFilterDate(e.target.value)}
                 onKeyDown={(e) => e.preventDefault()}
                 onClick={(e) => e.currentTarget.showPicker && e.currentTarget.showPicker()}
-                className="bg-[#0a0a0a] border border-gray-700 text-gray-900 text-sm rounded-lg p-2 focus:outline-none focus:border-orange-500 cursor-pointer"
+                className="bg-white border border-gray-700 text-gray-900 text-sm rounded-lg p-2 focus:outline-none focus:border-orange-500 cursor-pointer"
               />
               {filterDate && (
                  <button onClick={() => setFilterDate("")} className="text-xs text-orange-400 hover:text-orange-300">Clear</button>
@@ -121,7 +121,7 @@ export default function AgentFollowUps() {
            </div>
         </div>
 
-        <div className="overflow-auto flex-1 w-full bg-[#0a0a0a]">
+        <div className="overflow-auto flex-1 w-full bg-white">
           {loading ? (
              <div className="flex justify-center items-center h-full text-gray-500 gap-2"><Loader2 className="w-5 h-5 animate-spin" /> Loading your calendar...</div>
           ) : filteredLeads.length === 0 ? (
@@ -201,7 +201,7 @@ export default function AgentFollowUps() {
 
       {/* Call Logging Modal */}
       {selectedLead && (
-        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
+        <div className="fixed inset-0 bg-white/80 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
           <div className="bg-white border border-gray-200 rounded-3xl p-6 w-full max-w-lg shadow-2xl relative">
             <button onClick={() => setSelectedLead(null)} className="absolute top-4 right-4 text-gray-500 hover:text-gray-900">
               <XCircle className="w-6 h-6" />

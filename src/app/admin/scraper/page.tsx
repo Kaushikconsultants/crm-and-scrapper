@@ -241,7 +241,7 @@ export default function ScraperPage() {
   return (
     <div className="p-8 max-w-7xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">Live Scraper</h1>
+        <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600">Live Scraper</h1>
         <p className="text-gray-600">Extract high-quality leads from Google Maps instantly.</p>
       </div>
 
@@ -289,13 +289,13 @@ export default function ScraperPage() {
                 </div>
                 <input type="range" min="10" max="200" step="10" value={maxLeads} onChange={(e) => setMaxLeads(parseInt(e.target.value))} className="w-full accent-blue-500" />
               </div>
-              <div className="pt-2 space-y-3 bg-[#0a0a0a] p-4 rounded-xl border border-gray-200">
+              <div className="pt-2 space-y-3 bg-white p-4 rounded-xl border border-gray-200">
                 <h3 className="text-sm font-semibold text-gray-600 mb-2">Required Socials / Web</h3>
                 <FilterCheckbox label="Website" icon={Globe} checked={mustHaveWebsite} onChange={setMustHaveWebsite} />
                 <FilterCheckbox label="Instagram" icon={InstagramIcon} checked={mustHaveInstagram} onChange={setMustHaveInstagram} />
                 <FilterCheckbox label="Facebook" icon={FacebookIcon} checked={mustHaveFacebook} onChange={setMustHaveFacebook} />
               </div>
-              <button type="submit" disabled={loading} className="w-full bg-blue-600 text-gray-900 hover:bg-blue-500 disabled:bg-gray-200 disabled:text-gray-500 rounded-xl py-3.5 font-semibold transition-all flex items-center justify-center gap-2 mt-4">
+              <button type="submit" disabled={loading} className="w-full bg-blue-600 text-white hover:bg-blue-500 disabled:bg-gray-200 disabled:text-gray-500 rounded-xl py-3.5 font-semibold transition-all flex items-center justify-center gap-2 mt-4">
                 {loading ? <><Loader2 className="w-5 h-5 animate-spin" /> Extracting Leads...</> : "Start Scraping"}
               </button>
             </form>
@@ -330,7 +330,7 @@ export default function ScraperPage() {
                     <button 
                       onClick={handleAssign}
                       disabled={!assigningTo || isAssigning}
-                      className="bg-blue-600 hover:bg-blue-500 text-gray-900 px-3 py-1 rounded-lg text-xs font-bold disabled:opacity-50"
+                      className="bg-blue-600 hover:bg-blue-500 text-white px-3 py-1 rounded-lg text-xs font-bold disabled:opacity-50"
                     >
                       {isAssigning ? "..." : "Assign"}
                     </button>
@@ -339,13 +339,13 @@ export default function ScraperPage() {
                 <button onClick={() => handleDownloadCSV(leads, "Live Scrape")} disabled={leads.length === 0} className="flex items-center gap-2 px-3 py-1.5 bg-white text-black rounded-lg text-sm font-medium hover:bg-gray-200 disabled:opacity-50 transition-colors">
                   <Download className="w-4 h-4" /> CSV
                 </button>
-                <button onClick={() => handleDownloadPDF(leads, "Live Scrape")} disabled={leads.length === 0} className="flex items-center gap-2 px-3 py-1.5 bg-blue-600 text-gray-900 rounded-lg text-sm font-medium hover:bg-blue-500 disabled:opacity-50 transition-colors">
+                <button onClick={() => handleDownloadPDF(leads, "Live Scrape")} disabled={leads.length === 0} className="flex items-center gap-2 px-3 py-1.5 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-500 disabled:opacity-50 transition-colors">
                   <FileText className="w-4 h-4" /> PDF
                 </button>
               </div>
             </div>
 
-            <div className="overflow-auto flex-1 w-full bg-[#0a0a0a]">
+            <div className="overflow-auto flex-1 w-full bg-white">
               {leads.length === 0 ? (
                 <div className="p-6">
                   <h4 className="text-gray-600 font-semibold mb-4 text-sm flex items-center gap-2">

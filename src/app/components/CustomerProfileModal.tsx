@@ -585,7 +585,7 @@ export default function CustomerProfileModal({ lead: initialLead, onClose, curre
   const badge = getLeadScoreBadge(lead);
 
   return (
-    <div className="fixed inset-0 bg-black/85 flex items-center justify-center z-[100] p-4 backdrop-blur-md">
+    <div className="fixed inset-0 bg-white/85 flex items-center justify-center z-[100] p-4 backdrop-blur-md">
       <div className="bg-[#0f0f12] border border-gray-200 rounded-3xl w-full max-w-5xl shadow-2xl relative flex flex-col h-[90vh] max-h-[850px] overflow-hidden">
         
         {/* Header */}
