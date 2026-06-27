@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Database, Search, Users, CalendarCheck, LogOut, KanbanSquare, ChevronLeft, ChevronRight } from "lucide-react";
+import { Database, Search, Users, CalendarCheck, LogOut, KanbanSquare, ChevronLeft, ChevronRight, FileText } from "lucide-react";
 import { createClient } from "@/utils/supabase/client";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -33,6 +33,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { href: "/admin/agents", label: "Agents & Performance", icon: <Users className="w-4 h-4" /> },
     { href: "/admin/follow-ups", label: "Global Follow-ups", icon: <CalendarCheck className="w-4 h-4" /> },
     { href: "/admin/pipeline", label: "Global Pipeline", icon: <KanbanSquare className="w-4 h-4" /> },
+    { href: "/admin/proposals", label: "Proposals & Quotes", icon: <FileText className="w-4 h-4" /> },
   ];
 
   return (
