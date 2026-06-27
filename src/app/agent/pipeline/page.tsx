@@ -121,11 +121,11 @@ export default function AgentPipeline() {
                                draggable
                                onDragStart={(e) => handleDragStart(e, lead)}
                                onDragEnd={handleDragEnd}
-                               className="bg-gray-100 border border-gray-700/50 rounded-lg p-2.5 cursor-grab hover:border-emerald-500/50 transition-colors shadow shadow-black/40 active:cursor-grabbing"
+                               className="bg-white border border-gray-200 rounded-lg p-2.5 cursor-grab hover:border-emerald-500 transition-colors shadow-sm active:cursor-grabbing"
                                onClick={() => setSelectedProfileLead(lead)}
                              >
                                <div className="flex justify-between items-start gap-1">
-                                  <span className="font-bold text-gray-100 hover:text-blue-400 transition-colors text-xs line-clamp-2 cursor-pointer">
+                                  <span className="font-bold text-gray-900 hover:text-blue-600 transition-colors text-xs line-clamp-2 cursor-pointer">
                                     {lead.name}
                                   </span>
                                   <span className={`px-1.5 py-0.5 rounded text-[8px] font-bold border shrink-0 ${badge.classes.split('border')[0]}`}>
@@ -133,16 +133,16 @@ export default function AgentPipeline() {
                                   </span>
                                </div>
                                
-                               {lead.category && <p className="text-[10px] text-gray-500 mt-1 mb-2">{lead.category}</p>}
+                               {lead.category && <p className="text-[10px] text-gray-600 mt-1 mb-2 font-medium">{lead.category}</p>}
                                
-                               <div className="flex items-center justify-between border-t border-gray-200/80 pt-2 mt-2">
+                               <div className="flex items-center justify-between border-t border-gray-150 pt-2 mt-2">
                                   <div className="flex items-center gap-1.5">
                                      {lead.phone ? (
                                         <>
-                                           <a href={`tel:${lead.phone}`} className="w-6 h-6 rounded bg-blue-500/10 text-blue-400 flex items-center justify-center hover:bg-blue-500/20 transition-colors" title="Call" onClick={e => e.stopPropagation()}>
+                                           <a href={`tel:${lead.phone}`} className="w-6 h-6 rounded bg-blue-50 text-blue-700 flex items-center justify-center hover:bg-blue-100 transition-colors" title="Call" onClick={e => e.stopPropagation()}>
                                              <PhoneCall className="w-2.5 h-2.5" />
                                            </a>
-                                           <a href={getWhatsAppUrl(lead.phone, lead.name)} target="_blank" rel="noreferrer" className="w-6 h-6 rounded bg-emerald-500/10 text-emerald-400 flex items-center justify-center hover:bg-emerald-500/20 transition-colors" title="WhatsApp" onClick={e => e.stopPropagation()}>
+                                           <a href={getWhatsAppUrl(lead.phone, lead.name)} target="_blank" rel="noreferrer" className="w-6 h-6 rounded bg-emerald-50 text-emerald-700 flex items-center justify-center hover:bg-emerald-100 transition-colors" title="WhatsApp" onClick={e => e.stopPropagation()}>
                                              <MessageCircle className="w-2.5 h-2.5" />
                                            </a>
                                         </>
@@ -153,13 +153,13 @@ export default function AgentPipeline() {
                                   
                                   <div className="flex gap-1.5">
                                      {lead.gmbUrl && (
-                                        <a href={lead.gmbUrl} target="_blank" rel="noreferrer" className="text-gray-600 hover:text-gray-900 p-0.5" title="Google Maps" onClick={e => e.stopPropagation()}>
+                                        <a href={lead.gmbUrl} target="_blank" rel="noreferrer" className="text-gray-400 hover:text-gray-900 p-0.5" title="Google Maps" onClick={e => e.stopPropagation()}>
                                            <svg className="w-3.5 h-3.5 text-amber-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
                                         </a>
                                      )}
                                      {lead.website && (
                                         <a href={lead.website} target="_blank" rel="noreferrer" className="text-gray-600 hover:text-gray-900 p-0.5" title="Website" onClick={e => e.stopPropagation()}>
-                                           <Globe className="w-3.5 h-3.5 text-blue-400" />
+                                           <Globe className="w-3.5 h-3.5 text-blue-600" />
                                         </a>
                                      )}
                                   </div>
@@ -193,8 +193,8 @@ export default function AgentPipeline() {
       <style dangerouslySetInnerHTML={{__html: `
         .custom-scrollbar::-webkit-scrollbar { width: 3px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #555; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #aaa; }
       `}} />
     </div>
   );

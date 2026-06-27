@@ -108,27 +108,27 @@ export default function AdminPipeline() {
                                draggable
                                onDragStart={(e) => handleDragStart(e, lead)}
                                onDragEnd={handleDragEnd}
-                               className="bg-gray-100 border border-gray-700/50 rounded-lg p-2.5 cursor-grab hover:border-emerald-500/50 transition-colors shadow shadow-black/40 active:cursor-grabbing"
+                               className="bg-white border border-gray-200 rounded-lg p-2.5 cursor-grab hover:border-emerald-500 transition-colors shadow-sm active:cursor-grabbing"
                              >
                                <div className="flex justify-between items-start gap-1">
-                                  <a href={lead.gmbUrl || '#'} target="_blank" rel="noreferrer" className="font-bold text-gray-100 hover:text-blue-400 transition-colors text-xs line-clamp-2">
+                                  <a href={lead.gmbUrl || '#'} target="_blank" rel="noreferrer" className="font-bold text-gray-900 hover:text-blue-600 transition-colors text-xs line-clamp-2">
                                     {lead.name}
                                   </a>
                                   <span className={`px-1.5 py-0.5 rounded text-[8px] font-bold border shrink-0 ${badge.classes.split('border')[0]}`}>
                                      {badge.label}
                                   </span>
-                               </div>
+                                </div>
                                
-                               {lead.category && <p className="text-[10px] text-gray-500 mt-1 mb-2">{lead.category}</p>}
+                               {lead.category && <p className="text-[10px] text-gray-600 mt-1 mb-2 font-medium">{lead.category}</p>}
                                
-                               <div className="flex items-center justify-between border-t border-gray-200/80 pt-2 mt-2">
+                               <div className="flex items-center justify-between border-t border-gray-150 pt-2 mt-2">
                                   <div className="flex items-center gap-1.5">
                                      {lead.phone ? (
                                         <>
-                                           <a href={`tel:${lead.phone}`} className="w-6 h-6 rounded bg-blue-500/10 text-blue-400 flex items-center justify-center hover:bg-blue-500/20 transition-colors" title="Call">
+                                           <a href={`tel:${lead.phone}`} className="w-6 h-6 rounded bg-blue-50 text-blue-700 flex items-center justify-center hover:bg-blue-100 transition-colors" title="Call">
                                              <PhoneCall className="w-2.5 h-2.5" />
                                            </a>
-                                           <a href={getWhatsAppUrl(lead.phone, lead.name)} target="_blank" rel="noreferrer" className="w-6 h-6 rounded bg-emerald-500/10 text-emerald-400 flex items-center justify-center hover:bg-emerald-500/20 transition-colors" title="WhatsApp">
+                                           <a href={getWhatsAppUrl(lead.phone, lead.name)} target="_blank" rel="noreferrer" className="w-6 h-6 rounded bg-emerald-50 text-emerald-700 flex items-center justify-center hover:bg-emerald-100 transition-colors" title="WhatsApp">
                                              <MessageCircle className="w-2.5 h-2.5" />
                                            </a>
                                         </>
@@ -139,7 +139,7 @@ export default function AdminPipeline() {
                                   
                                   {lead.website && (
                                      <a href={lead.website} target="_blank" rel="noreferrer" className="text-gray-600 hover:text-gray-900 p-0.5" title="Website">
-                                        <Globe className="w-3.5 h-3.5 text-blue-400" />
+                                        <Globe className="w-3.5 h-3.5 text-blue-600" />
                                      </a>
                                   )}
                                </div>
@@ -161,8 +161,8 @@ export default function AdminPipeline() {
       <style dangerouslySetInnerHTML={{__html: `
         .custom-scrollbar::-webkit-scrollbar { width: 3px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #555; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #aaa; }
       `}} />
     </div>
   );
