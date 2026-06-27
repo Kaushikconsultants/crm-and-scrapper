@@ -14,6 +14,92 @@ const DEFAULT_LINE_ITEM: LineItem = {
   price: 25000
 };
 
+const BUILTIN_TEMPLATES = [
+  {
+    id: 'builtin-quotation',
+    isBuiltin: true,
+    title: 'Standard Business Quotation',
+    created_at: new Date().toISOString(),
+    client_details: {
+      title: 'BUSINESS QUOTATION',
+      clientName: '',
+      businessName: '',
+      location: '',
+      phone: '',
+      email: '',
+      taxRate: 18
+    },
+    line_items: [
+      {
+        id: 'b1',
+        offer: 'Website Design & Development',
+        roles: 'UI/UX design, custom responsive frontend, Next.js deployment.',
+        qty: 1,
+        duration: '1 Month',
+        price: 35000
+      },
+      {
+        id: 'b2',
+        offer: 'Local SEO Citation Building',
+        roles: 'Audit present profiles, build local citations, rank GMB listings.',
+        qty: 1,
+        duration: '1 Month',
+        price: 15000
+      }
+    ]
+  },
+  {
+    id: 'builtin-invoice',
+    isBuiltin: true,
+    title: 'Standard Tax Invoice',
+    created_at: new Date().toISOString(),
+    client_details: {
+      title: 'TAX INVOICE',
+      clientName: '',
+      businessName: '',
+      location: '',
+      phone: '',
+      email: '',
+      taxRate: 18
+    },
+    line_items: [
+      {
+        id: 'b3',
+        offer: 'Custom Software Development Retainer',
+        roles: 'Ongoing updates, bug fixes, maintenance, performance tuning.',
+        qty: 1,
+        duration: 'Monthly',
+        price: 20000
+      }
+    ]
+  },
+  {
+    id: 'builtin-proposal',
+    isBuiltin: true,
+    title: 'Comprehensive Project Proposal',
+    created_at: new Date().toISOString(),
+    client_details: {
+      title: 'BUSINESS PROPOSAL',
+      clientName: '',
+      businessName: '',
+      location: '',
+      phone: '',
+      email: '',
+      taxRate: 0
+    },
+    line_items: [
+      {
+        id: 'b4',
+        offer: 'Full CRM & Leads Dashboard Integration',
+        roles: 'Lead routing backend, real-time metrics, automated performance trackers.',
+        qty: 1,
+        duration: '2 Months',
+        price: 85000
+      }
+    ]
+  }
+];
+
 export default function ProposalsPage() {
   const supabase = createClient();
   const [loading, setLoading] = useState(false);
@@ -88,9 +174,10 @@ export default function ProposalsPage() {
       .order('created_at', { ascending: false });
       
     if (error) {
-      alert("Error fetching templates: " + error.message);
+      console.warn("Could not fetch database templates (check if proposals table exists):", error.message);
+      setTemplates(BUILTIN_TEMPLATES);
     } else {
-      setTemplates(data || []);
+      setTemplates([...BUILTIN_TEMPLATES, ...(data || [])]);
     }
     setLoadingTemplates(false);
   };
@@ -381,8 +468,15 @@ export default function ProposalsPage() {
                   {templates.map(template => (
                     <div key={template.id} className="flex justify-between items-center p-4 rounded-xl border border-gray-200 hover:border-blue-300 hover:shadow-sm transition-all bg-white cursor-pointer group" onClick={() => loadTemplate(template)}>
                       <div>
-                        <h4 className="font-bold text-sm text-gray-900 group-hover:text-blue-700">{template.title}</h4>
-                        <p className="text-xs text-gray-500 mt-1">Saved: {new Date(template.created_at).toLocaleDateString()}</p>
+                        <div className="flex items-center gap-2">
+                          <h4 className="font-bold text-sm text-gray-900 group-hover:text-blue-700">{template.title}</h4>
+                          {template.isBuiltin && (
+                            <span className="text-[10px] bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full font-semibold border border-blue-100">Built-in</span>
+                          )}
+                        </div>
+                        <p className="text-xs text-gray-500 mt-1">
+                          {template.isBuiltin ? "Ready to use" : `Saved: ${new Date(template.created_at).toLocaleDateString()}`}
+                        </p>
                       </div>
                       <div className="text-xs font-semibold text-blue-600 bg-blue-50 px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity">
                         Load Template
