@@ -108,10 +108,12 @@ export default function AgentsPage() {
       const { data: leadsData } = await supabase.from('leads').select('id, status, category, assigned_to, created_at');
       if (leadsData) setAllLeads(leadsData);
 
-      // Fetch Calls for Stats & Analytics
+      // Fetch Calls for Stats & Analytics (Order by latest so today's calls aren't truncated)
       const { data: callsData } = await supabase
         .from('call_logs')
-        .select('agent_id, created_at, status_marked');
+        .select('agent_id, created_at, status_marked')
+        .order('created_at', { ascending: false })
+        .limit(5000);
       if (callsData) setAllCalls(callsData);
 
       // Fetch Scraper Runs
