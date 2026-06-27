@@ -21,6 +21,7 @@ export interface ProposalData {
   subtotal: number;
   tax: number;
   total: number;
+  terms?: string[];
 }
 
 export const generateProposalPdf = async (data: ProposalData) => {
@@ -180,7 +181,7 @@ export const generateProposalPdf = async (data: ProposalData) => {
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(8);
   doc.setTextColor(71, 85, 105);
-  const terms = [
+  const terms = data.terms && data.terms.length > 0 ? data.terms : [
     "1. This quotation is valid for 30 days from the date of issue.",
     "2. 50% advance payment required to commence work.",
     "3. Remaining 50% due upon project completion.",

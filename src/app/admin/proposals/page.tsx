@@ -118,6 +118,7 @@ export default function ProposalsPage() {
     { ...DEFAULT_LINE_ITEM, id: crypto.randomUUID() }
   ]);
   const [taxRate, setTaxRate] = useState(18); // 18% GST by default
+  const [terms, setTerms] = useState<string>("1. This quotation is valid for 30 days from the date of issue.\n2. 50% advance payment required to commence work.\n3. Remaining 50% due upon project completion.\n4. All prices are in INR (Rs.) unless otherwise specified.");
 
   // Templates Modal State
   const [showTemplates, setShowTemplates] = useState(false);
@@ -160,7 +161,8 @@ export default function ProposalsPage() {
       lineItems,
       subtotal,
       tax: taxAmount,
-      total: grandTotal
+      total: grandTotal,
+      terms: terms.split('\n').map(t => t.trim()).filter(Boolean)
     };
 
     await generateProposalPdf(data);
@@ -194,7 +196,7 @@ export default function ProposalsPage() {
     }
 
     setSaving(true);
-    const client_details = { clientName, businessName, location, phone, email, title, taxRate };
+    const client_details = { clientName, businessName, location, phone, email, title, taxRate, terms: terms.split('\n').map(t => t.trim()).filter(Boolean) };
     
     const { error } = await supabase
       .from('proposals')
@@ -223,6 +225,13 @@ export default function ProposalsPage() {
     setEmail(details.email || "");
     setTaxRate(details.taxRate ?? 18);
     setLineItems(template.line_items || []);
+    
+    if (details.terms && Array.isArray(details.terms)) {
+      setTerms(details.terms.join('\n'));
+    } else {
+      setTerms("1. This quotation is valid for 30 days from the date of issue.\n2. 50% advance payment required to commence work.\n3. Remaining 50% due upon project completion.\n4. All prices are in INR (Rs.) unless otherwise specified.");
+    }
+    
     setShowTemplates(false);
   };
 
@@ -332,6 +341,17 @@ export default function ProposalsPage() {
                   />
                 </div>
               </div>
+            </div>
+          <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
+            <h3 className="font-semibold text-gray-900 mb-4 border-b border-gray-100 pb-2">Terms & Conditions</h3>
+            <div>
+              <label className="block text-xs font-semibold text-gray-600 mb-1">List (One term per line)</label>
+              <textarea 
+                value={terms} 
+                onChange={e => setTerms(e.target.value)} 
+                rows={6}
+                className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-xs text-gray-900 focus:outline-none focus:border-blue-500 resize-none font-mono" 
+              />
             </div>
           </div>
         </div>
