@@ -110,8 +110,8 @@ export const generateProposalPdf = async (data: ProposalData) => {
     `${item.offer}\n\nNotes: ${item.roles}`,
     item.duration,
     item.qty.toString(),
-    `₹${item.price.toLocaleString()}`,
-    `₹${(item.qty * item.price).toLocaleString()}`
+    `Rs. ${item.price.toLocaleString()}`,
+    `Rs. ${(item.qty * item.price).toLocaleString()}`
   ]);
 
   autoTable(doc, {
@@ -157,10 +157,10 @@ export const generateProposalPdf = async (data: ProposalData) => {
   doc.setFontSize(10);
   doc.setTextColor(71, 85, 105);
   doc.text("Subtotal:", 130, finalY + 10);
-  doc.text(`₹${data.subtotal.toLocaleString()}`, 190, finalY + 10, { align: 'right' });
+  doc.text(`Rs. ${data.subtotal.toLocaleString()}`, 190, finalY + 10, { align: 'right' });
   
   doc.text("Tax:", 130, finalY + 18);
-  doc.text(`₹${data.tax.toLocaleString()}`, 190, finalY + 18, { align: 'right' });
+  doc.text(`Rs. ${data.tax.toLocaleString()}`, 190, finalY + 18, { align: 'right' });
 
   // Line before total
   doc.line(130, finalY + 23, 190, finalY + 23);
@@ -169,7 +169,7 @@ export const generateProposalPdf = async (data: ProposalData) => {
   doc.setFontSize(12);
   doc.setTextColor(15, 23, 42);
   doc.text("Grand Total:", 130, finalY + 31);
-  doc.text(`₹${data.total.toLocaleString()}`, 190, finalY + 31, { align: 'right' });
+  doc.text(`Rs. ${data.total.toLocaleString()}`, 190, finalY + 31, { align: 'right' });
 
   // Footer terms
   doc.setFont('helvetica', 'bold');
@@ -184,7 +184,7 @@ export const generateProposalPdf = async (data: ProposalData) => {
     "1. This quotation is valid for 30 days from the date of issue.",
     "2. 50% advance payment required to commence work.",
     "3. Remaining 50% due upon project completion.",
-    "4. All prices are in INR (₹) unless otherwise specified."
+    "4. All prices are in INR (Rs.) unless otherwise specified."
   ];
   let currentY = finalY + 16;
   terms.forEach(term => {

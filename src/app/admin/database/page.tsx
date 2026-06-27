@@ -280,17 +280,17 @@ export default function DatabasePage() {
     <div className="p-4 max-w-[1600px] mx-auto h-full flex flex-col space-y-4">
       <div className="flex justify-between items-end flex-wrap gap-4">
         <div>
-          <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">Master Database</h1>
+          <h1 className="text-2xl font-bold text-gray-900">Master Database</h1>
           <p className="text-gray-600 text-xs mt-0.5">Assign leads to agents and view your complete historical data.</p>
         </div>
 
         {selectedLeads.size > 0 && (
-          <div className="flex items-center gap-3 bg-blue-900/20 border border-blue-500/30 p-2 rounded-xl">
-             <span className="text-blue-400 font-medium px-2">{selectedLeads.size} Selected</span>
+          <div className="flex items-center gap-3 bg-blue-50 border border-blue-200 p-2 rounded-xl">
+             <span className="text-blue-700 font-medium px-2">{selectedLeads.size} Selected</span>
              <select 
                value={assigningTo}
                onChange={(e) => setAssigningTo(e.target.value)}
-               className="bg-white border border-gray-700 text-gray-900 text-sm rounded-lg p-2 focus:outline-none"
+               className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg p-2 focus:outline-none"
              >
                <option value="">-- Assign To --</option>
                <option value="unassigned">Unassign</option>
@@ -299,14 +299,14 @@ export default function DatabasePage() {
              <button 
                onClick={handleAssign}
                disabled={!assigningTo || isAssigning}
-               className="bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-gray-900 px-4 py-2 rounded-lg text-sm font-semibold"
+               className="bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white px-4 py-2 rounded-lg text-sm font-semibold"
              >
                {isAssigning ? "Working..." : "Assign / Reassign"}
              </button>
              <button 
                onClick={handleAutoDistribute}
                disabled={isAssigning}
-               className="bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-gray-900 px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2"
+               className="bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2"
                title="Distribute selected leads evenly among active agents"
              >
                <Shuffle className="w-4 h-4" /> Auto-Distribute
@@ -316,8 +316,8 @@ export default function DatabasePage() {
       </div>
 
       <div className="bg-white border border-gray-200 rounded-2xl flex flex-col flex-1 overflow-hidden min-h-[600px]">
-        <div className="p-2.5 border-b border-gray-200 flex justify-between items-center bg-gray-100 flex-wrap gap-3">
-          <div className="flex items-center gap-2 bg-[#0a0a0a] p-1 rounded-xl border border-gray-200 flex-wrap">
+        <div className="p-2.5 border-b border-gray-200 flex justify-between items-center bg-gray-50 flex-wrap gap-3">
+          <div className="flex items-center gap-2 bg-gray-100 p-1 rounded-xl border border-gray-200 flex-wrap">
              <div className="flex items-center px-2 border-r border-gray-200">
                 <Filter className="w-3.5 h-3.5 text-gray-600 mr-1.5" />
                 <span className="text-xs text-gray-600 font-medium">Filters</span>
@@ -332,9 +332,8 @@ export default function DatabasePage() {
                 {uniqueCategories.map(cat => <option key={cat} value={cat} className="bg-white">{cat}</option>)}
              </select>
              <div className="w-px h-4 bg-gray-200"></div>
-             <select value={dbFilterAssigned} onChange={(e) => setDbFilterAssigned(e.target.value)} className="bg-transparent text-xs text-blue-400 font-medium focus:outline-none w-32 px-1 cursor-pointer">
+             <select value={dbFilterAssigned} onChange={(e) => setDbFilterAssigned(e.target.value)} className="bg-transparent text-xs text-blue-700 font-medium focus:outline-none w-32 px-1 cursor-pointer">
                 <option value="all" className="bg-white text-gray-700">All Agents</option>
-                <option value="unassigned" className="bg-white text-gray-700">Unassigned Only</option>
                 {agents.map(a => <option key={a.id} value={a.id} className="bg-white text-gray-700">{a.name}</option>)}
              </select>
              <div className="w-px h-4 bg-gray-200"></div>
@@ -346,7 +345,7 @@ export default function DatabasePage() {
                 <option value="month" className="bg-white text-gray-700">Last 30 Days</option>
              </select>
              <div className="w-px h-4 bg-gray-200"></div>
-             <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className="bg-transparent text-xs text-amber-400 font-semibold focus:outline-none w-32 px-1 cursor-pointer font-medium">
+             <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className="bg-transparent text-xs text-amber-700 font-semibold focus:outline-none w-32 px-1 cursor-pointer font-medium">
                 <option value="newest" className="bg-white text-gray-700">Newest Scraped</option>
                 <option value="oldest" className="bg-white text-gray-700">Oldest Scraped</option>
                 <option value="name" className="bg-white text-gray-700">Name (A-Z)</option>
@@ -354,48 +353,48 @@ export default function DatabasePage() {
              </select>
              <div className="w-px h-4 bg-gray-200"></div>
              <label className="flex items-center gap-1.5 cursor-pointer px-1 text-xs text-gray-700">
-                <input type="checkbox" checked={dbFilterWeb} onChange={(e) => setDbFilterWeb(e.target.checked)} className="rounded border-gray-700 bg-gray-50 w-3 h-3" /> Web
+                <input type="checkbox" checked={dbFilterWeb} onChange={(e) => setDbFilterWeb(e.target.checked)} className="rounded border-gray-300 bg-gray-50 w-3 h-3" /> Web
              </label>
              <label className="flex items-center gap-1.5 cursor-pointer pr-2 text-xs text-gray-700">
-                <input type="checkbox" checked={dbFilterPhone} onChange={(e) => setDbFilterPhone(e.target.checked)} className="rounded border-gray-700 bg-gray-50 w-3 h-3" /> Phone
+                <input type="checkbox" checked={dbFilterPhone} onChange={(e) => setDbFilterPhone(e.target.checked)} className="rounded border-gray-300 bg-gray-50 w-3 h-3" /> Phone
              </label>
           </div>
 
           <div className="flex gap-2 items-center flex-wrap">
              <div className="relative shrink-0">
-               <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-500" />
-               <input 
-                 type="text"
-                 placeholder="Search name/phone..."
-                 value={searchTerm}
-                 onChange={(e) => setSearchTerm(e.target.value)}
-                 className="bg-[#0a0a0a] border border-gray-200 rounded-lg pl-8 pr-3 py-1.5 text-xs text-gray-900 focus:outline-none focus:border-blue-500 w-44"
-               />
+                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-500" />
+                <input 
+                  type="text"
+                  placeholder="Search name/phone..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="bg-white border border-gray-200 rounded-lg pl-8 pr-3 py-1.5 text-xs text-gray-900 focus:outline-none focus:border-blue-500 w-44"
+                />
              </div>
              <span className="bg-gray-200 text-gray-700 px-2 py-1.5 rounded-lg text-xs font-medium flex items-center shrink-0">
                {sortedFilteredPastLeads.length} Leads
              </span>
              <button
                 onClick={() => setIsAddLeadOpen(true)}
-                className="bg-blue-600 hover:bg-blue-500 text-gray-900 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1.5 shrink-0"
+                className="bg-blue-600 hover:bg-blue-500 text-white px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1.5 shrink-0"
              >
                 <Plus className="w-3.5 h-3.5" /> Add Lead
              </button>
-             <button onClick={() => handleDownloadCSV(sortedFilteredPastLeads, "Exported_Leads")} className="bg-gray-100 border border-gray-700 hover:bg-gray-200 text-gray-900 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors shrink-0"><Download className="w-3.5 h-3.5"/> CSV</button>
-             <button onClick={() => handleDownloadPDF(sortedFilteredPastLeads, "Master Database")} disabled={sortedFilteredPastLeads.length === 0} className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 text-gray-900 rounded-lg text-xs font-medium hover:bg-blue-500 disabled:opacity-50 shrink-0">
+             <button onClick={() => handleDownloadCSV(sortedFilteredPastLeads, "Exported_Leads")} className="bg-gray-100 border border-gray-300 hover:bg-gray-200 text-gray-900 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors shrink-0"><Download className="w-3.5 h-3.5"/> CSV</button>
+             <button onClick={() => handleDownloadPDF(sortedFilteredPastLeads, "Master Database")} disabled={sortedFilteredPastLeads.length === 0} className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 text-white rounded-lg text-xs font-medium hover:bg-blue-500 disabled:opacity-50 shrink-0">
                <FileText className="w-3.5 h-3.5" /> PDF
              </button>
           </div>
         </div>
 
-        <div className="overflow-auto flex-1 w-full bg-[#0a0a0a]">
+        <div className="overflow-auto flex-1 w-full bg-white">
           {loadingPast ? (
             <div className="flex justify-center items-center h-full text-gray-500 gap-2"><Loader2 className="w-5 h-5 animate-spin text-blue-500" /> Loading database...</div>
           ) : sortedFilteredPastLeads.length === 0 ? (
             <div className="flex justify-center items-center h-full text-gray-500">No leads found matching your filters.</div>
           ) : (
             <table className="w-full text-left text-xs border-collapse min-w-[800px] table-fixed">
-              <thead className="bg-white text-gray-600 sticky top-0 z-10 shadow-sm border-b border-gray-200">
+              <thead className="bg-gray-50 text-gray-600 sticky top-0 z-10 shadow-sm border-b border-gray-200">
                 <tr>
                   <th className="px-3 py-3 w-10 text-center">
                     <input 
@@ -403,7 +402,7 @@ export default function DatabasePage() {
                       checked={selectedLeads.size > 0 && selectedLeads.size === sortedFilteredPastLeads.length}
                       ref={input => { if (input) input.indeterminate = selectedLeads.size > 0 && selectedLeads.size < sortedFilteredPastLeads.length; }}
                       onChange={() => toggleAll(sortedFilteredPastLeads)}
-                      className="rounded border-gray-700 bg-gray-50 cursor-pointer w-3.5 h-3.5"
+                      className="rounded border-gray-300 bg-gray-50 cursor-pointer w-3.5 h-3.5"
                     />
                   </th>
                   <th className="px-4 py-2.5 font-semibold text-xs text-gray-600 w-2/5">Business Name & Details</th>
@@ -412,17 +411,17 @@ export default function DatabasePage() {
                   <th className="px-4 py-2.5 font-semibold text-xs text-gray-600 text-center">Socials</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-800/50">
+              <tbody className="divide-y divide-gray-200">
                 {sortedFilteredPastLeads.map((lead: any) => {
                   const badge = getLeadScoreBadge(lead);
                   return (
-                    <tr key={lead.id} className={`hover:bg-gray-100 transition-colors group ${selectedLeads.has(lead.id) ? 'bg-blue-900/10' : ''}`}>
+                    <tr key={lead.id} className={`hover:bg-gray-50 transition-colors group ${selectedLeads.has(lead.id) ? 'bg-blue-50' : ''}`}>
                       <td className="px-3 py-2.5 text-center align-middle">
                          <input 
                            type="checkbox" 
                            checked={selectedLeads.has(lead.id)}
                            onChange={() => toggleSelection(lead.id)}
-                           className="rounded border-gray-700 bg-gray-50 cursor-pointer w-3.5 h-3.5"
+                           className="rounded border-gray-300 bg-gray-50 cursor-pointer w-3.5 h-3.5"
                          />
                       </td>
                       <td className="px-4 py-2.5 align-middle">
@@ -430,22 +429,22 @@ export default function DatabasePage() {
                            <div className="flex items-center gap-1.5 flex-wrap">
                              <button 
                                onClick={() => setSelectedHistoryLead(lead)} 
-                               className="text-left font-bold text-gray-100 hover:text-blue-400 transition-colors text-sm whitespace-normal break-words cursor-pointer"
+                               className="text-left font-bold text-gray-900 hover:text-blue-600 transition-colors text-sm whitespace-normal break-words cursor-pointer"
                              >
                                {lead.name}
                              </button>
                              {lead.gmbUrl && (
-                               <a href={lead.gmbUrl} target="_blank" rel="noreferrer" className="text-gray-500 hover:text-amber-500 transition-colors shrink-0" title="Google Maps">
+                               <a href={lead.gmbUrl} target="_blank" rel="noreferrer" className="text-gray-400 hover:text-amber-600 transition-colors shrink-0" title="Google Maps">
                                  <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-                               </a>
+                                </a>
                              )}
                            </div>
                            <div className="flex items-center gap-1.5 text-[10px] text-gray-500 flex-wrap font-medium">
                              <span className={`font-extrabold tracking-wide ${badge.classes.split('border')[0]}`}>{badge.label}</span>
                              <span>•</span>
-                             <span className="text-purple-400/90">{lead.category || "General"}</span>
+                             <span className="text-purple-700">{lead.category || "General"}</span>
                              <span>•</span>
-                             <span className="flex items-center gap-0.5 text-emerald-400/90"><MapPin className="w-2.5 h-2.5" /> {lead.location || "Haryana"}</span>
+                             <span className="flex items-center gap-0.5 text-emerald-700"><MapPin className="w-2.5 h-2.5" /> {lead.location || "Haryana"}</span>
                              {lead.source_platform && (
                                <>
                                  <span>•</span>
@@ -458,34 +457,34 @@ export default function DatabasePage() {
                       <td className="px-4 py-2.5 align-middle text-center">
                          <div className="flex flex-wrap gap-1.5 justify-center items-center">
                             {lead.assigned_to ? (
-                               <span className="bg-blue-500/10 text-blue-400 border border-blue-500/20 px-2 py-0.5 rounded text-[11px] font-semibold flex items-center gap-1">
+                               <span className="bg-blue-50 text-blue-700 border border-blue-200 px-2 py-0.5 rounded text-[11px] font-semibold flex items-center gap-1">
                                  <Users className="w-2.5 h-2.5" /> {lead.agent_profiles?.name || 'Agent'}
                                </span>
                             ) : (
-                               <span className="bg-gray-200/40 text-gray-600 px-2 py-0.5 rounded text-[11px] font-medium border border-gray-700/50">Unassigned</span>
+                               <span className="bg-gray-100 text-gray-600 px-2 py-0.5 rounded text-[11px] font-medium border border-gray-300">Unassigned</span>
                             )}
-                            <span className={`px-2 py-0.5 rounded text-[11px] font-medium border ${lead.status === 'New' ? 'bg-green-500/10 text-green-400 border-green-500/20' : 'bg-orange-500/10 text-orange-400 border-orange-500/20'}`}>
+                            <span className={`px-2 py-0.5 rounded text-[11px] font-medium border ${lead.status === 'New' ? 'bg-green-50 text-green-700 border-green-200' : 'bg-orange-50 text-orange-700 border-orange-200'}`}>
                               {lead.status || 'New'}
                             </span>
                          </div>
                       </td>
                       <td className="px-4 py-2.5 align-middle text-center">
                          <div className="flex items-center justify-center gap-2">
-                           <div className="font-mono text-blue-400 bg-blue-500/10 inline-block px-2.5 py-1 rounded border border-blue-500/20 text-xs font-semibold tracking-wide">
-                              {lead.phone ? `'${lead.phone}` : "No Phone"}
-                           </div>
-                           {lead.phone && (
-                              <a href={getWhatsAppUrl(lead.phone, lead.name)} target="_blank" rel="noreferrer" className="text-emerald-400 hover:text-emerald-300 bg-emerald-500/10 p-1.5 rounded hover:bg-emerald-500/20 transition-colors shrink-0" title="Message on WhatsApp">
-                                 <MessageCircle className="w-3.5 h-3.5" />
-                              </a>
-                           )}
-                         </div>
+                            <div className="font-mono text-blue-700 bg-blue-50 inline-block px-2.5 py-1 rounded border border-blue-200 text-xs font-semibold tracking-wide">
+                               {lead.phone ? `'${lead.phone}` : "No Phone"}
+                            </div>
+                            {lead.phone && (
+                               <a href={getWhatsAppUrl(lead.phone, lead.name)} target="_blank" rel="noreferrer" className="text-emerald-700 hover:text-emerald-600 bg-emerald-50 p-1.5 rounded hover:bg-emerald-100 transition-colors shrink-0" title="Message on WhatsApp">
+                                  <MessageCircle className="w-3.5 h-3.5" />
+                               </a>
+                            )}
+                          </div>
                       </td>
                       <td className="px-4 py-2.5 align-middle text-center">
                         <div className="flex gap-1.5 items-center justify-center flex-wrap">
-                           {lead.website && <a href={lead.website} target="_blank" rel="noreferrer" className="text-gray-600 hover:text-gray-900 bg-white/5 hover:bg-white/10 p-1.5 rounded" title="Website"><Globe className="w-3.5 h-3.5 text-blue-400" /></a>}
-                           {lead.instagram && <a href={lead.instagram} target="_blank" rel="noreferrer" className="text-pink-400 hover:text-pink-300 bg-pink-500/10 p-1.5 rounded hover:bg-pink-500/20" title="Instagram"><InstagramIcon className="w-3.5 h-3.5" /></a>}
-                           {lead.facebook && <a href={lead.facebook} target="_blank" rel="noreferrer" className="text-blue-500 hover:text-blue-400 bg-blue-500/10 p-1.5 rounded hover:bg-blue-500/20" title="Facebook"><FacebookIcon className="w-3.5 h-3.5" /></a>}
+                           {lead.website && <a href={lead.website} target="_blank" rel="noreferrer" className="text-gray-600 hover:text-gray-900 bg-gray-50 p-1.5 rounded" title="Website"><Globe className="w-3.5 h-3.5 text-blue-600" /></a>}
+                           {lead.instagram && <a href={lead.instagram} target="_blank" rel="noreferrer" className="text-pink-600 hover:text-pink-700 bg-pink-50 p-1.5 rounded hover:bg-pink-100" title="Instagram"><InstagramIcon className="w-3.5 h-3.5" /></a>}
+                           {lead.facebook && <a href={lead.facebook} target="_blank" rel="noreferrer" className="text-blue-600 hover:text-blue-700 bg-blue-50 p-1.5 rounded hover:bg-blue-100" title="Facebook"><FacebookIcon className="w-3.5 h-3.5" /></a>}
                         </div>
                       </td>
                     </tr>
